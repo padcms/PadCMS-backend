@@ -1,0 +1,24 @@
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+    weight: 100
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: pdf_info
+    value: '{"width":"768","height":"1024","zones":[{"uri":"local:\/\/navigation\/100_tweets","llx":"508.0","lly":"614.604","urx":"734.5","ury":"388.104"}],"text":"AVEC LES DOIGTS"}'
+
+field:
+  -
+    id: 1
+    field_type: 1
+    template: 1
+
+field_type:
+  -
+    id: 1
+    title: body

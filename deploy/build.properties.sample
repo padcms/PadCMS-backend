@@ -1,0 +1,6 @@
+progs.mysql=mysql
+
+db.host=127.0.0.1
+db.name=padcms
+db.user=root
+db.pass=root

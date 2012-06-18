@@ -1,0 +1,6 @@
+device_token:
+  -
+    id: 1
+    udid : fake_udid
+    token: fake_token
+    application_id: 1

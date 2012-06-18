@@ -1,0 +1,110 @@
+<?php
+/**
+ * @file
+ * AM_Component_Record_Database_Application class definition.
+ *
+ * LICENSE
+ *
+ * $DOXY_LICENSE
+ *
+ * @author $DOXY_AUTHOR
+ * @version $DOXY_VERSION
+ */
+
+/**
+ * Application record component
+ * @ingroup AM_Component
+ * @todo refactoring
+ */
+class AM_Component_Record_Database_Application extends AM_Component_Record_Database
+{
+    /**
+     *
+     * @param AM_Controller_Action $oActionController
+     * @param string $sName
+     * @param int $iId
+     * @param int $iClientId
+     * @return viod
+     */
+    public function  __construct(AM_Controller_Action $oActionController, $sName, $iId, $iClientId)
+    {
+        $aControls   = array();
+        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'client', $iClientId);
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'version', 'Version', array(array('require'), array('numeric')), 'version');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'description', 'Description', array(array('require')), 'description');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_twitter_ios',
+                'Message');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_fbook_ios',
+                'Message');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nt_email_ios',
+                'Title');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_email_ios',
+                'Message');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_twitter_android',
+                'Message');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_fbook_android',
+                'Message');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nt_email_android',
+                'Title');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'nm_email_android',
+                'Message');
+
+        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'application', 'id', $iId);
+    }
+
+    public function show()
+    {
+        if (!$this->isSubmitted) {
+            if (!$this->controls['version']->getValue())
+                $this->controls['version']->setValue(1);
+
+            if (!$this->controls['title']->getValue()) {
+                $maxId = $this->getMaxId();
+                $this->controls['title']->setValue('Application #' . ($maxId ? $maxId + 1: 1));
+            }
+        }
+
+        parent::show();
+    }
+
+    /**
+     * Returns max application id
+     *
+     * @return int
+     */
+    protected function getMaxId()
+    {
+        $oQuery = $this->db->select()
+                ->from('application', 'MAX(id)')
+                ->where('client = ?', $this->controls['client']->getValue());
+
+        return $this->db->fetchOne($oQuery);
+    }
+
+    protected function _preOperation()
+    {
+        $sTitle = $this->controls['title']->getValue();
+        $this->controls['title']->setValue(AM_Tools::filter_xss($sTitle));
+
+        $sDescription = $this->controls['description']->getValue();
+        $this->controls['description']->setValue(AM_Tools::filter_xss($sDescription));
+    }
+}

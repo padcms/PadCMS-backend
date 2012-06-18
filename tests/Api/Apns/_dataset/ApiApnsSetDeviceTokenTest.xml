@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <device_token id="1" udid="fake_udid" token="fake_token" application_id="1" />
+    <device_token id="2" udid="test_udid" token="test_token" application_id="11" />
+</dataset>

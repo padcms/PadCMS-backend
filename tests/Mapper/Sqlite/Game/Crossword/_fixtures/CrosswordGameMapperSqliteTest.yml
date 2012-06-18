@@ -1,0 +1,62 @@
+game:
+  -
+    id: 1
+    revision: 1
+    type: 1
+
+game_data:
+  -
+    id: 1
+    game: 1
+    key_name: grid_height
+    value: 11
+  -
+    id: 2
+    game: 1
+    key_name: grid_width
+    value: 11
+
+game_crossword_word:
+  -
+    id: 1
+    game: 1
+    answer: answer
+    question: test question
+    length: 6
+    direction: horizontal
+    start_from: 1
+
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+    weight: 100
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: game
+    value: 1
+  -
+    id: 2
+    id_element: 1
+    key_name: game_type
+    value: crossword
+
+field:
+  -
+    id: 1
+    field_type: 1
+    template: 1
+
+field_type:
+  -
+    id: 1
+    title: games
+
+game_type:
+  -
+    id: 1
+    title: crossword

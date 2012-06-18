@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS `field_type`;
+CREATE TABLE IF NOT EXISTS `field_type` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

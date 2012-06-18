@@ -1,0 +1,12 @@
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: resource
+    value: file.ext

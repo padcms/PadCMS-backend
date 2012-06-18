@@ -1,0 +1,251 @@
+@charset "utf-8";
+/* CSS Document */
+
+body
+{
+	font-size: 100%; /* Fixes exaggerated text resizing in IE6 and IE7 */
+}
+
+.block-clear {
+  clear:both;
+  display:inline-block;
+  width:100%;
+}
+
+* {
+  outline:0 none;
+}
+
+#page
+{
+	font-size:1em;
+}
+.size15
+{
+	font-size:1.25em;
+}
+
+body, caption, th, td, input, textarea, select, option, legend, fieldset
+{
+/* The following font family declarations are based on the Microsoft core
+* web fonts which are common fonts available on most computer systems. The
+* Bitstream Vera fonts are commonly available on Linux systems where the MS
+* fonts are less common.
+*
+* A user's web browser will look at the comma-separated list and will
+* attempt to use each font in turn until it finds one that is available
+* on the user's computer. The final "generic" font (sans-serif or serif)
+* hints at what type of font to use if the web browser doesn't find any
+* of the fonts in the list.
+
+font-family: "Times New Roman", Times, Georgia, "Bitstream Vera Serif", serif;
+font-family: Times, "Times New Roman", Georgia, "Bitstream Vera Serif", serif;
+font-family: Georgia, "Times New Roman", "Bitstream Vera Serif", serif;
+
+font-family: Verdana, Tahoma, Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+font-family: Tahoma, Verdana, Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+font-family: Helvetica, Arial, "Bitstream Vera Sans", sans-serif;
+font-family: Arial, Helvetica, "Bitstream Vera Sans", sans-serif;
+
+font-family: "Bitstream Vera Sans Mono", "Courier New", monospace;
+
+*/
+
+	font-family: Arial, Helvetica, Tahoma, Verdana, "Bitstream Vera Sans", sans-serif;
+}
+
+pre, code
+{
+	font-size: 1.1em; /* Monospace fonts can be hard to read */
+	font-family: "Bitstream Vera Sans Mono", "Courier New", monospace;
+}
+
+/** headings **/
+h1
+{
+	font-size: 2em;
+	line-height: 1.3em;
+	margin-top: 0;
+	margin-bottom: 0.5em; /* 0.5em is equavalent to 1em in the page's base font.
+			 Remember, a margin specified in ems is relative to
+			 the element's font-size, not to the pages' base
+			 font size. So, for example, if we want a 1em margin
+			 (relative to the base font), we have to divide that
+			 length by the element's font-size:
+			 1em / 2em = 0.5em */
+}
+
+h2
+{
+	font-size: 1.5em;
+	line-height: 1.3em;
+	margin-top: 0.667em; /* Equivalent to 1em in the page's base font: 1 / 1.5 = 0.667em */
+	margin-bottom: 0.667em;
+}
+
+h3
+{
+	font-size: 1.3em;
+	line-height: 1.3em;
+	margin-top: 0.769em; /* Equivalent to 1em in the page's base font: 1 / 1.3 = 0.769 */
+	margin-bottom: 0.769em;
+}
+
+h4, h5, h6
+{
+	font-size: 1.1em;
+	line-height: 1.3em;
+	margin-top: 0.909em; /* Equivalent to 1em in the page's base font: 1 / 1.1 = 0.909 */
+	margin-bottom: 0.909em;
+}
+
+/** block-level elements **/
+p, ul, ol, dl, pre, table, fieldset, blockquote
+{
+	margin: 1em 0;
+}
+
+/** lists **/
+/* standardize list item indentation */
+ul, ol
+{
+	margin-left: 0;
+	padding-left: 2em;
+}
+
+.block ul, /* Drupal overrides */
+.item-list ul
+{
+	margin: 1em 0;
+	padding: 0 0 0 2em;
+}
+
+ul ul, ul ol,
+ol ol, ol ul,
+.block ul ul, .block ul ol,
+.block ol ol, .block ol ul,
+.item-list ul ul, .item-list ul ol,
+.item-list ol ol, .item-list ol ul
+{
+	margin: 0;
+}
+
+li
+{
+	margin: 0;
+	padding: 0;
+}
+
+.item-list ul li /* Drupal override */
+{
+	margin: 0;
+	padding: 0;
+	list-style: inherit;
+}
+
+ul.menu li, /* Drupal override */
+li.expanded,
+li.collapsed,
+li.leaf
+{
+	margin: 0;
+	padding: 0;
+}
+
+ul          { list-style-type: disc; }
+ul ul       { list-style-type: circle; }
+ul ul ul    { list-style-type: square; }
+ul ul ul ul { list-style-type: circle; }
+ol          { list-style-type: decimal; }
+ol ol       { list-style-type: lower-alpha; }
+ol ol ol    { list-style-type: decimal; }
+
+dt
+{
+	margin: 0;
+	padding: 0;
+}
+
+dd
+{
+	margin: 0 0 0 2em;
+	padding: 0;
+}
+
+/** links **/
+/* The order of link states are based on Eric Meyer's article:
+* http://meyerweb.com/eric/thoughts/2007/06/11/who-ordered-the-link-states
+*/
+a
+{
+	text-decoration:none;
+}
+
+a:hover
+{
+	text-decoration:underline;
+}
+
+/** tables **/
+/* Override Drupal default CSS */
+table
+{
+	border-collapse: collapse;
+}
+
+th,
+thead th,
+tbody th
+{
+	text-align: center;
+	padding-right: 0;
+	border-bottom: none;
+}
+
+tbody
+{
+	border-top: none;
+}
+
+/** abbreviations **/
+abbr
+{
+	border-bottom: 1px dotted #666;
+	cursor: help;
+	white-space: nowrap;
+}
+
+/* Date-based "abbreviations" show computer-friendly timestamps which are not
+human-friendly. */
+abbr.created
+{
+	border: none;
+	cursor: auto;
+	white-space: normal;
+}
+
+/** images **/
+img
+{
+	border: 0;
+}
+
+/** horizontal rules **/
+hr
+{
+	height: 1px;
+	border: 1px solid #666;
+}
+
+/** forms **/
+form
+{
+	margin: 0;
+	padding: 0;
+}
+
+fieldset
+{
+	margin: 1em 0;
+	padding: 0.5em;
+}

@@ -1,0 +1,24 @@
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+    weight: 100
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: resource
+    value: resource.pdf
+
+field:
+  -
+    id: 1
+    field_type: 1
+    template: 1
+
+field_type:
+  -
+    id: 1
+    title: body

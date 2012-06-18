@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="padcms" default="notarget" description="padCMS Back Office">
+    <php function="gethostname" returnProperty="host.machinename" />
+    <property name="phing.config.file" value="./deploy/config.properties" />
+    <!--
+        Prepare directory structure needed for project
+    -->
+    <target name="init-fs">
+        <echo msg="Creating project directory structure" />
+
+        <available file="${phing.config.file}" property="env.ready" />
+        <fail unless="env.ready" message="Can't load ${phing.config.file}. You must call phing make-config before call this target" />
+        <property file="${phing.config.file}" />
+
+        <property name="locations" value="
+            application/cache,
+            application/log,
+            application/cache/smarty,
+            application/temp,
+            front/content,
+            front/export,
+            front/resources" />
+        <foreach list="${locations}" param="dir" target="mkdir-and-chmod" />
+    </target>
+
+    <target name="mkdir-and-chmod">
+        <mkdir dir="${application.startdir}/${dir}" />
+        <chmod file="${application.startdir}/${dir}" mode="0777" />
+    </target>
+
+    <!--
+        Creates the configuration file in ./scheme/config.properties, which contains info needed for phing targets
+        When user called this target, he should specify database credentials which project should use
+    -->
+    <target name="init">
+        <phingcall target="build-app-config" />
+        <phingcall target="init-fs" />
+    </target>
+
+    <target name="build-app-config">
+        <echo msg="Installing config into ${phing.config.file} file" />
+        <propertyprompt propertyName="Common.BaseDomain" defaultValue="padcms.loc"
+            promptText="Enter base domain name" />
+
+        <propertyprompt propertyName="Db.Primary.Host" defaultValue="127.0.0.1"
+            promptText="Enter primary mysql server name" />
+        <propertyprompt propertyName="Db.Primary.Port" defaultValue="3306"
+            promptText="Enter primary mysql server port" />
+        <propertyprompt propertyName="Db.Primary.Name" defaultValue="padcms"
+            promptText="Enter primary database name" />
+        <propertyprompt propertyName="Db.Primary.User" defaultValue="root"
+            promptText="Enter primary mysql user" />
+        <propertyprompt propertyName="Db.Primary.Password" defaultValue=""
+            promptText="Enter primary mysql database password" />
+
+        <propertyprompt propertyName="Db.Test.Host" defaultValue="127.0.0.1"
+            promptText="Enter test mysql server name" />
+        <propertyprompt propertyName="Db.Test.Port" defaultValue="3306"
+            promptText="Enter test mysql server port" />
+        <propertyprompt propertyName="Db.Test.Name" defaultValue="padcms_test"
+            promptText="Enter test database name" />
+        <propertyprompt propertyName="Db.Test.User" defaultValue="root"
+            promptText="Enter test mysql user" />
+        <propertyprompt propertyName="Db.Test.Password" defaultValue=""
+            promptText="Enter test mysql database password" />
+
+        <propertyprompt propertyName="Bin.PdfDrawLocation" defaultValue="/usr/bin/pdfdraw"
+            promptText="Enter location for pdfdraw tool from MuPDF library" />
+        <propertyprompt propertyName="Bin.PdfToTextLocation" defaultValue="/usr/bin/pdftotext"
+            promptText="Enter location for pdftotext tool from Poppler library" />
+        <propertyprompt propertyName="Bin.PdfInfoLocation" defaultValue="/usr/bin/pdfinfo"
+            promptText="Enter location for pdfinfo tool from Poppler library" />
+        <exportproperties targetfile="${phing.config.file}" />
+
+        <copy file="./application/configs/application_sample.ini" tofile="./application/configs/application.ini" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+
+                    <token key="DbPrimaryHost" value="${Db.Primary.Host}" />
+                    <token key="DbPrimaryPort" value="${Db.Primary.Port}" />
+                    <token key="DbPrimaryName" value="${Db.Primary.Name}" />
+                    <token key="DbPrimaryUser" value="${Db.Primary.User}" />
+                    <token key="DbPrimaryPassword" value="${Db.Primary.Password}" />
+
+                    <token key="DbTestHost" value="${Db.Test.Host}" />
+                    <token key="DbTestPort" value="${Db.Test.Port}" />
+                    <token key="DbTestName" value="${Db.Test.Name}" />
+                    <token key="DbTestUser" value="${Db.Test.User}" />
+                    <token key="DbTestPassword" value="${Db.Test.Password}" />
+
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <copy file="./application/configs/config_sample.ini" tofile="./application/configs/config.ini" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+                    <token key="CommonBaseDomain" value="${Common.BaseDomain}" />
+
+                    <token key="BinPdfDrawLocation" value="${Bin.PdfDrawLocation}" />
+                    <token key="BinPdfToTextLocation" value="${Bin.PdfToTextLocation}" />
+                    <token key="BinPdfInfoLocation" value="${Bin.PdfInfoLocation}" />
+
+                </replacetokens>
+            </filterchain>
+        </copy>
+    </target>
+
+</project>

@@ -1,0 +1,38 @@
+page:
+  -
+    id: 1
+    revision: 1
+    template: 1
+    user: 1
+    title: Root page
+    #Bits (LRTB)  b0100 = 4
+    connections: 4
+  -
+    id: 2
+    revision: 1
+    template: 1
+    user: 1
+    title: right connected to page 1
+    #Bits (LRTB)  b1000 = 8
+    connections: 8
+
+page_imposition:
+  -
+    id: 1
+    page: 1
+    is_linked_to: 2
+    link_type: right
+
+revision:
+  -
+    id: 1
+    title: Test revision
+
+template:
+  -
+    id: 1
+    title: Test template
+    has_right_connector: 1
+    has_left_connector: 1
+    has_top_connector: 1
+    has_bottom_connector: 1

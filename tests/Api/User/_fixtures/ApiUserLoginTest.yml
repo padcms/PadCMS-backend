@@ -1,0 +1,18 @@
+client:
+  -
+    id: 1
+    title: Test client
+    deleted: no
+
+user:
+  -
+    id: 1
+    first_name: John
+    last_name: Doe
+    login : john
+    # md5(password)
+    password: 5f4dcc3b5aa765d61d8327deb882cf99
+    email: john@mail.com
+    is_admin: 0
+    client: 1
+    deleted: no

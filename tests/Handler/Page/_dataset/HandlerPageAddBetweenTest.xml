@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <page id="1" title="Root page" revision="1" user="1" template="1" connections="4" />
+    <page id="2" title="right connected to page 1" revision="1" user="1" template="1" connections="8" />
+    <page id="3" title="right connected to page 1" revision="1" user="1" template="1" connections="12" />
+    <page_imposition page="1"  is_linked_to="3" link_type="right" />
+    <page_imposition page="3"  is_linked_to="2" link_type="right" />
+</dataset>

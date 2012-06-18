@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PadCMS" basedir="." default="build">
+
+    <!-- Sets the DSTAMP, TSTAMP and TODAY properties -->
+    <tstamp/>
+
+    <!-- Load our configuration -->
+    <property file="./build.properties" />
+
+    <!-- create our migration task -->
+    <target name="migrate" description="Database Migrations">
+
+        <!-- load the dbdeploy task -->
+        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+
+        <!-- these two filenames will contain the generated SQL to do the deploy and roll it back-->
+        <property name="build.dbdeploy.deployfile" value="../application/cache/dbdeploy/deploy-${DSTAMP}${TSTAMP}.sql" />
+        <property name="build.dbdeploy.undofile" value="../application/cache/dbdeploy/undo-${DSTAMP}${TSTAMP}.sql" />
+
+        <mkdir dir="../application/cache/dbdeploy" />
+        <chmod file="../application/cache/dbdeploy" mode="0777" />
+
+        <!-- generate the deployment scripts -->
+        <dbdeploy
+            url="mysql:host=${db.host};dbname=${db.name}"
+            userid="${db.user}"
+            password="${db.pass}"
+            dir="./db/deltas"
+            outputfile="./${build.dbdeploy.deployfile}"
+            undooutputfile="./${build.dbdeploy.undofile}" />
+
+        <!-- execute the SQL - Use mysql command line to avoid trouble with large files or many statements and PDO -->
+        <exec
+            command="${progs.mysql} -h${db.host} -u${db.user} -p${db.pass} ${db.name} &lt; ${build.dbdeploy.deployfile}"
+            dir="./"
+            checkreturn="true" />
+    </target>
+</project>

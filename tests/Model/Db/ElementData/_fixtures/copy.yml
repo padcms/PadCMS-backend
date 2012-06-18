@@ -1,0 +1,41 @@
+application:
+  -
+    id: 1
+
+issue:
+  -
+    id: 1
+    title: Test issue
+    application: 1
+    orientation: vertical
+
+revision:
+  -
+    id: 1
+    issue: 1
+    title: Test revision
+
+page:
+  -
+    id: 1
+    revision: 1
+    user: 1
+    title: test_page
+
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: resource
+    value: file.png
+  -
+    id: 2
+    id_element: 1
+    key_name: additional_key
+    value: additional_file.png

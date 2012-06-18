@@ -1,0 +1,6 @@
+page_imposition:
+  -
+    id: 1
+    page: 1
+    is_linked_to: 2
+    link_type: left

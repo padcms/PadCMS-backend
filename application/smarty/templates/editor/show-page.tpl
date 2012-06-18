@@ -1,0 +1,1 @@
+{include file="includes/editor/page.tpl" page=$page}

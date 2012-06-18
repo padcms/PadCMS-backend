@@ -1,0 +1,72 @@
+#colorSelector {
+	position: relative;
+	width: 36px;
+	height: 36px;
+	background: url(../images/colorpicker/select.png);
+	display: inline;
+}
+#colorSelector div {
+	position: absolute;
+	left: 3px;
+	top: 2px;
+	width: 24px;
+	height: 24px;
+	background: url(../images/colorpicker/select.png) center;
+}
+
+@-moz-document url-prefix() {
+	#colorSelector div  {
+		top: 13px;
+	}
+}
+
+#hupload, input.hupload {
+	position: absolute;
+	left: 140px;
+	width: 0px;
+	height: 25px;
+	padding: 0;
+}
+.customFile {
+	width: 219px;
+	margin-left: -140px;
+	cursor: default;
+	height: 25px;
+	z-index: 2;
+	filter: alpha(opacity: 0);
+	opacity: 0;
+}
+.fakeButton {
+	position: absolute;
+	z-index: 1;
+	width: 117px;
+	height: 25px;
+	background: url(../images/upload.png) no-repeat left top;
+	float: left;
+}
+
+.blocker {
+	position: relative;
+	z-index: 3;
+	width: 150px;
+	height: 25px;
+	background: url(images/transparent.gif);
+}
+#FileName {
+	position: absolute;
+	height: 15px;
+	margin-left: 90px;
+	font-family: Verdana;
+	font-size: 8pt;
+	color: Gray;
+	margin-top: 2px;
+	padding-top: 1px;
+	padding-left: 19px;
+}
+
+.selectBox-dropdown .selectBox-label {
+    padding: 5px 8px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+}

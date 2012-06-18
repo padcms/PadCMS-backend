@@ -1,0 +1,116 @@
+client:
+  -
+    id: 1
+    title: Test client
+    deleted: no
+
+user:
+  -
+    id: 1
+    first_name: John
+    last_name: Doe
+    login : john
+    # md5(password)
+    password: 5f4dcc3b5aa765d61d8327deb882cf99
+    email: john@mail.com
+    is_admin: 0
+    client: 1
+    deleted: no
+
+state:
+  -
+    id: 1
+    title: work-in-progress
+
+application:
+  -
+    id: 1
+    title: Title
+    description: Description
+    product_id: com.padcms.application_1
+    client: 1
+    nm_twitter_ios: Twitter message
+    nm_fbook_ios: Facebook message
+    nt_email_ios: Email title
+    nm_email_ios: Email message
+
+issue:
+  -
+    id: 1
+    title: Title
+    number: 1
+    state: 1
+    product_id: com.padcms.issue_1
+    application: 1
+    issue_color: d9411a
+    static_pdf_mode: 2pages
+
+revision:
+  -
+    id: 1
+    title: Title
+    state: 1
+    issue: 1
+    user: 1
+    created: '2012-04-05 15:47:03'
+
+page:
+  -
+    id: 1
+    revision: 1
+    title: test_page
+    template: 7
+
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+  -
+    id: 2
+    page: 1
+    field: 2
+
+element_data:
+  -
+    id: 1
+    id_element: 1
+    key_name: resource
+    value: resource.png
+  -
+    id: 2
+    id_element: 2
+    key_name: resource
+    value: resource.mp4
+
+field_type:
+  -
+    id: 1
+    title: body
+  -
+    id: 2
+    title: video
+
+field:
+  -
+    id: 1
+    template: 7
+    field_type: 1
+    name: body
+  -
+    id: 2
+    template: 7
+    field_type: 2
+    name: video
+
+issue_help_page:
+  -
+    id: 1
+    id_issue: 1
+    type: horizontal
+    name: horizontal.pdf
+  -
+    id: 2
+    id_issue: 1
+    type: vertical
+    name: vertical.pdf

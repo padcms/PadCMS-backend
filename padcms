@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @file
+ * Cli script
+ *
+ * LICENSE
+ *
+ * $DOXY_LICENSE
+ *
+ * @author $DOXY_AUTHOR
+ * @version $DOXY_VERSION
+ */
+
+/**
+ * @ingroup AM_Cli
+ */
+
+// Define path to application directory
+defined('APPLICATION_PATH') || define('APPLICATION_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'application'));
+//Define path to the public directory
+define('SITE_PATH', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'front'));
+// Define application environment
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
+
+define('APPLICATION_PREFIX',  'cli');
+
+// Ensure include/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'include'),
+    get_include_path(),
+)));
+
+// Define application environment
+// Create application, bootstrap, and run
+require_once 'Zend/Application.php';
+$oApplication = new Zend_Application(
+    APPLICATION_PREFIX . '_' . APPLICATION_ENV,
+    APPLICATION_PATH . '/configs/application.ini'
+);
+
+$oApplication->bootstrap()
+             ->run();

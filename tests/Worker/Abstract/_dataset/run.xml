@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <task id="1" task_type_id="1" status="run" options='a:1:{s:2:"do";s:4:"fire";}' />
+</dataset>

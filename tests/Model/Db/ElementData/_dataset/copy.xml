@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <element_data id_element="1" key_name="resource" value="file.png" />
+    <element_data id_element="1" key_name="additional_key" value="additional_file.png" />
+    <element_data id_element="2" key_name="additional_key" value="additional_file.png" />
+    <element_data id_element="2" key_name="resource" value="file.png" />
+</dataset>

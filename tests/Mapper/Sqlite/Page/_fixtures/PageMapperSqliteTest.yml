@@ -1,0 +1,9 @@
+page:
+  -
+    id: 1
+    revision: 1
+    title: Title
+    template: 1
+    machine_name: Machine name
+    pdf_page: 1
+    updated: 2011-11-23 15:00:00

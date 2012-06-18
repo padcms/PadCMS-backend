@@ -1,0 +1,24 @@
+term:
+  -
+    id: 1
+    title: Test term
+    description: Test description
+    color: ffffff
+    thumb_stripe: file_name_stripe.png
+    thumb_summary: file_name_summary.png
+
+page:
+  -
+    id: 1
+    revision: 1
+    title: Title
+    template: 1
+    machine_name: Machine name
+    pdf_page: 1
+    updated: 2011-11-23 15:00:00
+
+term_page:
+  -
+    id: 1
+    term: 1
+    page: 1

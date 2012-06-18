@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <task id="1" task_type_id="1" status="error" options='a:3:{s:2:"do";s:6:"finish";s:10:"error_code";i:500;s:13:"error_message";s:15:"Exception given";}' />
+</dataset>

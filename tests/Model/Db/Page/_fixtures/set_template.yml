@@ -1,0 +1,82 @@
+application:
+  -
+    id: 1
+
+issue:
+  -
+    id: 1
+    title: Test issue
+    application: 1
+
+revision:
+  -
+    id: 1
+    issue: 1
+    title: Test revision
+    updated: 2010-04-24 17:15:23
+
+page:
+  -
+    id: 1
+    revision: 1
+    template: 1
+    title: Root page
+    updated: 2010-04-24 17:15:23
+
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+  -
+    id: 2
+    page: 1
+    field: 2
+
+element_data:
+  -
+    id: 1
+    id_element: 2
+    key_name: resource
+    value: test.png
+  -
+    id: 2
+    id_element: 2
+    key_name: resource
+    value: test.png
+
+page_background:
+  -
+    id: 2
+    type: element
+    page: 1
+
+template:
+  -
+    id: 1
+    title: old_template
+  -
+    id: 2
+    title: new_template
+
+field:
+  -
+    id: 1
+    field_type: 1
+    template: 1
+  -
+    id: 2
+    field_type: 2
+    template: 1
+  -
+    id: 3
+    field_type: 1
+    template: 2
+
+field_type:
+  -
+    id: 1
+    title: body
+  -
+    id: 2
+    title: popup

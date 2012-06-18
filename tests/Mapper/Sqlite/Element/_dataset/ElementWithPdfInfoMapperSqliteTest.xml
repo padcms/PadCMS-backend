@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <element id="1" page_id="1" element_type_name="body" weight="100" content_text="AVEC LES DOIGTS" />
+    <element_data element_id="1" type="width"  value="768" position_id="0" />
+    <element_data element_id="1" type="height"  value="1024" position_id="0" />
+    <element_data element_id="1" type="active_zone"  value="local://navigation/100_tweets" position_id="1" />
+    <element_data_position id="1" start_x="508.0" end_x="734.5" start_y="614.604" end_y="388.104" />
+</dataset>

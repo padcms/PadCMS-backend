@@ -1,0 +1,1 @@
+<textarea name="{$control.name}" id="{$control.name}"  rows="{$_rows}" cols="{$_cols}"{if isset($_style)} style="{$_style|escape:"quotes"}"{/if}{if isset($_class)} class="{$_class}"{/if}{if isset($_readonly)} readonly{/if}{if isset($_disabled)} disabled{/if}{if isset($_additional)}{$_additional}{/if}>{$control.value|escape}</textarea>
