@@ -1,0 +1,16 @@
+/application/configs/config.ini
+/application/configs/application.ini
+
+/application/certificates/*
+/application/log/*
+/application/temp/*
+/application/cache/*
+
+/front/content/*
+/front/export/*
+/front/resources/*
+
+/nbproject/*
+
+/deploy/build.properties
+/deploy/config.properties
