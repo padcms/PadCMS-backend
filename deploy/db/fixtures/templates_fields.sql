@@ -85,8 +85,10 @@ INSERT INTO `field` (`id`, `name`, `description`, `field_type`, `min`, `max`, `m
 (22, 'video', NULL, 3, 0, 0, 0, 0, 0, 9, 1),
 (23, 'overlay', NULL, 8, 0, 0, 0, 0, 0, 9, 1),
 
-(27, 'body', NULL, 1, 0, 0, 0, 0, 0, 10, 1),
-(28, 'background', NULL, 4, 0, 0, 0, 0, 0, 10, 1),
+-- Touchable article with fixed illustration (A006)
+(27, 'body', NULL, 1, 0, 0, 0, 0, 1, 10, 1),
+(28, 'background', NULL, 4, 0, 0, 0, 0, 2, 10, 1),
+(60, 'video', NULL, 3, 0, 0, 0, 0, 3, 10, 1),
 
 (29, 'background', NULL, 4, 0, 0, 0, 0, 0, 11, 1),
 (30, 'mini_article', NULL, 6, 0, 0, 0, 0, 0, 11, 1),
