@@ -31,7 +31,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-C license and that you accept its terms.
  *
- * @author $DOXY_AUTHOR
+ * @author Copyright (c) PadCMS (http://www.padcms.net)
  * @version $DOXY_VERSION
  */
 // Define path to application directory

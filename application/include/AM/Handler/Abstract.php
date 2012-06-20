@@ -7,7 +7,7 @@
  *
  * This source file is subject to the new BSD license
  *
- * @author $DOXY_AUTHOR
+ * @author Copyright (c) PadCMS (http://www.padcms.net)
  * @version $DOXY_VERSION
  */
 
