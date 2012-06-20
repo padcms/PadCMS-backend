@@ -45,18 +45,6 @@
  */
 class AM_Acl extends Zend_Acl
 {
-
-    const RESOURCE_APP               = 'application';
-    const RESOURCE_ISSUE             = 'issue';
-    const RESOURCE_REV               = 'revision';
-    const RESOURCE_PAGE              = 'page';
-    const RESOURCE_ELEMENT           = 'element';
-    const RESOURCE_USER              = 'user';
-    const RESOURCE_TOC               = 'toc';
-    const RESOURCE_EXPORT_REVISION   = 'exportRevision';
-    const RESOURCE_EXPORT_PAGE       = 'exportPage';
-    const RESOURCE_EXPORT_FOR_DEVICE = 'exportForDevice';
-
     public function __construct()
     {
         /* Roles */
@@ -71,7 +59,6 @@ class AM_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('admin'));
         $this->add(new Zend_Acl_Resource('auth'));
         $this->add(new Zend_Acl_Resource('error'));
-        $this->add(new Zend_Acl_Resource('cron'));
         $this->add(new Zend_Acl_Resource('index'));
         $this->add(new Zend_Acl_Resource('issue'));
         $this->add(new Zend_Acl_Resource('page'));
@@ -83,9 +70,6 @@ class AM_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('java-script'));
         $this->add(new Zend_Acl_Resource('page-map'));
         $this->add(new Zend_Acl_Resource('export'));
-        $this->add(new Zend_Acl_Resource('import'));
-        $this->add(new Zend_Acl_Resource('statistic'));
-        $this->add(new Zend_Acl_Resource('settings'));
         $this->add(new Zend_Acl_Resource('devices'));
 
         $this->add(new Zend_Acl_Resource('field'));
@@ -113,11 +97,7 @@ class AM_Acl extends Zend_Acl
         $this->allow(null, 'test');
 
         $this->allow(null, 'export');
-        $this->allow(null, 'import');
 
-        $this->allow('guest', 'application', 'ping');
-        $this->allow('guest', 'client', 'get-issues');
-        $this->allow('guest', 'devices', 'is-valid');
         $this->allow('guest', 'issue', 'download');
 
         $this->allow('admin');
@@ -142,8 +122,6 @@ class AM_Acl extends Zend_Acl
 
         $this->allow('member', 'user', 'index');
         $this->allow('member', 'user', 'show');
-
-        $this->allow('member', 'statistic');
         $this->allow('member', 'application');
         $this->allow('member', 'index');
         $this->allow('member', 'editor');

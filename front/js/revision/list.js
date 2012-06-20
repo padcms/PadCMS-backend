@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) PadCMS (http://www.padcms.net)
+ *
+ * Licensed under the CeCILL-C license
+ * http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
+ * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
+ */
 $(document).ready(function() {
   $('h3.title-inprogress a').click(function() {
       $('#revision-list-actions').dialog()
@@ -54,7 +61,7 @@ $(document).ready(function() {
               + $('#revision-list-actions').dialog('option', 'revision')
               + "/iid/" + $('#revision-list-actions').dialog('option', 'issue');
   });
-  
+
   $('#revision-list-actions').dialog({
       title: translate('select_an_action'),
       modal: true,
