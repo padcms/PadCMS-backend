@@ -32,6 +32,8 @@ Installation
         phing init
 * Run build task to create the necessary tables in databases
 
-        cd /path/to/padcms
         ./padcms build
         APPLICATION_ENV=test ./padcms build
+* Run test
+
+        ./padcms phpunitall
