@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) PadCMS (http://www.padcms.net)
+ *
+ * Licensed under the CeCILL-C license
+ * http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
+ * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
+ */
 window.taxonomy = {
 
     bindDeleteTag: function() {
@@ -51,7 +58,7 @@ window.taxonomy = {
         });
         this.bindDeleteTag();
     },
-    
+
     onSaveTitle: function() {
         var title = $('#page-title-input').val().trim();
         if (!title) return;

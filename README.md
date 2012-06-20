@@ -34,6 +34,6 @@ Installation
 
         ./padcms build
         APPLICATION_ENV=test ./padcms build
-* Run test
+* Run tests
 
         ./padcms phpunitall

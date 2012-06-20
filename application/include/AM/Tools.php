@@ -99,7 +99,7 @@ class AM_Tools extends Volcano_Tools
      */
     public static function clearContent($sType = null, $iId = null, $sFileName = null)
     {
-        $sBasePath = Zend_Registry::get("config")->content->base;
+        $sBasePath = Zend_Registry::get('config')->content->base;
 
         $sSplittedIdPath = is_null($iId) ? null : trim(AM_Tools_String::generatePathFromId($iId), DIRECTORY_SEPARATOR);
 
@@ -138,7 +138,7 @@ class AM_Tools extends Volcano_Tools
      */
     public static function getContentPath($sType, $iId = null)
     {
-        $sPath = Zend_Registry::get("config")->content->base;
+        $sPath = Zend_Registry::get('config')->content->base;
         $sPath .= DIRECTORY_SEPARATOR . $sType;
         if (!is_null($iId)) {
             $sPath .= DIRECTORY_SEPARATOR . trim(AM_Tools_String::generatePathFromId($iId), DIRECTORY_SEPARATOR);
