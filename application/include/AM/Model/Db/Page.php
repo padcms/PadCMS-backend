@@ -525,7 +525,10 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
                         ($oPageTemplate->hasConnector(self::LINK_BOTTOM)? !$oTemplate->hasConnector(self::LINK_BOTTOM) : false) ||
                         ($oPageTemplate->hasConnector(self::LINK_RIGHT) ? !$oTemplate->hasConnector(self::LINK_RIGHT) : false) ||
                         ($oPageTemplate->hasConnector(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false) ||
-                        ($oTemplate->id == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE && $this->getOrientation() == AM_Model_Db_Issue::ORIENTATION_VERTICAL && $this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE);
+                        ($oTemplate->id == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE
+                            && $this->getOrientation() == AM_Model_Db_Issue::ORIENTATION_VERTICAL
+                            && ($this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE && !empty($this->getIssue()->static_pdf_mode))
+                        );
 
             $aResult[] = array(
                 'id'          => $oTemplate->id,
@@ -570,7 +573,7 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
             $bIsDisabled = !$oTemplate->hasConnector($this->reverseLinkType($sLinkType))
                     || ($oTemplate->id == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE
                         && $this->getOrientation() == AM_Model_Db_Issue::ORIENTATION_VERTICAL
-                        && $this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE);
+                        && ($this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE && !empty($this->getIssue()->static_pdf_mode)));
 
             $aResult[] = array(
                 'id'          => $oTemplate->id,

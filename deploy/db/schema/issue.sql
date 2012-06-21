@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `issue` (
   `user` int(10) NOT NULL,
   `type` enum('simple', 'enriched') DEFAULT 'simple',
   `orientation` enum('horizontal', 'vertical') DEFAULT 'vertical',
-  `static_pdf_mode` enum('issue','page','2pages','none') DEFAULT NULL,
+  `static_pdf_mode` enum('issue','page','2pages','none') DEFAULT 'none',
   `product_id` varchar(255) DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime DEFAULT NULL,

@@ -693,7 +693,6 @@ var pageMap = {
         window.fieldSlide.init();
         window.fieldBody.init();
         window.fieldMiniArt.init();
-        window.fieldOverlay.init();
         window.fieldScrollPane.init();
         window.fieldVideo.init();
         window.fieldHtml.init();
