@@ -49,7 +49,6 @@ class AM_Model_Db_FieldType extends AM_Model_Db_Abstract
     const TYPE_BACKGROUND     = 'background';
     const TYPE_SCROLLING_PANE = 'scrolling_pane';
     const TYPE_SLIDE          = 'slide';
-    const TYPE_OVERLAY        = 'overlay';
     const TYPE_SOUND          = 'sound';
     const TYPE_HTML           = 'html';
     const TYPE_ADVERT         = 'advert';

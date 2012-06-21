@@ -78,7 +78,6 @@ class AM_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('field-body'));
         $this->add(new Zend_Acl_Resource('field-gallery'));
         $this->add(new Zend_Acl_Resource('field-mini-art'));
-        $this->add(new Zend_Acl_Resource('field-overlay'));
         $this->add(new Zend_Acl_Resource('field-scrolling-pane'));
         $this->add(new Zend_Acl_Resource('field-video'));
         $this->add(new Zend_Acl_Resource('field-sound'));
@@ -108,7 +107,6 @@ class AM_Acl extends Zend_Acl
         $this->allow('member', 'field-body');
         $this->allow('member', 'field-gallery');
         $this->allow('member', 'field-mini-art');
-        $this->allow('member', 'field-overlay');
         $this->allow('member', 'field-scrolling-pane');
         $this->allow('member', 'field-video');
         $this->allow('member', 'field-sound');

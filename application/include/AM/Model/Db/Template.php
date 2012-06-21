@@ -50,7 +50,6 @@ class AM_Model_Db_Template extends AM_Model_Db_Abstract
     const TPL_SLIDESHOW                               = 6;
     const TPL_COVER_PAGE                              = 7;
     const TPL_SLIDERS_BASED_MINI_ARTICLES_VERTICAL    = 8;
-    const TPL_ARTICLE_WITH_OVERLAY                    = 9;
     const TPL_FIXED_ILLUSTRATION_ARTICLE_TOUCHABLE    = 10;
     const TPL_INTERACTIVES_BULLETS                    = 11;
     const TPL_SLIDESHOW_PAGE                          = 12;

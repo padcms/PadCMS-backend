@@ -34,7 +34,6 @@
 <script type="text/javascript" src="{$baseUrl}/js/field/body.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/gallery.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/miniart.js"></script>
-<script type="text/javascript" src="{$baseUrl}/js/field/overlay.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/scrollpane.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/slide.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/video.js"></script>
