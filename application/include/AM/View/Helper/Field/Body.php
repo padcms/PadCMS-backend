@@ -52,7 +52,8 @@ class AM_View_Helper_Field_Body extends AM_View_Helper_Field
             $aExtraDataItem = array(
                 AM_Model_Db_Element_Data_Body::DATA_KEY_HAS_PHOTO_GALLERY_LINK,
                 AM_Model_Db_Element_Data_Body::DATA_KEY_TOP,
-                AM_Model_Db_Element_Data_Body::DATA_KEY_SHOW_TOP_LAYER
+                AM_Model_Db_Element_Data_Body::DATA_KEY_SHOW_TOP_LAYER,
+                AM_Model_Db_Element_Data_Body::DATA_KEY_SHOW_GALLERY_ON_ROTATE
             );
 
             foreach ($aExtraDataItem as $sItem) {

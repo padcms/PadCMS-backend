@@ -4,7 +4,6 @@ INSERT INTO `template` (`id`, `title`, `description`, `has_right_connector`, `ha
 (1, 'basic_article', 'Basic Article (A001)', 1, 1, 0, 0, 1, 1),
 (3, 'simple_page', 'Simple page (P001)', 1, 1, 1, 1, 1, 1),
 
-(2, 'fixed_illustration_article', 'Article with fixed illustration  (A002)', 1, 1, 0, 0, 1, 2),
 (10, 'fixed_illustration_article_touchable', 'Touchable article with fixed illustration (A006)', 1, 1, 1, 1, 1, 2),
 
 (5, 'sliders_based_mini_articles_horizontal', 'Sliders based mini-articles (horizontal)(A003)', 1, 1, 1, 1, 1, 3),
@@ -15,7 +14,6 @@ INSERT INTO `template` (`id`, `title`, `description`, `has_right_connector`, `ha
 (20, 'scrolling_page_horizontal', 'Scrolling page (horizontal) (P005)', 1, 1, 1, 1, 1, 4),
 
 (6, 'slideshow', 'Slideshow  (S001)', 1, 1, 1, 1, 1, 5),
-(12, 'slideshow_page', 'Slideshow page (S002)', 1, 1, 1, 1, 1, 5),
 
 (11, 'interactives_bullets', 'Interactives bullets (A007)', 1, 1, 1, 1, 1, 6),
 (16, 'flash_bullet_interactive', 'Interactive bullet with flash (A010)', 1, 1, 1, 1, 1, 6),
@@ -47,98 +45,87 @@ INSERT INTO `field_type` (`id`, `title`) VALUES
 (16, '3d')
 ;
 
-INSERT INTO `field` (`id`, `name`, `description`, `field_type`, `min`, `max`, `max_width`, `max_height`, `weight`, `template`, `engine_version`) VALUES
+INSERT INTO `field` (`name`, `description`, `field_type`, `min`, `max`, `max_width`, `max_height`, `weight`, `template`, `engine_version`) VALUES
 -- Basic Article (A001)
-(12, 'video', NULL, 3, 0, 0, 0, 0, 3, 1, 1),
-(3, 'gallery', NULL, 2, 0, 0, 0, 0, 2, 1, 1),
-(9, 'body', NULL, 1, 0, 0, 0, 0, 1, 1, 1),
-
--- Article with fixed illustration  (A002)
-(11, 'gallery', NULL, 2, 0, 0, 0, 0, 2, 2, 1),
-(6, 'background', NULL, 4, 0, 0, 0, 0, 4, 2, 1),
-(10, 'body', NULL, 1, 0, 0, 0, 0, 1, 2, 1),
-(13, 'video', NULL, 3, 0, 0, 0, 0, 3, 2, 1),
+('video', NULL, 3, 0, 0, 0, 0, 3, 1, 1),
+('gallery', NULL, 2, 0, 0, 0, 0, 2, 1, 1),
+('body', NULL, 1, 0, 0, 0, 0, 1, 1, 1),
 
 -- Simple page (P001)
-(1, 'body', NULL, 1, 0, 0, 0, 0, 1, 3, 1),
-(5, 'video', NULL, 3, 0, 0, 0, 0, 3, 3, 1),
+('body', NULL, 1, 0, 0, 0, 0, 1, 3, 1),
+('video', NULL, 3, 0, 0, 0, 0, 3, 3, 1),
 
 -- Scrolling page (vertical) (P002)
-(7, 'background', NULL, 4, 0, 0, 0, 0, 4, 4, 1),
-(8, 'scrolling_pane', NULL, 5, 0, 0, 0, 0, 5, 4, 1),
-(14, 'video', NULL, 3, 0, 0, 0, 0, 3, 4, 1),
-(25, 'gallery', NULL, 2, 0, 0, 0, 0, 5, 4, 1),
+('background', NULL, 4, 0, 0, 0, 0, 4, 4, 1),
+('scrolling_pane', NULL, 5, 0, 0, 0, 0, 5, 4, 1),
+('video', NULL, 3, 0, 0, 0, 0, 3, 4, 1),
+('gallery', NULL, 2, 0, 0, 0, 0, 5, 4, 1),
 
 -- Sliders based mini-articles (horizontal)(A003)
-(16, 'mini_article', NULL, 6, 0, 0, 0, 0, 6, 5, 1),
-(31, 'background', NULL, 4, 0, 0, 0, 0, 5, 5, 1),
+('mini_article', NULL, 6, 0, 0, 0, 0, 6, 5, 1),
+('background', NULL, 4, 0, 0, 0, 0, 5, 5, 1),
 
 -- Slideshow  (S001)
-(15, 'background', NULL, 4, 0, 0, 0, 0, 4, 6, 1),
-(17, 'slide', NULL, 7, 0, 0, 0, 0, 7, 6, 1),
+('background', NULL, 4, 0, 0, 0, 0, 4, 6, 1),
+('slide', NULL, 7, 0, 0, 0, 0, 7, 6, 1),
 
 -- Cover page (P003)
-(18, 'body', NULL, 1, 0, 0, 0, 0, 1, 7, 1),
-(19, 'video', NULL, 3, 0, 0, 0, 0, 4, 7, 1),
-(26, 'background', NULL, 4, 0, 0, 0, 0, 2, 7, 1),
-(42, 'advert', NULL, 11, 0, 0, 0, 0, 3, 7, 1),
+('body', NULL, 1, 0, 0, 0, 0, 1, 7, 1),
+('video', NULL, 3, 0, 0, 0, 0, 4, 7, 1),
+('background', NULL, 4, 0, 0, 0, 0, 2, 7, 1),
+('advert', NULL, 11, 0, 0, 0, 0, 3, 7, 1),
 
 -- Sliders based mini-articles (vertical) (A004)
-(20, 'mini_article', NULL, 6, 0, 0, 0, 0, 6, 8, 1),
-(32, 'background', NULL, 4, 0, 0, 0, 0, 5, 8, 1),
+('mini_article', NULL, 6, 0, 0, 0, 0, 6, 8, 1),
+('background', NULL, 4, 0, 0, 0, 0, 5, 8, 1),
 
 -- Touchable article with fixed illustration (A006)
-(27, 'body', NULL, 1, 0, 0, 0, 0, 1, 10, 1),
-(28, 'background', NULL, 4, 0, 0, 0, 0, 2, 10, 1),
-(60, 'video', NULL, 3, 0, 0, 0, 0, 3, 10, 1),
+('body', NULL, 1, 0, 0, 0, 0, 1, 10, 1),
+('background', NULL, 4, 0, 0, 0, 0, 2, 10, 1),
+('gallery', NULL, 2, 0, 0, 0, 0, 3, 10, 1),
+('video', NULL, 3, 0, 0, 0, 0, 4, 10, 1),
 
 -- Interactives bullets (A007)
-(29, 'background', NULL, 4, 0, 0, 0, 0, 0, 11, 1),
-(30, 'mini_article', NULL, 6, 0, 0, 0, 0, 0, 11, 1),
-
--- Slideshow page (S002)
-(33, 'background', NULL, 4, 0, 0, 0, 0, 2, 12, 1),
-(34, 'body', NULL, 1, 0, 0, 0, 0, 2, 12, 1),
-(35, 'video', NULL, 3, 0, 0, 0, 0, 3, 12, 1),
-(36, 'sound', NULL, 9, 0, 0, 0, 0, 4, 12, 1),
+('background', NULL, 4, 0, 0, 0, 0, 0, 11, 1),
+('mini_article', NULL, 6, 0, 0, 0, 0, 0, 11, 1),
 
 -- Sliders based mini-articles (top) (A008)
-(37, 'mini_article', NULL, 6, 0, 0, 0, 0, 0, 13, 1),
+('mini_article', NULL, 6, 0, 0, 0, 0, 0, 13, 1),
 
 -- HTML page (P004)
-(41, 'body', NULL, 1, 0, 0, 0, 0, 1, 14, 1),
-(40, 'html', NULL, 10, 0, 0, 0, 0, 2, 14, 1),
+('body', NULL, 1, 0, 0, 0, 0, 1, 14, 1),
+('html', NULL, 10, 0, 0, 0, 0, 2, 14, 1),
 
 -- Drag and drop with mini-articles (A009)
-(38, 'background',    NULL, 4, 0, 0, 0, 0, 1, 15, 1),
-(39, 'drag_and_drop', NULL, 12, 0, 0, 0, 0, 2, 15, 1),
+('background',    NULL, 4, 0, 0, 0, 0, 1, 15, 1),
+('drag_and_drop', NULL, 12, 0, 0, 0, 0, 2, 15, 1),
 
 -- Interactive bullet with flash (A010)
-(43, 'body', NULL, 1, 0, 0, 0, 0, 0, 16, 1),
-(44, 'background', NULL, 4, 0, 0, 0, 0, 0, 16, 1),
-(45, 'mini_article', NULL, 6, 0, 0, 0, 0, 0, 16, 1),
+('body', NULL, 1, 0, 0, 0, 0, 0, 16, 1),
+('background', NULL, 4, 0, 0, 0, 0, 0, 16, 1),
+('mini_article', NULL, 6, 0, 0, 0, 0, 0, 16, 1),
 
 -- Gallery with flash bullet interactive (A011)
-(46, 'background', NULL, 4, 0, 0, 0, 0, 1, 17, 1),
-(47, 'scrolling_pane', NULL, 5, 0, 0, 0, 0, 2, 17, 1),
-(48, 'gallery', NULL, 2, 0, 0, 0, 0, 3, 17, 1),
-(49, 'popup', NULL, 13, 0, 0, 0, 0, 4, 17, 1),
-(50, 'video', NULL, 3, 0, 0, 0, 0, 5, 17, 1),
+('background', NULL, 4, 0, 0, 0, 0, 1, 17, 1),
+('scrolling_pane', NULL, 5, 0, 0, 0, 0, 2, 17, 1),
+('gallery', NULL, 2, 0, 0, 0, 0, 3, 17, 1),
+('popup', NULL, 13, 0, 0, 0, 0, 4, 17, 1),
+('video', NULL, 3, 0, 0, 0, 0, 5, 17, 1),
 
 -- HTML5 (A012)
-(51, 'html5', NULL, 14, 0, 0, 0, 0, 1, 18, 1),
+('html5', NULL, 14, 0, 0, 0, 0, 1, 18, 1),
 
 -- Games template
-(52, 'background', NULL, 4, 0, 0, 0, 0, 1, 19, 1),
-(53, 'games', NULL, 15, 0, 0, 0, 0, 1, 19, 1),
+('background', NULL, 4, 0, 0, 0, 0, 1, 19, 1),
+('games', NULL, 15, 0, 0, 0, 0, 1, 19, 1),
 
 -- Scrolling page (horizontal) (P005)
-(54, 'background', NULL, 4, 0, 0, 0, 0, 4, 20, 1),
-(55, 'scrolling_pane', NULL, 5, 0, 0, 0, 0, 5, 20, 1),
-(56, 'video', NULL, 3, 0, 0, 0, 0, 3, 20, 1),
-(57, 'gallery', NULL, 2, 0, 0, 0, 0, 5, 20, 1),
+('background', NULL, 4, 0, 0, 0, 0, 4, 20, 1),
+('scrolling_pane', NULL, 5, 0, 0, 0, 0, 5, 20, 1),
+('video', NULL, 3, 0, 0, 0, 0, 3, 20, 1),
+('gallery', NULL, 2, 0, 0, 0, 0, 5, 20, 1),
 
 -- 3D (A014)
-(58, 'background', NULL, 4, 0, 0, 0, 0, 1, 21, 1),
-(59, '3d', NULL, 16, 0, 0, 0, 0, 2, 21, 1)
+('background', NULL, 4, 0, 0, 0, 0, 1, 21, 1),
+('3d', NULL, 16, 0, 0, 0, 0, 2, 21, 1)
 ;

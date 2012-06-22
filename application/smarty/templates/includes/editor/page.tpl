@@ -34,19 +34,17 @@
             <a id="page-machine-name-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
         </div>
 
-        {if $page.showPdfPage}
-            <span class="labe">{'PDF page'|translate}</span>
-            <div class="pdf-page">
-                <div class="form-item-wrapper">
-                    <input id="page-pdf-page-input" value="{$page.pdf_page}" type="text" class="form-text" />
-                </div>
-                <a id="page-pdf-select-btn" href="#" class="cbutton">
-                    <span><span class="ico">{'Select'}</span></span>
-                </a>
-                <a id="page-pdf-page-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
-                <div class="clr"></div>
+        <span class="labe">{'Horizontal page'|translate}</span>
+        <div class="pdf-page">
+            <div class="form-item-wrapper">
+                <input id="page-pdf-page-input" value="{$page.pdf_page}" type="text" class="form-text" />
             </div>
-        {/if}
+            <a id="page-pdf-select-btn" href="#" class="cbutton">
+                <span><span class="ico">{'Select'}</span></span>
+            </a>
+            <a id="page-pdf-page-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
+            <div class="clr"></div>
+        </div>
 
         <span class="labe">{'TOC'|translate}</span>
 

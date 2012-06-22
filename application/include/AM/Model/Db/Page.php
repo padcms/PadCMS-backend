@@ -520,15 +520,10 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
             //Check template compatibility:
             //1) if current template has TOP(LEFT, ...) connector, new template must have same connector
             //2) if current template hasn't TOP(LEFT, ...) connector, new template may have the same or may not
-            //3)) Issue with not NONE horizontal pdf type can't have template TPL_SLIDESHOW_PAGE
             $bIsDisabled = ($oPageTemplate->hasConnector(self::LINK_TOP) ? !$oTemplate->hasConnector(self::LINK_TOP) : false) ||
                         ($oPageTemplate->hasConnector(self::LINK_BOTTOM)? !$oTemplate->hasConnector(self::LINK_BOTTOM) : false) ||
                         ($oPageTemplate->hasConnector(self::LINK_RIGHT) ? !$oTemplate->hasConnector(self::LINK_RIGHT) : false) ||
-                        ($oPageTemplate->hasConnector(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false) ||
-                        ($oTemplate->id == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE
-                            && $this->getOrientation() == AM_Model_Db_Issue::ORIENTATION_VERTICAL
-                            && ($this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE && !empty($this->getIssue()->static_pdf_mode))
-                        );
+                        ($oPageTemplate->hasConnector(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false);
 
             $aResult[] = array(
                 'id'          => $oTemplate->id,
@@ -567,13 +562,8 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
             /** @var $oTemplate AM_Model_Db_Template **/
 
             //Check template compatibility:
-            //1) connected template must have reversed $linkType connector
-            //2) Issue with not NONE horizontal pdf type can't have template TPL_SLIDESHOW_PAGE
-            //3) Issues with horizontal orientation don't have template TPL_SLIDESHOW_PAGE
-            $bIsDisabled = !$oTemplate->hasConnector($this->reverseLinkType($sLinkType))
-                    || ($oTemplate->id == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE
-                        && $this->getOrientation() == AM_Model_Db_Issue::ORIENTATION_VERTICAL
-                        && ($this->getIssue()->static_pdf_mode != AM_Model_Db_Issue::HORISONTAL_MODE_NONE && !empty($this->getIssue()->static_pdf_mode)));
+            // - connected template must have reversed $linkType connector
+            $bIsDisabled = !$oTemplate->hasConnector($this->reverseLinkType($sLinkType));
 
             $aResult[] = array(
                 'id'          => $oTemplate->id,
