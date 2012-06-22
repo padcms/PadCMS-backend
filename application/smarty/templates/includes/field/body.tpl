@@ -75,6 +75,13 @@
         </div>
     </div>
 
+    <div id="edit-show-on-rotate-wrapper" class="form-item">
+        <label>{'Show gallery on rotate'|translate}</label>
+        <div class="checks">
+            <input type="checkbox" onchange="fieldBody.onChangeShowGalleryOnRotate(this);" name="partner" value="" {if isset($field.element) && $field.element.showGalleryOnRotate}checked="checked"{/if} />
+        </div>
+    </div>
+
     {if $template == 'fixed_illustration_article_touchable'}
     <div id="edit-has-photo-wrapper" class="form-item">
         <label>{'Show top layer'|translate}</label>

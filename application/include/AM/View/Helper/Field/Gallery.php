@@ -56,6 +56,17 @@ class AM_View_Helper_Field_Gallery extends AM_View_Helper_Field
                     'gallery' => $iGalleryId
                 );
 
+                $sUniq = '?' . strtotime($oElement->updated);
+
+                $sOverlay = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Gallery::DATA_KEY_OVERLAY);
+                if (false !== $sOverlay) {
+                    $sFileExtension = pathinfo($sOverlay, PATHINFO_EXTENSION);
+
+                    $aElementView['overlay']      = $sOverlay;
+                    $aElementView['overlayUri'] = AM_Tools::getImageUrl('none', 'element', $oElement->id,
+                            AM_Model_Db_Element_Data_Gallery::DATA_KEY_OVERLAY. '.' . $sFileExtension ). $sUniq;
+                }
+
                 $aResourceView = $this->_getResourceViewData($oElement);
                 $aElementView  = array_merge($aElementView, $aResourceView);
 

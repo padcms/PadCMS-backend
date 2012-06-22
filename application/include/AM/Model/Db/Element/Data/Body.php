@@ -43,6 +43,7 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
 {
     const DATA_KEY_TOP                    = 'top';
     const DATA_KEY_HAS_PHOTO_GALLERY_LINK = 'hasPhotoGalleryLink';
+    const DATA_KEY_SHOW_GALLERY_ON_ROTATE     = 'showGalleryOnRotate';
     const DATA_KEY_SHOW_TOP_LAYER         = 'showTopLayer';
 
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('pdf', 'jpg', 'jpeg', 'png', 'zip'));
@@ -76,6 +77,23 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
 
         if ($iValue < 0) {
             throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HAS_PHOTO_GALLERY_LINK));
+        }
+
+        return $iValue;
+    }
+
+    /**
+     * Check showGalleryOnRotate value
+     * @param int $iValue
+     * @return int
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addShowGalleryOnRotate($iValue)
+    {
+        $iValue = intval($iValue);
+
+        if ($iValue < 0) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_SHOW_GALLERY_ON_ROTATE));
         }
 
         return $iValue;

@@ -162,6 +162,12 @@ var fieldBody = {
         context.onSave('hasPhotoGalleryLink', value ? 1 : 0);
     },
 
+    onChangeShowGalleryOnRotate: function(element) {
+        var context = this;
+        var value = $(element).attr('checked');
+        context.onSave('showGalleryOnRotate', value ? 1 : 0);
+    },
+
     onChangeShowTopLayer: function(element) {
         var context = this;
         var value = $(element).attr('checked');

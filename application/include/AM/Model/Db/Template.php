@@ -42,7 +42,6 @@
 class AM_Model_Db_Template extends AM_Model_Db_Abstract
 {
     const TPL_BASIC_ARTICLE                           = 1;
-    const TPL_FIXED_ILLUSTRATION_ARTICLE              = 2;
     const TPL_SIMPLE_PAGE                             = 3;
     const TPL_SCROLLING_PAGE_VERTICAL                 = 4;
     const TPL_SCROLLING_PAGE_HORIZONTAL               = 20;
@@ -52,7 +51,6 @@ class AM_Model_Db_Template extends AM_Model_Db_Abstract
     const TPL_SLIDERS_BASED_MINI_ARTICLES_VERTICAL    = 8;
     const TPL_FIXED_ILLUSTRATION_ARTICLE_TOUCHABLE    = 10;
     const TPL_INTERACTIVES_BULLETS                    = 11;
-    const TPL_SLIDESHOW_PAGE                          = 12;
     const TPL_SLIDERS_BASED_MINI_ARTICLES_TOP         = 13;
     const TPL_HTML_PAGE                               = 14;
     const TPL_DRAG_AND_DROP_PAGE                      = 15;

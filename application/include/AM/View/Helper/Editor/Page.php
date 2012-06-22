@@ -67,7 +67,7 @@ class AM_View_Helper_Editor_Page extends AM_View_Helper_Abstract
 
         $aPageInfo = array_merge($aPageInfo, $this->_oPage->toArray());
 
-        if ($this->_oPage->template == AM_Model_Db_Template::TPL_SLIDESHOW_PAGE) {
+        if ($this->_oPage->getOrientation() == AM_Model_Db_Issue::ORIENTATION_HORIZONTAL) {
             $aPageInfo['showPdfPage'] = false;
         } else {
             $aPageInfo['showPdfPage'] = true;
