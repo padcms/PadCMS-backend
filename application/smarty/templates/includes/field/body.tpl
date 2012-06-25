@@ -41,33 +41,6 @@
 
     </div>
 
-    {if $template != 'fixed_illustration_article'}
-    <div id="edit-top-wrapper" class="form-item">
-        <label>{'Top position'|translate}</label>
-        <div class="form-item-wrapper">
-            <input type="text" class="form-text" value="{if isset($field.element)}{$field.element.top}{/if}" />
-        </div>
-        <a id="page-additional-data-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
-    </div>
-
-    {*<div id="edit-width-wrapper" class="form-item">
-        <label>{'Width'|translate}</label>
-        <div class="form-item-wrapper">
-            <input type="text" class="form-text" value="{$field.element.width}" />
-        </div>
-        <a id="page-additional-data-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
-    </div>*}
-
-    {*<div id="edit-align-wrapper" class="form-item">
-        <label>{'Alignment'|translate}</label>
-        <select onchange="fieldBody.onChangeAlign(this);">
-            <option value="left"  {if $field.element.alignment == 'left'}selected="selected"{/if}>{'Left'|translate}</option>
-            <option value="right" {if $field.element.alignment == 'right'}selected="selected"{/if}>{'Right'|translate}</option>
-        </select>
-    </div>*}
-
-    {/if}
-
     <div id="edit-has-photo-wrapper" class="form-item">
         <label>{'Has photo gallery link'|translate}</label>
         <div class="checks">
@@ -75,18 +48,28 @@
         </div>
     </div>
 
-    <div id="edit-show-on-rotate-wrapper" class="form-item">
-        <label>{'Show gallery on rotate'|translate}</label>
-        <div class="checks">
-            <input type="checkbox" onchange="fieldBody.onChangeShowGalleryOnRotate(this);" name="partner" value="" {if isset($field.element) && $field.element.showGalleryOnRotate}checked="checked"{/if} />
+            {if $template != 'fixed_illustration_article'}
+    <div id="edit-top-wrapper" class="form-item">
+        <label>{'Top position'|translate}</label>
+        <div class="form-item-wrapper">
+            <input type="text" class="form-text" value="{if isset($field.element)}{$field.element.top}{/if}" />
         </div>
+        <a id="page-additional-data-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
     </div>
+    {/if}
 
     {if $template == 'fixed_illustration_article_touchable'}
     <div id="edit-has-photo-wrapper" class="form-item">
         <label>{'Show top layer'|translate}</label>
         <div class="checks">
             <input type="checkbox" onchange="fieldBody.onChangeShowTopLayer(this);" name="partner" value="" {if isset($field.element) && $field.element.showTopLayer}checked="checked"{/if} />
+        </div>
+    </div>
+
+        <div id="edit-show-on-rotate-wrapper" class="form-item">
+        <label>{'Show gallery on rotate'|translate}</label>
+        <div class="checks">
+            <input type="checkbox" onchange="fieldBody.onChangeShowGalleryOnRotate(this);" name="partner" value="" {if isset($field.element) && $field.element.showGalleryOnRotate}checked="checked"{/if} />
         </div>
     </div>
     {/if}

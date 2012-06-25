@@ -287,9 +287,11 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         }
 
         if ($this->controls['type']->getValue() == AM_Model_Db_Issue::VERTICAL_MODE_ENRICHED) {
+            $aUser = $this->actionController->getUser();
+
             $aBind            = array();
             $aBind['state']   = self::STATE_WORK_IN_PROGRESS;
-            $aBind['user']    = $this->databaseControls['user']->getValue();
+            $aBind['user']    = $aUser['id'];
             $aBind['created'] = new Zend_Db_Expr('NOW()');
             $aBind['updated'] = new Zend_Db_Expr('NOW()');
             $aBind['issue']   = $this->getPrimaryKeyValue();
@@ -299,7 +301,6 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
                 return false;
             }
 
-            $aUser = $this->actionController->getUser();
 
             $aBind             = array();
             $aBind['title']    = 'Root page';
