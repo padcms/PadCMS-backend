@@ -67,7 +67,7 @@ class AM_View_Helper_Editor_Page extends AM_View_Helper_Abstract
 
         $aPageInfo = array_merge($aPageInfo, $this->_oPage->toArray());
 
-        if ($this->_oPage->getOrientation() == AM_Model_Db_Issue::ORIENTATION_HORIZONTAL) {
+        if ($this->_oPage->getOrientation() == AM_Model_Db_Issue::ORIENTATION_HORIZONTAL || $this->_oPage->getIssue()->static_pdf_mode == AM_Model_Db_Issue::HORISONTAL_MODE_NONE) {
             $aPageInfo['showPdfPage'] = false;
         } else {
             $aPageInfo['showPdfPage'] = true;
