@@ -20,8 +20,9 @@ Requirements
 Installation
 ------------
 
-* Download or fork the latest stable release of PadCMS backend
-* Move the files to the convenient location on your web server (this place should not be the web server's document root).
+* Clone the latest stable release of PadCMS backend to the convenient location on your web server (this place should not be the web server's document root).
+
+        git clone git@github.com:padcms/PadCMS-backend.git /path/to/padcms
 * Create symbolic link from the web server's document root directory to the "front" directory.
 
         ln -s /path/to/padcms/front /path/to/document/root
