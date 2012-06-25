@@ -34,6 +34,7 @@
             <a id="page-machine-name-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
         </div>
 
+        {if $page.showPdfPage}
         <span class="labe">{'Horizontal page'|translate}</span>
         <div class="pdf-page">
             <div class="form-item-wrapper">
@@ -45,6 +46,7 @@
             <a id="page-pdf-page-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
             <div class="clr"></div>
         </div>
+        {/if}
 
         <span class="labe">{'TOC'|translate}</span>
 
