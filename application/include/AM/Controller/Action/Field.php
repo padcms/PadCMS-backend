@@ -285,8 +285,12 @@ class AM_Controller_Action_Field extends AM_Controller_Action
 
             $sResourceFileName = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $sFileExtension;
             if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {
+                $sOrientation = $oPage->getOrientation();
+                if (AM_Model_Db_Template::TPL_SCROLLING_PAGE_HORIZONTAL == $oPage->template) {
+                    $sOrientation = AM_Model_Db_Issue::ORIENTATION_HORIZONTAL;
+                }
                 $sUniq                             = '?' . strtotime($oElement->updated);
-                $aResourceFileViewInfo['smallUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $oPage->getOrientation(), 'element', $oElement->id, $sResourceFileName) . $sUniq;
+                $aResourceFileViewInfo['smallUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $sOrientation, 'element', $oElement->id, $sResourceFileName) . $sUniq;
                 $aResourceFileViewInfo['bigUri']   = AM_Tools::getImageUrl('none', 'element', $oElement->id, $sResourceFileName) . $sUniq;
             } else {
                 $aResourceFileViewInfo['smallUri'] = AM_Tools::getIconForNonImageFile($sResourceFileName);

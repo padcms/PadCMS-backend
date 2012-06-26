@@ -79,4 +79,19 @@ class AM_View_Helper_Field_ScrollingPane extends AM_View_Helper_Field
 
         parent::show();
     }
+
+    /**
+     * Returns preset name for thumbnail
+     * @return string
+     */
+    protected function _getThumbnailPresetName()
+    {
+        $sOrientation = $this->_sPageOrientation;
+
+        if (AM_Model_Db_Template::TPL_SCROLLING_PAGE_HORIZONTAL == $this->_oPage->template) {
+            $sOrientation = AM_Model_Db_Issue::ORIENTATION_HORIZONTAL;
+        }
+
+        return AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $sOrientation;
+    }
 }

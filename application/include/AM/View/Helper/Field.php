@@ -108,7 +108,7 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
             $sResourceFileName = $sResourceKeyName . '.' . $sFileExtension;
             if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {
                 $sUniq                    = '?' . strtotime($oElement->updated);
-                $aElementView['smallUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation, 'element', $oElement->id, $sResourceFileName) . $sUniq;
+                $aElementView['smallUri'] = AM_Tools::getImageUrl($this->_getThumbnailPresetName(), 'element', $oElement->id, $sResourceFileName) . $sUniq;
                 $aElementView['bigUri']   = AM_Tools::getImageUrl('none', 'element', $oElement->id, $sResourceFileName) . $sUniq;
             } else {
                 $aElementView['smallUri'] = AM_Tools::getIconForNonImageFile($sResourceFileName);
@@ -132,5 +132,14 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
         $this->oView->{$sViewVariableName} = $aData;
 
         return $this;
+    }
+
+    /**
+     * Returns preset name for thumbnail
+     * @return string
+     */
+    protected function _getThumbnailPresetName()
+    {
+        return AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation;
     }
 }
