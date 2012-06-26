@@ -73,7 +73,7 @@ class AM_Model_Db_Element_Data_ScrollingPane extends AM_Model_Db_Element_Data_Re
         $sFieldType = $this->getElement()->getFieldTypeTitle();
 
         if (AM_Model_Db_Template::TPL_SCROLLING_PAGE_HORIZONTAL == $iTemplate && AM_Model_Db_FieldType::TYPE_SCROLLING_PANE == $sFieldType) {
-            return self::TYPE . '-horizontal-scroll';
+            return self::TYPE . '-horizontal-scroll-' . $this->getElement()->getPage()->getOrientation();
         }
 
         return self::TYPE . '-' . $this->getElement()->getPage()->getOrientation();
