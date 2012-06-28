@@ -44,4 +44,4 @@ Installation
         Login: admin
         Password: password
 
-  We are strongly recommend to change password asap
+  We strongly recommend to change password asap
