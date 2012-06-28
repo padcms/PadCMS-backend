@@ -38,3 +38,8 @@ Installation
 * Run tests
 
         ./padcms phpunitall
+
+* To access the backend as superuser
+
+        Login: admin
+        Password: password
