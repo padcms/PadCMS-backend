@@ -77,35 +77,26 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
     }
 
     /**
-     * Copy term data from one revision to other
+     * Move term data from one revision to other
      * @param AM_Model_Db_Revision $oRevisionTo
      * @return AM_Model_Db_Term
      */
     public function moveToRevision(AM_Model_Db_Revision $oRevisionTo)
     {
-        $oTagVocabulary = $oRevisionTo->getVocabularyTag();
         $oTocVocabulary = $oRevisionTo->getVocabularyToc();
 
         $bNeedToUpdate = false;
 
-        if ($this->_isTag()) {
-            //Check vacabulary of term & new revision
-            if ($oTagVocabulary->id != $this->vocabulary) {
-                $this->vocabulary   = $oTagVocabulary->id;
-                $bNeedToUpdate       = true;
-            }
-        } elseif($this->_isToc()) {
+        //@todo: change tags and TOC architecture
+        //We use this method during moving revision to other issue
+        //In this case we have to move only terms used by this revision
+        //And we can't move any tags -they aren't assigned to revision
+
+        if ($this->_isToc() && !empty($this->revision) && $oRevisionTo->id == $this->revision) {
             //Check vacabulary of term & new revision
             if ($oTocVocabulary->id != $this->vocabulary) {
-                $this->vocabulary   = $oTocVocabulary->id;
-                $bNeedToUpdate       = true;
-            }
-        }
-
-        if (!empty($this->revision)) {
-            if($oRevisionTo->id != $this->revision) {
-                $this->revision   = $oRevisionTo->id;
-                $bNeedToUpdate     = true;
+                $this->vocabulary = $oTocVocabulary->id;
+                $bNeedToUpdate    = true;
             }
         }
 
