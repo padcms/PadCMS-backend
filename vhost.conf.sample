@@ -1,0 +1,10 @@
+<VirtualHost *:80>
+	DocumentRoot /var/www/padcms/htdocs/front
+	ServerName padcms.loc
+	<Directory /var/www/padcms/htdocs/front>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride all
+		Order allow,deny
+		Allow from all
+	</Directory>
+</VirtualHost>
