@@ -20,28 +20,59 @@ Requirements
 Installation
 ------------
 
-* Clone the latest stable release of PadCMS backend to the convenient location on your web server (this place should not be the web server's document root).
+* Install all required packages
 
-        git clone git@github.com:padcms/PadCMS-backend.git /path/to/padcms
-* Create symbolic link from the web server's document root directory to the "front" directory.
+        sudo apt-get install git apache2 mysql-server php5 sqlite3 poppler-utils xorg-dev php5-mysql php5-sqlite php5-imagick php5-gd php-apc php-pear
+* Compile MuPdf utils
 
-        ln -s /path/to/padcms/front /path/to/document/root
-* [Create](http://dev.mysql.com/doc/refman/5.0/en/creating-database.html) MySQL database for production and test environments
+        mkdir /tmp/mupdf && cd /tmp/mupdf
+        git clone git://git.ghostscript.com/mupdf.git .
+        wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
+        unzip mupdf-thirdparty-2012-04-23.zip
+        sudo make prefix=/usr/local install
+
+* Install needed packages from PEAR
+
+        sudo pear config-set auto_discover 1
+        sudo pear upgrade-all
+        sudo pear install --alldeps pear.phing.info/phing
+        sudo pear install pear.phpunit.de/DbUnit-1.0.0
+* Create databases
+
+        mysql -u root -proot -e 'create database padcms; create database padcms_test;'
+* Clone the latest stable release of PadCMS backend
+
+        sudo mkdir /var/www/padcms
+        sudo chown username:usergroup /var/www/padcms
+        git clone git://github.com/padcms/PadCMS-backend.git /var/www/padcms/htdocs
+        cd /var/www/padcms/htdocs
+* Prepare Apache virtual host
+
+        sudo cp vhost.conf.sample /etc/apache2/sites-available/padcms
+        sudo a2ensite padcms
+        sudo a2enmod rewrite
+        sudo apache2ctl restart
+* Bind host 'padcms.loc' to the 127.0.0.1 IP in /etc/hosts file
+
+        sudo nano /etc/hosts
+        cat /etc/hosts
+
+        127.0.0.1    localhost
+        127.0.1.1    debian
+        127.0.0.1    padcms.loc
 * Run phing configuration wizard in the padcms folder. You will be guided through few questions about system configuration. You can use default values or set specific. After configuration, the script will create a folders for temporary files and resources.
 
-        cd /path/to/padcms
         phing init
 * Run build task to create the necessary tables in databases
 
         ./padcms build
         APPLICATION_ENV=test ./padcms build
-* Run tests
+* Run tests (optional)
 
         ./padcms phpunitall
-
-* To access the backend as superuser
+* To access the backend as superuser open http://padcms.loc in you browser and use credentials:
 
         Login: admin
         Password: password
 
-  We strongly recommend to change password asap
+We strongly recommend to change password asap
