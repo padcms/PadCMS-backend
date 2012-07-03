@@ -1513,7 +1513,7 @@ a.cbutton-add span {
 }
 
 .page-panel .cont input.form-text {
-  width:246px !important;
+  width:246px;
 }
 
 .page-panel .cont .form-item-wrapper {
@@ -1587,7 +1587,6 @@ a.cbutton-add span {
   padding: 4px 4px 4px 4px;
   height:20px;
   font-size:12px;
-  width:140px;
   float:left;
 }
 
@@ -2519,4 +2518,8 @@ span.radio{
 
 #share-tabs {
     border: none;
+}
+
+#toc-current-color-input {
+    width: 220px;
 }

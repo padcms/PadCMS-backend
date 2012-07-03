@@ -16,6 +16,8 @@
 <link href="{$baseUrl}/js/lib/jquery/select-box/jquery.selectBox.css" rel="stylesheet" type="text/css" />
 <link href="{$baseUrl}/js/lib/jquery/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
 <link href="{$baseUrl}/js/lib/jquery/jstree/themes/default/style.css" rel="stylesheet" type="text/css" />
+<link href="{$baseUrl}/css/layout.css" rel="stylesheet" media="screen" type="text/css" />
+<link href="{$baseUrl}/css/colorpicker.css" rel="stylesheet" type="text/css" />
 
 {literal}
 <!--[if !IE 7]>

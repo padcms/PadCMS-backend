@@ -6,8 +6,12 @@
  * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
  */
 $(document).ready(function(){
+    colorPicker.init();
+});
 
-	$('#cpicker_fld').ColorPicker({
+var colorPicker = {
+    init: function() {
+	$('.cpicker_fld').ColorPicker({
 		color: '#d9411a',
 		onSubmit: function(hsb, hex, rgb, el) {
 			$(el).val(hex);
@@ -23,21 +27,22 @@ $(document).ready(function(){
 	.bind('keyup', function(){
 		$(this).ColorPickerSetColor(this.value);
 	});
+        $('.colorpicker').css('z-index', "100000000");
 	$('#colorSelector').ColorPicker({
 		color: '#d9411a',
 		onSubmit: function(hsb, hex, rgb, el) {
-			$('#cpicker_fld').val(hex);
+			$('.cpicker_fld').val(hex);
 			$(el).ColorPickerHide();
 		},
 		onBeforeShow: function () {
-			if($('#cpicker_fld').attr('value') != '') {
-				$(this).ColorPickerSetColor('#' + $('#cpicker_fld').attr('value'));
+			if($('.cpicker_fld').attr('value') != '') {
+				$(this).ColorPickerSetColor('#' + $('.cpicker_fld').attr('value'));
 			}
 		},
 		onChange: function (hsb, hex, rgb) {
 			$('#colorSelector div').css('backgroundColor', '#' + hex);
 		}
 	});
-
-});
+    }
+};
 

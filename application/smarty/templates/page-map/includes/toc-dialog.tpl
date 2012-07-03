@@ -62,18 +62,13 @@
                             <a id="toc-current-description-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
                         </div>
 
-                        {*<span class="labe">{'PDF page'|translate}</span>
-                        <div class="toc">
-                            <div class="form-item-wrapper">
-                                <input id="toc-current-pdf-page-input" value="" type="text" class="form-text" />
-                            </div>
-                            <a id="toc-current-pdf-page-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
-                        </div>*}
-
                         <span class="labe">{'Color'|translate}</span>
                         <div class="toc">
                             <div class="form-item-wrapper">
-                                <input id="toc-current-color-input" value="" type="text" class="form-text" />
+                                <input id="toc-current-color-input" value="" type="text" class="form-text cpicker_fld"/>
+                                <div id="colorSelector">
+                                    <div id="colorSelectorBg"></div>
+                                </div>
                             </div>
                             <a id="toc-current-color-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
                         </div>
