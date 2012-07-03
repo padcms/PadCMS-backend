@@ -14,6 +14,10 @@
 	background: url(../images/colorpicker/select.png) center;
 }
 
+#colorSelector div {
+    top: 15px\0/; /* IE8 hack */
+}
+
 @-moz-document url-prefix() {
 	#colorSelector div  {
 		top: 13px;
