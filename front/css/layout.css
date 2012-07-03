@@ -18,6 +18,10 @@
 	#colorSelector div  {
 		top: 13px;
 	}
+
+	div.toc #colorSelector div  {
+		top: 15px;
+	}
 }
 
 #hupload, input.hupload {
@@ -62,11 +66,4 @@
 	margin-top: 2px;
 	padding-top: 1px;
 	padding-left: 19px;
-}
-
-.selectBox-dropdown .selectBox-label {
-    padding: 5px 8px;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
 }

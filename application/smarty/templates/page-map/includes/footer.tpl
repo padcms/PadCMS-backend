@@ -51,6 +51,9 @@
 <script type="text/javascript" src="{$baseUrl}/js/page-map/expand.js?a"></script>
 <script type="text/javascript" src="{$baseUrl}/js/page-map/page-map.js?a"></script>
 
+<script type="text/javascript" src="/js/colorpicker/colorpicker.js"></script>
+<script type="text/javascript" src="/js/colorpicker/color-handle.js"></script>
+
 {$smarty.capture.js}
 
 <div id="dialog"></div>

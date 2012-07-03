@@ -504,6 +504,10 @@ tocEditor.currentTree = {
         $('#toc-current-pdf-page-input').val(data.pdf_page);
         $('#toc-current-color-input').val(data.color);
 
+        colorPicker.init();
+
+        $('#colorSelectorBg').css('background-color', '#' + data.color);
+
         var thumbStripe = data.thumbStripe;
         var thumbSummary = data.thumbSummary;
 

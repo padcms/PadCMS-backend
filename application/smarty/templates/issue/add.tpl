@@ -83,7 +83,7 @@
                         <div class="form-item{if isset($number) && $number.errors} error{/if}">
                             <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>
                             <div class="form-item-wrapper" >
-                                {if isset($issue_color)}{include file="Volcano/input.tpl" control=$issue_color id="cpicker" _class="form-text" _additional='id="cpicker_fld" style="width:292px;"'}{/if}
+                                {if isset($issue_color)}{include file="Volcano/input.tpl" control=$issue_color id="cpicker_fld" _class="form-text cpicker_fld" _additional='style="width:292px;"'}{/if}
                                 <div id="colorSelector"><div style="background-color: #{if isset($issue_color)}{$issue_color.value}{/if};"/></div></div>
                             </div>
                             <div class="clr"></div>
