@@ -83,7 +83,7 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
      *
      * @return string|false
      */
-    protected function _getExportThumbnail()
+    protected function _getExportOverlay()
     {
         $sValue = $this->_getResourcePathForExport(self::DATA_KEY_OVERLAY);
 
