@@ -55,10 +55,8 @@ Installation
 * Bind host 'padcms.loc' to the 127.0.0.1 IP in /etc/hosts file
 
         sudo nano /etc/hosts
-        cat /etc/hosts
+add to the end of file
 
-        127.0.0.1    localhost
-        127.0.1.1    debian
         127.0.0.1    padcms.loc
 * Run phing configuration wizard in the padcms folder. You will be guided through few questions about system configuration. You can use default values or set specific. After configuration, the script will create a folders for temporary files and resources.
 
