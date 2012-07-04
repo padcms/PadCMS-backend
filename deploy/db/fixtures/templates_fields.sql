@@ -24,7 +24,7 @@ INSERT INTO `template` (`id`, `title`, `description`, `has_right_connector`, `ha
 (18, 'html5', 'HTML5 (A012)', 1, 1, 1, 1, 1, 7),
 (19, 'games', 'Games (A013)', 1, 1, 0, 0, 2, 7),
 
-(21, '3d', '3D (A014)', 7, 1, 1, 0, 0, 8)
+(21, '3d', '3D (A014)', 1, 1, 1, 1, 1, 8)
 ;
 
 INSERT INTO `field_type` (`id`, `title`) VALUES
