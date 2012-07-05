@@ -46,16 +46,8 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 
 
     protected static $_aAllowedFileExtensions = array(
-        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png'),
-        self::DATA_KEY_OVERLAY  => array('jpg', 'jpeg', 'pdf', 'png')
+        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png')
     );
-
-    protected function _init()
-    {
-        parent::_init();
-
-        $this->addAdditionalResourceKey(array(self::DATA_KEY_OVERLAY));
-    }
 
     /**
      * Create new element
@@ -76,17 +68,5 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
         $oElement->save();
 
         return $oElement;
-    }
-
-    /**
-     * Returns path to the overlay
-     *
-     * @return string|false
-     */
-    protected function _getExportOverlay()
-    {
-        $sValue = $this->_getResourcePathForExport(self::DATA_KEY_OVERLAY);
-
-        return $sValue;
     }
 }

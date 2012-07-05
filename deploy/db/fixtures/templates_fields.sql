@@ -83,6 +83,7 @@ INSERT INTO `field` (`name`, `description`, `field_type`, `min`, `max`, `max_wid
 ('body', NULL, 1, 0, 0, 0, 0, 1, 10, 1),
 ('background', NULL, 4, 0, 0, 0, 0, 2, 10, 1),
 ('gallery', NULL, 2, 0, 0, 0, 0, 3, 10, 1),
+('popup', NULL, 13, 0, 0, 0, 0, 5, 10, 1),
 ('video', NULL, 3, 0, 0, 0, 0, 4, 10, 1),
 
 -- Interactives bullets (A007)

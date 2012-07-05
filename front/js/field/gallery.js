@@ -29,11 +29,6 @@ var fieldGallery = {
             return event.data.onDelete(event.originalEvent);
         });
 
-        $('a.add-overlay-btn', context.domRoot).bind('click', context, function(event){
-            event.data.onAddOverlay(event);
-            return false;
-        });
-
         context.initFancybox($("a.single_image", context.domRoot));
 
         $(".gallery", context.domRoot).sortable({
@@ -83,9 +78,6 @@ var fieldGallery = {
                                 + '<div class="data-item">'
                                     + image
                                     + '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>'
-                                    + '<div class="actions">'
-                                       + '<a rel="" title="Add overlay" href="#" class="action-2-disabled add-overlay-btn"></a>'
-                                    + '</div>'
                                     +'<a href="#" title="Delete image" class="close delete-btn"></a>'
                                 + '</div>'
                             + '</li>';
@@ -96,10 +88,6 @@ var fieldGallery = {
                         var domElement = $('#element-' + element);
                         $('a.delete-btn', domElement).bind('click', context, function(event) {
                             return event.data.onDelete(event.originalEvent);
-                        });
-                        $('a.add-overlay-btn', context.domRoot).bind('click', context, function(event){
-                            event.data.onAddOverlay(event);
-                            return false;
                         });
 
                         context.initFancybox($('a.single_image', domElement));
@@ -200,16 +188,5 @@ var fieldGallery = {
                 context.init();
             }
         });
-    },
-
-    onAddOverlay: function(event) {
-        var elementId = $(event.target).closest('li').attr('id').split('-').pop();
-        if (!elementId)
-            return false;
-        $('#add-file-dialog').dialog('option', 'elementId', elementId)
-            .dialog('option', 'key', 'overlay')
-            .dialog('option', 'sourceEvent', event)
-            .dialog('option', 'title', 'Add overlay to element')
-            .dialog('open');
     }
 }
