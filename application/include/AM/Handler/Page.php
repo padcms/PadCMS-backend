@@ -188,15 +188,18 @@ class AM_Handler_Page extends AM_Handler_Abstract
 
         $aPage['tpl_title'] = $oPage->getTemplate()->description;
 
-        $aPage['tpl']['has_left']   = $oPage->getTemplate()->has_left_connector;
-        $aPage['tpl']['has_right']  = $oPage->getTemplate()->has_right_connector;
-        $aPage['tpl']['has_top']    = $oPage->getTemplate()->has_top_connector;
-        $aPage['tpl']['has_bottom'] = $oPage->getTemplate()->has_bottom_connector;
-
         $aPage['has_left']   = $oPage->hasConnection(AM_Model_Db_Page::LINK_LEFT);
         $aPage['has_right']  = $oPage->hasConnection(AM_Model_Db_Page::LINK_RIGHT);
         $aPage['has_top']    = $oPage->hasConnection(AM_Model_Db_Page::LINK_TOP);
         $aPage['has_bottom'] = $oPage->hasConnection(AM_Model_Db_Page::LINK_BOTTOM);
+
+        //Restrict user to add left and right childs in pages which have bottom or top parent
+            $aPage['tpl']['has_left']   = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_left_connector;
+            $aPage['tpl']['has_right']  = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_right_connector;
+
+        $aPage['tpl']['has_top']    = $oPage->getTemplate()->has_top_connector;
+        $aPage['tpl']['has_bottom'] = $oPage->getTemplate()->has_bottom_connector;
+
 
         $oPageRoot = $oPage->getParent();
         if (!is_null($oPageRoot)) {

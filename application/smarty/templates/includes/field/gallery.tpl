@@ -43,11 +43,6 @@
 
                                         <span title="{$element.fileName}" class="name">{$element.fileNameShort}</span>
 
-                                        <div class="actions">
-                                            <a class="{if $element.overlay}action-2{else}action-2-disabled{/if} add-overlay-btn"
-                                               href="{$element.overlayUri}" title="{'Add overlay'|translate}" rel="{$element.overlay}"></a>
-                                        </div>
-
                                         <a class="close delete-btn" title="{'Delete image'|translate}" href="#"></a>
 
                                     </div>
