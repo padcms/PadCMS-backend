@@ -44,11 +44,13 @@ class AM_Api_Purchase extends AM_Api
     const URL_APPLE_VERIFY_PRODUCTION = 'https://buy.itunes.apple.com/verifyReceipt';
     const URL_APPLE_VERIFY_SANDBOX    = 'https://sandbox.itunes.apple.com/verifyReceipt';
 
-    const SUBSCRIPTION_1YEAR   = '1year';
-    const SUBSCRIPTION_2YEAR   = '2year';
-    const SUBSCRIPTION_ARCHIVE = 'archive';
+    const SUBSCRIPTION_3MONTHES = '3months';
+    const SUBSCRIPTION_1YEAR    = 'oneyear';
+    const SUBSCRIPTION_2YEAR    = '2year';
+    const SUBSCRIPTION_ARCHIVE  = 'archive';
 
-    protected static $_aSubscriptionTypes = array(self::SUBSCRIPTION_1YEAR,
+    protected static $_aSubscriptionTypes = array(self::SUBSCRIPTION_3MONTHES,
+                                                  self::SUBSCRIPTION_1YEAR,
                                                   self::SUBSCRIPTION_2YEAR,
                                                   self::SUBSCRIPTION_ARCHIVE);
 
@@ -120,15 +122,17 @@ class AM_Api_Purchase extends AM_Api
             } else {
                 $mExpiresDate = clone $oPurchaseDate;
                 switch ($sSubscriptionType) {
-                    case '1year':
-                        $mExpiresDate->add(1, Zend_Date::YEAR);
-                        $this->getLogger()->debug(sprintf('UDID: "%s" Set subscription expires_date to "%s"', $sUdid, $mExpiresDate->toString()));
+                    case self::SUBSCRIPTION_3MONTHES:
+                        $mExpiresDate->add(3, Zend_Date::MONTH);
                         break;
-                    case '2year':
+                    case self::SUBSCRIPTION_1YEAR:
+                        $mExpiresDate->add(1, Zend_Date::YEAR);
+                        break;
+                    case self::SUBSCRIPTION_2YEAR:
                         $mExpiresDate->add(2, Zend_Date::YEAR);
-                        $this->getLogger()->debug(sprintf('UDID: "%s" Set subscription expires_date to "%s"', $sUdid, $mExpiresDate->toString()));
                         break;
                 }
+                $this->getLogger()->debug(sprintf('UDID: "%s" Set subscription expires_date to "%s"', $sUdid, $mExpiresDate->toString()));
             }
         }
 
