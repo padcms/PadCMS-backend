@@ -41,8 +41,8 @@
  */
 class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 {
-    const DATA_KEY_GALLERY_ID = 'gallery_id';
-    const DATA_KEY_OVERLAY    = 'overlay';
+    const DATA_KEY_GALLERY_ID  = 'gallery_id';
+    const DATA_KEY_ENABLE_ZOOM = 'zoom';
 
 
     protected static $_aAllowedFileExtensions = array(
@@ -68,5 +68,22 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
         $oElement->save();
 
         return $oElement;
+    }
+
+    /**
+     * Check zoom value
+     * @param int $iValue
+     * @return int
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addZoom($iValue)
+    {
+        $iValue = intval($iValue);
+
+        if ($iValue < 0) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HAS_PHOTO_GALLERY_LINK));
+        }
+
+        return $iValue;
     }
 }

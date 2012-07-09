@@ -49,7 +49,7 @@ class AM_Api_Purchase extends AM_Api
     const SUBSCRIPTION_2YEAR    = '2year';
     const SUBSCRIPTION_ARCHIVE  = 'archive';
 
-    protected static $_aSubscriptionTypes = array(self::SUBSCRIPTION_3MONTHES,
+    public static $aSubscriptionTypes = array(self::SUBSCRIPTION_3MONTHES,
                                                   self::SUBSCRIPTION_1YEAR,
                                                   self::SUBSCRIPTION_2YEAR,
                                                   self::SUBSCRIPTION_ARCHIVE);
@@ -89,7 +89,7 @@ class AM_Api_Purchase extends AM_Api
         //Checking subscription data
         $aProductIdChunks  = explode('.', $sProductId);
         $sSubscriptionType = array_pop($aProductIdChunks);
-        if (in_array($sSubscriptionType, self::$_aSubscriptionTypes)) {
+        if (in_array($sSubscriptionType, self::$aSubscriptionTypes)) {
             $sProductId = implode('.', $aProductIdChunks);
         } else {
             $sSubscriptionType = null;
