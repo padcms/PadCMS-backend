@@ -59,6 +59,8 @@ class AM_View_Helper_Field_Gallery extends AM_View_Helper_Field
                 $aResourceView = $this->_getResourceViewData($oElement);
                 $aElementView  = array_merge($aElementView, $aResourceView);
 
+                $aElementView['zoom'] = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Gallery::DATA_KEY_ENABLE_ZOOM, 0);
+
                 $aGalleries[$iGalleryId][] = $aElementView;
             }
         }

@@ -43,6 +43,11 @@
 
                                         <span title="{$element.fileName}" class="name">{$element.fileNameShort}</span>
 
+                                        <div class="actions">
+                                            <a class="{if $element.zoom}action-2{else}action-2-disabled{/if} enable-zoom-btn"
+                                               href="#" title="{'Enable zooming'|translate}"></a>
+                                        </div>
+
                                         <a class="close delete-btn" title="{'Delete image'|translate}" href="#"></a>
 
                                     </div>

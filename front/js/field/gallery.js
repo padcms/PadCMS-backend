@@ -29,6 +29,11 @@ var fieldGallery = {
             return event.data.onDelete(event.originalEvent);
         });
 
+        $('a.enable-zoom-btn', context.domRoot).bind('click', context, function(event){
+            event.data.onEnableZoom(event);
+            return false;
+        });
+
         context.initFancybox($("a.single_image", context.domRoot));
 
         $(".gallery", context.domRoot).sortable({
@@ -52,7 +57,7 @@ var fieldGallery = {
                     if (!responseJSON.status) {
                         if (responseJSON.message) {
                             alert(responseJSON.message);
-                        } else {
+                        }else {
                             alert(translate('Error. Can\'t upload file'));
                         }
                     } else {
@@ -78,6 +83,9 @@ var fieldGallery = {
                                 + '<div class="data-item">'
                                     + image
                                     + '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>'
+                                    + '<div class="actions">'
+                                       + '<a title="Enable zooming" href="#" class="action-1-disabled enable-zoom-btn"></a>'
+                                    + '</div>'
                                     +'<a href="#" title="Delete image" class="close delete-btn"></a>'
                                 + '</div>'
                             + '</li>';
@@ -86,6 +94,12 @@ var fieldGallery = {
 
                         // Bind events
                         var domElement = $('#element-' + element);
+
+                        $('a.enable-zoom-btn', domElement).bind('click', context, function(event){
+                            event.data.onEnableZoom(event);
+                            return false;
+                        });
+
                         $('a.delete-btn', domElement).bind('click', context, function(event) {
                             return event.data.onDelete(event.originalEvent);
                         });
@@ -188,5 +202,37 @@ var fieldGallery = {
                 context.init();
             }
         });
+    },
+
+    onEnableZoom: function(event) {
+        var context = this;
+        var elementId = $(event.target).closest('li').attr('id').split('-').pop();
+        context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+
+        $.ajax({
+            url: '/field-gallery/save',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page_id: context.pageId,
+                field_id: context.fieldId,
+                element: elementId,
+                key: 'zoom',
+                value: context.value
+            },
+            success: function(data) {
+                try {
+                    if (context.value == 1) {
+                        $(event.target).removeClass('action-2-disabled').addClass('action-2');
+                    } else {
+                        $(event.target).removeClass('action-2').addClass('action-2-disabled');
+                    }
+                } catch (e) {
+                    window.ui.log(e);
+                    alert(translate('unexpected_error'));
+                }
+            }
+        });
+        return false;
     }
 }

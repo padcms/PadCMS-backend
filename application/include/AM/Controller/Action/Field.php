@@ -109,7 +109,16 @@ class AM_Controller_Action_Field extends AM_Controller_Action
                 throw new AM_Exception(sprintf('Page with id "%d" not found.', $this->_iPageId));
             }
 
-            $oElement = $oPage->getElementForField($oField);
+            if (!is_null($this->_iElementId)) {
+                $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', $this->_iElementId);
+                /* @var $oElement AM_Model_Db_Element */
+                if (is_null($oElement)) {
+                    $oElement = $oPage->getElementForField($oField);
+                }
+            } else {
+                $oElement = $oPage->getElementForField($oField);
+            }
+
             /* @var $oElement AM_Model_Db_Element */
             $oElement->getResources()->addKeyValue($sKey, $sValue);
 
