@@ -110,13 +110,22 @@ class AM_Api_Client extends AM_Api
             //Checking subscripton
             $oSubscription = null;
             if (!is_null($oDevice)) {
-                $oSubscription = AM_Model_Db_Table_Abstract::factory('purchase')
-                        ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $oApplication->product_id, 'deleted' => 'no'));
-                /* @var $oSubscription AM_Model_Db_Purchase */
+                $aProductIds = array($oApplication->product_id);
+                foreach (AM_Api_Purchase::$aSubscriptionTypes as $sType) {
+                    $aProductIds[] = $oApplication->product_id . '.' . $sType;
+                }
 
-                if (!is_null($oSubscription)) {
-                    if ($oSubscription->isExpired()) {
+                foreach($aProductIds as $sProductId) {
+                    $oSubscription = AM_Model_Db_Table_Abstract::factory('purchase')
+                            ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $sProductId, 'deleted' => 'no'));
+                    /* @var $oSubscription AM_Model_Db_Purchase */
+
+                    if (!is_null($oSubscription)) {
+                        if ($oSubscription->isExpired()) {
                             $oSubscription = null;
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
