@@ -50,5 +50,6 @@ class AM_Resource_Processor implements AM_Resource_Processor_Interface
     public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode)
     {
         AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
+        AM_Tools_Image::cropImage($sDst);
     }
 }

@@ -215,4 +215,35 @@ class AM_Tools_Image
 
         return imagecopyresampled($rDstImage, $rSrcImage, $iDstX, $iDstY, $iSrcX, $iSrcY, $iDstW, $iDstH, $iSrcW, $iSrcH);
     }
+
+
+    public static function cropImage($sImagePath)
+    {
+        $sTempDir = AM_Handler_Temp::getInstance()->getDir();
+
+        $sArchivePath = pathinfo($sImagePath, PATHINFO_DIRNAME);
+
+        $sCmd = sprintf('convert %s -crop 256x256 -set filename:title "%%[fx:page.y/256+1]_%%[fx:page.x/256+1]" +repage  +adjoin %s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir);
+
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+
+        $aFiles = AM_Tools_Finder::type('file')
+                ->name('resource_*.png')
+                ->sort_by_name()
+                ->in($sTempDir);
+
+        $sZipPath         = $sArchivePath . DIRECTORY_SEPARATOR . 'resource.zip';
+        $oZip             = new ZipArchive();
+        $rArchiveResource = $oZip->open($sZipPath, ZIPARCHIVE::CREATE);
+
+        if ($rArchiveResource !== true) {
+            throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);
+        }
+        foreach ($aFiles as $sFile) {
+            $oZip->addFile($sFile, pathinfo($sFile, PATHINFO_BASENAME));
+        }
+        $oZip->close();
+
+        return $aFiles;
+    }
 }
