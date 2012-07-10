@@ -216,7 +216,12 @@ class AM_Tools_Image
         return imagecopyresampled($rDstImage, $rSrcImage, $iDstX, $iDstY, $iSrcX, $iSrcY, $iDstW, $iDstH, $iSrcW, $iSrcH);
     }
 
-
+    /**
+     * http://www.imagemagick.org/Usage/crop/#crop_equal
+     * @param string $sImagePath
+     * @return void
+     * @throws AM_Exception
+     */
     public static function cropImage($sImagePath)
     {
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
@@ -244,7 +249,5 @@ class AM_Tools_Image
             $oZip->addFile($sFile, pathinfo($sFile, PATHINFO_BASENAME));
         }
         $oZip->close();
-
-        return $aFiles;
     }
 }
