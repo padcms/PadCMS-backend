@@ -222,6 +222,7 @@ class AM_Tools_Image
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
 
         $sArchivePath = pathinfo($sImagePath, PATHINFO_DIRNAME);
+        $sArchiveName = pathinfo($sImagePath, PATHINFO_FILENAME);
 
         $sCmd = sprintf('convert %s -crop 256x256 -set filename:title "%%[fx:page.y/256+1]_%%[fx:page.x/256+1]" +repage  +adjoin %s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir);
 
@@ -232,7 +233,7 @@ class AM_Tools_Image
                 ->sort_by_name()
                 ->in($sTempDir);
 
-        $sZipPath         = $sArchivePath . DIRECTORY_SEPARATOR . 'resource.zip';
+        $sZipPath         = $sArchivePath . DIRECTORY_SEPARATOR . $sArchiveName .'.zip';
         $oZip             = new ZipArchive();
         $rArchiveResource = $oZip->open($sZipPath, ZIPARCHIVE::CREATE);
 
