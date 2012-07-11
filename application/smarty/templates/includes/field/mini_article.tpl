@@ -40,10 +40,10 @@
                                 href="#" title="{'Add video'|translate}" rel="{$element.video}"></a>
 
                                 <a class="{if $element.thumbnail}action-2{else}action-2-disabled{/if} add-thumbnail-btn"
-                                href="{$element.thumbnailUri}" title="{'Add thumbnail'|translate}" rel="{$element.thumbnail}"></a>
+                                href="#" title="{'Add thumbnail'|translate}" rel="{$element.thumbnail}"></a>
 
                                 <a class="{if $element.thumbnailSelected}action-2{else}action-2-disabled{/if} add-thumbnail-selected-btn"
-                                href="{$element.thumbnailSelectedUri}" title="{'Add selected thumbnail'|translate}" rel="{$element.thumbnailSelected}"></a>
+                                href="#" title="{'Add selected thumbnail'|translate}" rel="{$element.thumbnailSelected}"></a>
 
                             </div>
 
