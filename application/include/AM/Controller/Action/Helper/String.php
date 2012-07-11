@@ -50,7 +50,7 @@ class AM_Controller_Action_Helper_String extends Zend_Controller_Action_Helper_A
      * @param int $iMaxStringLength
      * @return string
      */
-    public function cut($sString, $iMaxStringLength = 15)
+    public function cut($sString, $iMaxStringLength = 13)
     {
         if (mb_strlen($sString, 'UTF-8') > $iMaxStringLength) {
             $sString = mb_substr($sString, 0, $iMaxStringLength, 'UTF-8') . '...';

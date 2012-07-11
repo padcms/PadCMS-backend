@@ -408,9 +408,9 @@ span.template span.name {
     display:block;
     font-size:11px;
     font-weight:normal;
-    left:-3px;
+    left:-7px;
     position:relative;
-    width:85px;
+    width:110px;
 }
 .static-pdf-wrapper .pic-grid .data-item a.close {
     background:url("/images/map/ico-del-pic-small.png") no-repeat scroll 0 0 transparent;
