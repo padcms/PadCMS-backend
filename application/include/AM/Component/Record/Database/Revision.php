@@ -90,7 +90,11 @@ class AM_Component_Record_Database_Revision extends AM_Component_Record_Database
 
             $oRevisions = AM_Model_Db_Table_Abstract::factory('revision')->findAllBy($aCriteria);
             foreach ($oRevisions as $oRevision) {
-                $aRevisions[$oRevision->id] = $oRevision->title;
+                /* @var $oRevision AM_Model_Db_Revision */
+                $oIssue                     = $oRevision->getIssue();
+                $oApplication               = $oIssue->getApplication();
+                $oCleint                    = $oApplication->getClient();
+                $aRevisions[$oRevision->id] = sprintf('%s > %s > %s > %s', $oCleint->title, $oApplication->title, $oIssue->title, $oRevision->title);
             }
         }
 
@@ -152,6 +156,7 @@ class AM_Component_Record_Database_Revision extends AM_Component_Record_Database
 
         try {
             $oRevisionCurrent->copyFromRevision($oRevisionFrom);
+            return true;
         } catch (Exception $oException) {
             return false;
         }
