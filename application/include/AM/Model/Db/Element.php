@@ -135,9 +135,11 @@ class AM_Model_Db_Element extends AM_Model_Db_Abstract
     {
         $oPage = AM_Model_Db_Table_Abstract::factory('page')->findOneBy(array('id' => $this->page));
 
-        if (!empty($oPage)){
-            $this->setPage($oPage);
+        if (is_null($oPage)) {
+            throw new AM_Model_Db_Exception(sprintf('Element "%s" has no page', $this->id));
         }
+
+        $this->setPage($oPage);
 
         return $this;
     }
