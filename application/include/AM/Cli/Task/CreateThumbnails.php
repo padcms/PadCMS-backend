@@ -67,6 +67,7 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
      */
     protected function _resizeElements()
     {
+
         $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
                 ->select()
                 ->where(sprintf('key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
@@ -75,9 +76,13 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
 
         foreach ($oElementDatas as $oElementData) {
-            $oData = $oElementData->getData();
-            if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName') ) {
-                $this->_resizeImage($oElementData->value, $oElementData->id_element, AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName());
+            try {
+                $oData = $oElementData->getData();
+                if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName')) {
+                    $this->_resizeImage($oElementData->value, $oElementData->id_element, AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName());
+                }
+            } catch (Exception $oException) {
+                $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
             }
         }
     }
@@ -94,11 +99,15 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         $oTerms = AM_Model_Db_Table_Abstract::factory('term')->fetchAll($oQuery);
 
         foreach ($oTerms as $oTerm) {
-            if (!empty($oTerm->thumb_stripe)) {
-                $this->_resizeImage($oTerm->thumb_stripe, $oTerm->id, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_STRIPE);
-            }
-            if (!empty($oTerm->thumb_summary)) {
-                $this->_resizeImage($oTerm->thumb_summary, $oTerm->id, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_SUMMARY);
+            try {
+                if (!empty($oTerm->thumb_stripe)) {
+                    $this->_resizeImage($oTerm->thumb_stripe, $oTerm->id, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_STRIPE);
+                }
+                if (!empty($oTerm->thumb_summary)) {
+                    $this->_resizeImage($oTerm->thumb_summary, $oTerm->id, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_SUMMARY);
+                }
+            } catch (Exception $oException) {
+                $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
             }
         }
     }
@@ -115,7 +124,11 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         $oPagesHorizaontal = AM_Model_Db_Table_Abstract::factory('page_horisontal')->fetchAll($oQuery);
 
         foreach ($oPagesHorizaontal as $oPageHorizontal) {
-            $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal->id_issue, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
+            try {
+                $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal->id_issue, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
+            } catch (Exception $oException) {
+                $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
+            }
         }
     }
 
@@ -139,15 +152,12 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
                     . DIRECTORY_SEPARATOR
                     . $sResourceKeyName . '.' . $sFileExtension;
-        try {
-            $this->_oThumbnailer->clearSources()
-                    ->addSourceFile($sFilePath)
-                    ->loadAllPresets($sResourcePresetName)
-                    ->createThumbnails();
 
-            $this->_echo(sprintf('%s', $sFilePath), 'success');
-        } catch (Exception $oException) {
-            $this->_echo(sprintf('%s %s', $sFilePath, $oException->getMessage()), 'error');
-        }
+        $this->_oThumbnailer->clearSources()
+                ->addSourceFile($sFilePath)
+                ->loadAllPresets($sResourcePresetName)
+                ->createThumbnails();
+
+        $this->_echo(sprintf('%s', $sFilePath), 'success');
     }
 }
