@@ -370,7 +370,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         /* @var $oThumbnailer AM_Handler_Thumbnail */
         $oThumbnailer->clearSources()
                 ->addSourceFile($sDestination)
-                ->loadAllPresets($this->_getThumbnailPresetName())
+                ->loadAllPresets($this->getThumbnailPresetName())
                 ->createThumbnails();
 
         foreach ($oThumbnailer->getSources() as $oSource) {
@@ -393,7 +393,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
      *
      * @return string
      */
-    protected function _getThumbnailPresetName()
+    public function getThumbnailPresetName()
     {
         return self::TYPE . '-' . $this->getElement()->getPage()->getOrientation();
     }

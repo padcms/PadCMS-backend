@@ -67,7 +67,7 @@ class AM_Model_Db_Element_Data_ScrollingPane extends AM_Model_Db_Element_Data_Re
      *
      * @return string
      */
-    protected function _getThumbnailPresetName()
+    public function getThumbnailPresetName()
     {
         $iTemplate  = $this->getElement()->getPage()->template;
         $sFieldType = $this->getElement()->getFieldTypeTitle();
