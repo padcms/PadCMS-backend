@@ -43,4 +43,35 @@
  */
 class AM_Model_Db_ElementData extends AM_Model_Db_Abstract
 {
+
+    /** @var AM_Model_Db_Element **/
+    protected $_oElement = null; /**< @type AM_Model_Db_Element */
+    /** @var AM_Model_Db_Element_Data_Abstract **/
+    protected $_oData = null; /**< @type AM_Model_Db_Element_Data_Abstract */
+
+    /**
+     * Returns element
+     * @return AM_Model_Db_Element
+     */
+    public function getElement()
+    {
+        if (is_null($this->_oElement)) {
+            $this->_oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('id' => $this->id_element));
+        }
+
+        return $this->_oElement;
+    }
+
+    /**
+     * Returns resource object
+     * @return AM_Model_Db_Element_Data_Abstract
+     */
+    public function getData()
+    {
+        if (is_null($this->_oData) && !is_null($this->getElement())) {
+            $this->_oData = $this->getElement()->getResources();
+        }
+
+        return $this->_oData;
+    }
 }

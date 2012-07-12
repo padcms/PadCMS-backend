@@ -75,7 +75,10 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
 
         foreach ($oElementDatas as $oElementData) {
-            $this->_resizeImage($oElementData->value, $oElementData->id_element, AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name);
+            $oData = $oElementData->getData();
+            if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName') ) {
+                $this->_resizeImage($oElementData->value, $oElementData->id_element, AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName());
+            }
         }
     }
 
@@ -125,8 +128,12 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
      * @param string $sResourceKeyName The name of the resource type (resource, thumbnail, etc)
      * @return @void
      */
-    protected function _resizeImage($sFileBaseName, $iElementId, $sResourceType, $sResourceKeyName)
+    protected function _resizeImage($sFileBaseName, $iElementId, $sResourceType, $sResourceKeyName, $sResourcePresetName = null)
     {
+        if (is_null($sResourcePresetName)) {
+            $sResourcePresetName = $sResourceType;
+        }
+
         $sFileExtension = strtolower(pathinfo($sFileBaseName, PATHINFO_EXTENSION));
 
         $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
@@ -135,12 +142,12 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
         try {
             $this->_oThumbnailer->clearSources()
                     ->addSourceFile($sFilePath)
-                    ->loadAllPresets($sResourceType)
+                    ->loadAllPresets($sResourcePresetName)
                     ->createThumbnails();
 
             $this->_echo(sprintf('%s', $sFilePath), 'success');
         } catch (Exception $oException) {
-            $this->_echo(sprintf('%s', $sFilePath), 'error');
+            $this->_echo(sprintf('%s %s', $sFilePath, $oException->getMessage()), 'error');
         }
     }
 }
