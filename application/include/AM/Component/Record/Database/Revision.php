@@ -85,7 +85,8 @@ class AM_Component_Record_Database_Revision extends AM_Component_Record_Database
                 $aStates[$oState->id] = $oState->title;
             }
         } else {
-            $aCriteria = ($this->user['is_admin'])? array() : array('user' => $this->user['id']);
+            $aCriteria            = ($this->user['is_admin'])? array() : array('user' => $this->user['id']);
+            $aCriteria['deleted'] = 'no';
 
             $oRevisions = AM_Model_Db_Table_Abstract::factory('revision')->findAllBy($aCriteria);
             foreach ($oRevisions as $oRevision) {
