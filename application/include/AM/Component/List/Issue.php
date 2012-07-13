@@ -59,9 +59,12 @@ class AM_Component_List_Issue extends AM_Component_Grid
                 ->join('state', 'issue.state = state.id', null)
                 ->join('user', 'user.id = issue.user', null)
 
-                ->joinLeft('revision', 'revision.issue = issue.id', null)
-                ->joinLeft(array('revision1' => 'revision'), 'revision1.issue = issue.id '
-                        . $oActionController->oDb->quoteInto('AND revision1.state = ?', AM_Model_Db_State::STATE_PUBLISHED), null)
+                ->joinLeft('revision', $oActionController->oDb->quoteInto('revision.issue = issue.id AND revision.deleted = ?', 'no'), null)
+                ->joinLeft(array('revision1' => 'revision'),
+                        'revision1.issue = issue.id'
+                        . $oActionController->oDb->quoteInto(' AND revision1.state = ?', AM_Model_Db_State::STATE_PUBLISHED)
+                        . $oActionController->oDb->quoteInto(' AND revision1.deleted = ?', 'no'),
+                        null)
 
                 ->where('application.id = ?', $iApplicationId)
 

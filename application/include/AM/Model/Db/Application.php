@@ -50,7 +50,23 @@ class AM_Model_Db_Application extends AM_Model_Db_Abstract
     /** @var AM_Model_Db_Rowset_Issue **/
     protected $_oIssues = null; /**< @type AM_Model_Db_Rowset_Issue */
 
+    /** @var AM_Model_Db_Client **/
+    protected $_oClient = null; /**< @type AM_Model_Db_Client */
+
     /**
+     * Returns application's clent
+     * @return AM_Model_Db_Client
+     */
+    public function getClient()
+    {
+        if (is_null($this->_oClient)) {
+            $this->_oClient = AM_Model_Db_Table_Abstract::factory('client')->findOneBy(array('id' => $this->client));
+        }
+
+        return $this->_oClient;
+    }
+
+        /**
      * Set TOC vocabulary
      * @param AM_Model_Db_Vocabulary $oVocabulary
      * @return AM_Model_Db_Application

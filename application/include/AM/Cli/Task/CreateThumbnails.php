@@ -46,14 +46,17 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
 
     protected function _configure()
     {
+        $this->addOption('from', 'f', '=i', 'Export revisions with ID > FROM');
     }
 
     public function execute()
     {
+        $iIdFrom = intval($this->_getOption('from')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
+
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 
         $this->_echo('Resizing elements');
-        $this->_resizeElements();
+        $this->_resizeElements($iIdFrom);
 
         $this->_echo('Resizing TOC');
         $this->_resizeTOC();
@@ -65,14 +68,19 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
     /**
      * Resizes all elements with type "resource"
      */
-    protected function _resizeElements()
+    protected function _resizeElements($iIdFrom = null)
     {
-
         $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
                 ->select()
                 ->where(sprintf('key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
                                                                 , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL
-                                                                , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL_SELECTED));
+                                                                , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL_SELECTED))
+                ->order('id_element ASC');
+
+        if ($iIdFrom > 0) {
+            $oQuery->where('id_element > ?', $iIdFrom);
+        }
+
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
 
         foreach ($oElementDatas as $oElementData) {
