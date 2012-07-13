@@ -85,16 +85,11 @@ class AM_Component_Record_Database_Revision extends AM_Component_Record_Database
                 $aStates[$oState->id] = $oState->title;
             }
         } else {
-            $aCriteria            = ($this->user['is_admin'])? array() : array('user' => $this->user['id']);
-            $aCriteria['deleted'] = 'no';
+            $aCriteria = ($this->user['is_admin'])? array() : array('revision.user' => $this->user['id']);
 
-            $oRevisions = AM_Model_Db_Table_Abstract::factory('revision')->findAllBy($aCriteria, null, array('user ASC', 'issue ASC'));
-            foreach ($oRevisions as $oRevision) {
-                /* @var $oRevision AM_Model_Db_Revision */
-                $oIssue                     = $oRevision->getIssue();
-                $oApplication               = $oIssue->getApplication();
-                $oCleint                    = $oApplication->getClient();
-                $aRevisions[$oRevision->id] = sprintf('%s > %s > %s > %s', $oCleint->title, $oApplication->title, $oIssue->title, $oRevision->title);
+            $aRevisionSet = AM_Model_Db_Table_Abstract::factory('revision')->getRevisionsSortedByOwners($aCriteria);
+            foreach ($aRevisionSet as $aRevision) {
+                $aRevisions[$aRevision['id']] = sprintf('%s > %s > %s > %s', $aRevision['title_client'], $aRevision['title_application'], $aRevision['title_issue'], $aRevision['title']);
             }
         }
 
