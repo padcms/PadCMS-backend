@@ -105,4 +105,42 @@ class AM_Model_Db_Table_Revision extends AM_Model_Db_Table_Abstract
 
         return $iResult;
     }
+
+    /**
+     * Returns array of revisions sorted by client, application, issue
+     * @param array $aCriteria
+     * @return array
+     */
+    public function getRevisionsSortedByOwners($aCriteria)
+    {
+        $aCriteria = $this->_whereValues($aCriteria);
+
+        $oQuery = $this->getAdapter()
+                ->select()
+                ->from('revision')
+                ->join('issue', 'issue.id = revision.issue', null)
+                ->join('application', 'application.id = issue.application', null)
+                ->join('client', 'client.id = application.client', null)
+                ->where('revision.deleted = ?', 'no')
+                ->where('issue.deleted = ?', 'no')
+                ->where('application.deleted = ?', 'no')
+                ->where('client.deleted = ?', 'no')
+                ->order(array('client.title ASC', 'application.title ASC', 'issue.title ASC', 'revision.title ASC'))
+                ->columns(array(
+                    'id'                => 'revision.id',
+                    'title'             => 'revision.title',
+                    'title_issue'       => 'issue.title',
+                    'title_application' => 'application.title',
+                    'title_client'      => 'client.title'
+                )
+        );
+
+        foreach ($aCriteria as $sValue) {
+            $oQuery->where($sValue);
+        }
+
+        $aRevisions = $this->getAdapter()->fetchAll($oQuery);
+
+        return $aRevisions;
+    }
 }
