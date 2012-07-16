@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <term id="1" vocabulary="1" revision="1" title="Term 1" />
+    <term id="2" vocabulary="1" revision="3" title="Term 2" />
+    <term id="3" vocabulary="1" revision="2" title="Term 1" />
+    <page id="1" toc="1" />
+    <page id="2" toc="3" />
+</dataset>

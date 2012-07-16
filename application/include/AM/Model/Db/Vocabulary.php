@@ -77,7 +77,7 @@ class AM_Model_Db_Vocabulary extends AM_Model_Db_Abstract
      */
     public function fetchToc()
     {
-        $this->_oToc = AM_Model_Db_Table_Abstract::factory('term')->findAllBy(array('deleted' => 'no', 'vocabulary' => $this->id));
+        $this->_oToc = AM_Model_Db_Table_Abstract::factory('term')->findAllBy(array('deleted' => 'no', 'vocabulary' => $this->id), null, array('id ASC'));
 
         //TODO: Is RowSet can return as $id=>$object ?
         $aTermsById = array();
@@ -190,16 +190,13 @@ class AM_Model_Db_Vocabulary extends AM_Model_Db_Abstract
     /**
      * Copy vocabulary and all his terms from one revision to other
      * @param AM_Model_Db_Revision $oRevisionTo
+     * @param AM_Model_Db_Revision $oRevisionFrom
      * @return AM_Model_Db_Term
      */
-    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo)
+    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo, AM_Model_Db_Revision $oRevisionFrom)
     {
-        if (!empty($this->_oTags)) {
-            $this->_oTags->copyToRevision($oRevisionTo);
-        }
-
         if (!empty($this->_oToc)) {
-            $this->_oToc->copyToRevision($oRevisionTo);
+            $this->_oToc->copyToRevision($oRevisionTo, $oRevisionFrom);
         }
 
         return $this;

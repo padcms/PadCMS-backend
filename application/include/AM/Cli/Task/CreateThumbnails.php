@@ -46,17 +46,21 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
 
     protected function _configure()
     {
-        $this->addOption('from', 'f', '=i', 'Export revisions with ID > FROM');
+        $this->addOption('from', 'f', '=i', 'Export element with ID > FROM');
+        $this->addOption('element', 'el', '=i', 'Export element with selected ID');
     }
 
     public function execute()
     {
-        $iIdFrom = intval($this->_getOption('from')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
+        $iIdFrom  = intval($this->_getOption('from')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
+        $iElement = intval($this->_getOption('element')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 
         $this->_echo('Resizing elements');
-        $this->_resizeElements($iIdFrom);
+        $this->_resizeElements($iIdFrom, $iElement);
+
+        if ($iElement > 0 ) return;
 
         $this->_echo('Resizing TOC');
         $this->_resizeTOC();
@@ -68,7 +72,7 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
     /**
      * Resizes all elements with type "resource"
      */
-    protected function _resizeElements($iIdFrom = null)
+    protected function _resizeElements($iIdFrom = null, $iElementId = null)
     {
         $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
                 ->select()
@@ -79,6 +83,8 @@ class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
 
         if ($iIdFrom > 0) {
             $oQuery->where('id_element > ?', $iIdFrom);
+        } elseif ($iElementId > 0) {
+            $oQuery->where('id_element = ?', $iElementId);
         }
 
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
