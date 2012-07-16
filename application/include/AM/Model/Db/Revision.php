@@ -136,11 +136,11 @@ class AM_Model_Db_Revision extends AM_Model_Db_Abstract
         $aPages         = $oRevisionFrom->getPages();
 
         if (!empty($oVocabularyToc)) {
-            $oVocabularyToc->copyToRevision($this);
+            $oVocabularyToc->copyToRevision($this, $oRevisionFrom);
         }
 
         if (!empty($oVocabularyTag)) {
-            $oVocabularyTag->copyToRevision($this);
+            $oVocabularyTag->copyToRevision($this, $oRevisionFrom);
         }
 
         foreach ($aPages as $oPage) {

@@ -112,44 +112,23 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
      * @param AM_Model_Db_Revision $oRevisionTo
      * @return AM_Model_Db_Term
      */
-    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo)
+    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo, AM_Model_Db_Revision $oRevisionFrom)
     {
-        $oTagVocabulary = $oRevisionTo->getVocabularyTag();
         $oTocVocabulary = $oRevisionTo->getVocabularyToc();
 
-        $oResources = $this->getResources();
+        if($this->_isToc()  && !empty($this->revision ) && $oRevisionFrom->id == $this->revision) {
+            $oResources = $this->getResources();
 
-        $bNeedToInsert = false;
-
-        if ($this->_isTag()) {
-            //Check vacabulary of term & new revision
-            if ($oTagVocabulary->id != $this->vocabulary) {
-                $this->vocabulary   = $oTagVocabulary->id;
-                $bNeedToInsert       = true;
-            }
-        } elseif($this->_isToc()) {
-            //Check vacabulary of term & new revision
-            if ($oTocVocabulary->id != $this->vocabulary) {
-                $this->vocabulary   = $oTocVocabulary->id;
-                $bNeedToInsert       = true;
-            }
-        }
-
-        if (!empty($this->revision)) {
+            $this->vocabulary = $oTocVocabulary->id;
             $this->revision   = $oRevisionTo->id;
-            $bNeedToInsert     = true;
-        }
-
-        if ($bNeedToInsert) {
-            $iIdOld = $this->id;
 
             $aData               = array();
             $aData['updated']    = null;
             $aData['vocabulary'] = $this->vocabulary;
             $aData['revision']   = $this->revision;
 
-            $this->copy($aData);
 
+            $this->copy($aData);
             $oResources->copy();
         }
         return $this;
@@ -222,6 +201,11 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
             $oTermPage->page = $oPage->id;
             $oTermPage->term = $this->id;
             $oTermPage->save();
+
+            if ($this->_isToc()) {
+                $oPage->toc = $this->id;
+                $oPage->save();
+            }
         }
 
         return $this;

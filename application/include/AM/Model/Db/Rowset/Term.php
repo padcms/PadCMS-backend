@@ -43,14 +43,15 @@ class AM_Model_Db_Rowset_Term extends AM_Model_Db_Rowset_Abstract
     /**
      * Copy a terms from one revision to other
      * @param AM_Model_Db_Revision $oRevisionTo
+     * @param AM_Model_Db_Revision $oRevisionFrom
      * @return AM_Model_Db_Rowset_Term
      */
-    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo)
+    public function copyToRevision(AM_Model_Db_Revision $oRevisionTo, AM_Model_Db_Revision $oRevisionFrom)
     {
         //Inserting new records
         foreach ($this as $oTerm) {
             /* @var $oTerm AM_Model_Db_Term */
-            $oTerm->copyToRevision($oRevisionTo);
+            $oTerm->copyToRevision($oRevisionTo, $oRevisionFrom);
         }
 
         //Update nesting reletions
