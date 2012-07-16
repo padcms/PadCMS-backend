@@ -1,8 +1,5 @@
 <?php
 /**
- * @file
- * AM_Cli_Task_CreateThumbnails class definition.
- *
  * LICENSE
  *
  * This software is governed by the CeCILL-C  license under French law and
@@ -36,55 +33,63 @@
  */
 
 /**
- * This task creates thumbnail for all resources
+ * Task creates thumbnail for elements
  * @ingroup AM_Cli
  */
-class AM_Cli_Task_CreateThumbnails extends AM_Cli_Task_Abstract
+class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
 {
     /** @var AM_Handler_Thumbnail */
     protected $_oThumbnailer = null; /**< @type AM_Handler_Thumbnail */
+    /** @var int */
+    protected $_iFromId = null; /**< @type int */
+    /** @var int */
+    protected $_iElementId = null; /**< @type int */
+    /** @var int */
+    protected $_iRevisionId = null; /**< @type int */
 
     protected function _configure()
     {
         $this->addOption('from', 'f', '=i', 'Export element with ID > FROM');
         $this->addOption('element', 'el', '=i', 'Export element with selected ID');
+        $this->addOption('revision', 'rev', '=i', 'Export elements with selected revision ID');
     }
 
     public function execute()
     {
-        $iIdFrom  = intval($this->_getOption('from')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
-        $iElement = intval($this->_getOption('element')); //If this option is set, we are creating thumbnails for elements with ID > $iIdFrom
+        $this->_iFromId     = intval($this->_getOption('from'));
+        $this->_iElementId  = intval($this->_getOption('element'));
+        $this->_iRevisionId = intval($this->_getOption('revision'));
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 
         $this->_echo('Resizing elements');
-        $this->_resizeElements($iIdFrom, $iElement);
-
-        if ($iElement > 0 ) return;
-
-        $this->_echo('Resizing TOC');
-        $this->_resizeTOC();
-
-        $this->_echo('Resizing horizontal pdfs');
-        $this->_resizeHorizontalPdfs();
+        $this->_resizeElements();
     }
 
     /**
-     * Resizes all elements with type "resource"
+     * Resizes elements
      */
-    protected function _resizeElements($iIdFrom = null, $iElementId = null)
+    protected function _resizeElements()
     {
         $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
                 ->select()
-                ->where(sprintf('key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
+                ->from('element_data')
+                ->where(sprintf('element_data.key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
                                                                 , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL
                                                                 , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL_SELECTED))
-                ->order('id_element ASC');
+                ->order('element_data.id_element ASC');
+        /* @var $oQuery Zend_Db_Table_Select */
 
-        if ($iIdFrom > 0) {
-            $oQuery->where('id_element > ?', $iIdFrom);
-        } elseif ($iElementId > 0) {
-            $oQuery->where('id_element = ?', $iElementId);
+        if ($this->_iFromId > 0) {
+            $oQuery->where('element_data.id_element > ?', $this->_iFromId);
+        } elseif ($this->_iElementId > 0) {
+            $oQuery->where('element_data.id_element = ?', $this->_iElementId);
+        } elseif ($this->_iRevisionId > 0) {
+            $oQuery->setIntegrityCheck(false)
+                    ->joinInner('element', 'element.id = element_data.id_element')
+                    ->joinInner('page', 'page.id = element.page')
+                    ->joinInner('revision', 'revision.id = page.revision')
+                    ->where('revision.id = ?', $this->_iRevisionId);
         }
 
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
