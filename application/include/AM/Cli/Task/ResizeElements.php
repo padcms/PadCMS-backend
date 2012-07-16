@@ -46,19 +46,31 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
     protected $_iElementId = null; /**< @type int */
     /** @var int */
     protected $_iRevisionId = null; /**< @type int */
+    /** @var int */
+    protected $_iPageId = null; /**< @type int */
+    /** @var int */
+    protected $_iIssueId = null; /**< @type int */
+    /** @var int */
+    protected $_iApplicationId = null; /**< @type int */
 
     protected function _configure()
     {
-        $this->addOption('from', 'f', '=i', 'Export element with ID > FROM');
+        $this->addOption('from', 'fr', '=i', 'Export element with ID > FROM');
         $this->addOption('element', 'el', '=i', 'Export element with selected ID');
         $this->addOption('revision', 'rev', '=i', 'Export elements with selected revision ID');
+        $this->addOption('page', 'p', '=i', 'Export elements with selected page ID');
+        $this->addOption('issue', 'is', '=i', 'Export elements with selected issue ID');
+        $this->addOption('application', 'app', '=i', 'Export elements with selected application ID');
     }
 
     public function execute()
     {
-        $this->_iFromId     = intval($this->_getOption('from'));
-        $this->_iElementId  = intval($this->_getOption('element'));
-        $this->_iRevisionId = intval($this->_getOption('revision'));
+        $this->_iFromId        = intval($this->_getOption('from'));
+        $this->_iElementId     = intval($this->_getOption('element'));
+        $this->_iRevisionId    = intval($this->_getOption('revision'));
+        $this->_iPageId        = intval($this->_getOption('page'));
+        $this->_iIssueId       = intval($this->_getOption('issue'));
+        $this->_iApplicationId = intval($this->_getOption('application'));
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 
@@ -73,23 +85,48 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
     {
         $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
                 ->select()
+                ->setIntegrityCheck(false)
                 ->from('element_data')
+                ->joinInner('element', 'element.id = element_data.id_element')
+                ->joinInner('page', 'page.id = element.page')
+                ->joinInner('revision', 'revision.id = page.revision')
+                ->joinInner('issue', 'issue.id = revision.issue')
+                ->joinInner('application', 'application.id = issue.application')
+                ->joinInner('client', 'client.id = application.client')
                 ->where(sprintf('element_data.key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
                                                                 , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL
                                                                 , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL_SELECTED))
+                ->where('page.deleted = ?', 'no')
+                ->where('revision.deleted = ?', 'no')
+                ->where('issue.deleted = ?', 'no')
+                ->where('application.deleted = ?', 'no')
+                ->where('client.deleted = ?', 'no')
+
                 ->order('element_data.id_element ASC');
         /* @var $oQuery Zend_Db_Table_Select */
 
         if ($this->_iFromId > 0) {
             $oQuery->where('element_data.id_element > ?', $this->_iFromId);
-        } elseif ($this->_iElementId > 0) {
+        }
+
+        if ($this->_iElementId > 0) {
             $oQuery->where('element_data.id_element = ?', $this->_iElementId);
-        } elseif ($this->_iRevisionId > 0) {
-            $oQuery->setIntegrityCheck(false)
-                    ->joinInner('element', 'element.id = element_data.id_element')
-                    ->joinInner('page', 'page.id = element.page')
-                    ->joinInner('revision', 'revision.id = page.revision')
-                    ->where('revision.id = ?', $this->_iRevisionId);
+        }
+
+        if ($this->_iPageId > 0) {
+            $oQuery->where('page.id = ?', $this->_iPageId);
+        }
+
+        if ($this->_iRevisionId > 0) {
+            $oQuery->where('revision.id = ?', $this->_iRevisionId);
+        }
+
+        if ($this->_iIssueId > 0) {
+            $oQuery->where('issue.id = ?', $this->_iIssueId);
+        }
+
+        if ($this->_iApplicationId > 0) {
+            $oQuery->where('application.id = ?', $this->_iApplicationId);
         }
 
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
