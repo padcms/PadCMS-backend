@@ -36,10 +36,8 @@
  * Task creates thumbnail for elements
  * @ingroup AM_Cli
  */
-class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
+class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
 {
-    /** @var AM_Handler_Thumbnail */
-    protected $_oThumbnailer = null; /**< @type AM_Handler_Thumbnail */
     /** @var int */
     protected $_iFromId = null; /**< @type int */
     /** @var int */
@@ -55,12 +53,12 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
 
     protected function _configure()
     {
-        $this->addOption('from', 'fr', '=i', 'Export element with ID > FROM');
-        $this->addOption('element', 'el', '=i', 'Export element with selected ID');
-        $this->addOption('revision', 'rev', '=i', 'Export elements with selected revision ID');
-        $this->addOption('page', 'p', '=i', 'Export elements with selected page ID');
-        $this->addOption('issue', 'is', '=i', 'Export elements with selected issue ID');
-        $this->addOption('application', 'app', '=i', 'Export elements with selected application ID');
+        $this->addOption('from', 'fr', '=i', 'Resize element with ID > FROM');
+        $this->addOption('element', 'el', '=i', 'Resize element with selected ID');
+        $this->addOption('revision', 'rev', '=i', 'Resize elements with selected revision ID');
+        $this->addOption('page', 'p', '=i', 'Resize elements with selected page ID');
+        $this->addOption('issue', 'is', '=i', 'Resize elements with selected issue ID');
+        $this->addOption('application', 'app', '=i', 'Resize elements with selected application ID');
     }
 
     public function execute()
@@ -166,54 +164,5 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Abstract
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
             }
         }
-    }
-
-    /**
-     * Resizes all horizontal pages
-     */
-    protected function _resizeHorizontalPdfs()
-    {
-        $oQuery = AM_Model_Db_Table_Abstract::factory('page_horisontal')
-                ->select()
-                ->where('resource IS NOT NULL');
-
-        $oPagesHorizaontal = AM_Model_Db_Table_Abstract::factory('page_horisontal')->fetchAll($oQuery);
-
-        foreach ($oPagesHorizaontal as $oPageHorizontal) {
-            try {
-                $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal->id_issue, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
-            } catch (Exception $oException) {
-                $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
-            }
-        }
-    }
-
-
-    /**
-     * Resizes given image
-     * @param string $sFileBaseName
-     * @param int $iElementId The id of element, term, horisontal page
-     * @param string $sResourceType The type of resource's parent (element, toc, cache-static-pdf)
-     * @param string $sResourceKeyName The name of the resource type (resource, thumbnail, etc)
-     * @return @void
-     */
-    protected function _resizeImage($sFileBaseName, $iElementId, $sResourceType, $sResourceKeyName, $sResourcePresetName = null)
-    {
-        if (is_null($sResourcePresetName)) {
-            $sResourcePresetName = $sResourceType;
-        }
-
-        $sFileExtension = strtolower(pathinfo($sFileBaseName, PATHINFO_EXTENSION));
-
-        $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
-                    . DIRECTORY_SEPARATOR
-                    . $sResourceKeyName . '.' . $sFileExtension;
-
-        $this->_oThumbnailer->clearSources()
-                ->addSourceFile($sFilePath)
-                ->loadAllPresets($sResourcePresetName)
-                ->createThumbnails();
-
-        $this->_echo(sprintf('%s', $sFilePath), 'success');
     }
 }
