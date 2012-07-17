@@ -50,6 +50,7 @@ class AM_Cli_Task_ResizeHzpages extends AM_Cli_Task_Resize_Abstract
         $this->addOption('from', 'fr', '=i', 'Risize horizontal pages with issue ID > FROM');
         $this->addOption('issue', 'is', '=i', 'Resize horizontal pages with selected issue ID');
         $this->addOption('application', 'app', '=i', 'Resize elements with selected application ID');
+        $this->addOption('preset', 'pr', '=s', 'Resize elements using selected preset');
     }
 
     public function execute()
@@ -57,6 +58,7 @@ class AM_Cli_Task_ResizeHzpages extends AM_Cli_Task_Resize_Abstract
         $this->_iFromIssueId   = intval($this->_getOption('from'));
         $this->_iIssueId       = intval($this->_getOption('issue'));
         $this->_iApplicationId = intval($this->_getOption('application'));
+        $this->_sPreset        = (string) $this->_getOption('preset');
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 

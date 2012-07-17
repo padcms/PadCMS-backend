@@ -134,8 +134,8 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     public function addPreset($sPreset)
     {
         $sPreset = (string) $sPreset;
-        if (!isset($this->getConfig()->{$preset})) {
-            throw new AM_Handler_Thumbnail_Exception(sptintf('There is not preset with name \'%s\' in the config', $sPreset), 502);
+        if (!isset($this->getConfig()->{$sPreset})) {
+            throw new AM_Handler_Thumbnail_Exception(sprintf('There is not preset with name \'%s\' in the config', $sPreset), 502);
         }
 
         $this->_aPresets[] = $sPreset;

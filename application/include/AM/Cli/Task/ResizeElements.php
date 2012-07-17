@@ -59,6 +59,7 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
         $this->addOption('page', 'p', '=i', 'Resize elements with selected page ID');
         $this->addOption('issue', 'is', '=i', 'Resize elements with selected issue ID');
         $this->addOption('application', 'app', '=i', 'Resize elements with selected application ID');
+        $this->addOption('preset', 'pr', '=s', 'Resize elements using selected preset');
     }
 
     public function execute()
@@ -69,6 +70,7 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
         $this->_iPageId        = intval($this->_getOption('page'));
         $this->_iIssueId       = intval($this->_getOption('issue'));
         $this->_iApplicationId = intval($this->_getOption('application'));
+        $this->_sPreset        = (string) $this->_getOption('preset');
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 

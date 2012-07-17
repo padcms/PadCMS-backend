@@ -222,14 +222,14 @@ class AM_Tools_Image
      * @return void
      * @throws AM_Exception
      */
-    public static function cropImage($sImagePath)
+    public static function cropImage($sImagePath, $iBlockSize = 256)
     {
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
 
         $sArchivePath = pathinfo($sImagePath, PATHINFO_DIRNAME);
         $sArchiveName = pathinfo($sImagePath, PATHINFO_FILENAME);
 
-        $sCmd = sprintf('convert %s -crop 256x256 -set filename:title "%%[fx:page.y/256+1]_%%[fx:page.x/256+1]" +repage  +adjoin %s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir);
+        $sCmd = sprintf('convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
 
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 

@@ -51,7 +51,12 @@ class AM_Resource_Processor implements AM_Resource_Processor_Interface
     {
         AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
         if ('noresize' != $sMode) {
-            AM_Tools_Image::cropImage($sDst);
+            $iBlockSize = 256;
+            if ($iWidth == 1536 || $iWidth == 2048) {
+                $iBlockSize = 512;
+            }
+
+            AM_Tools_Image::cropImage($sDst, $iBlockSize);
         }
     }
 }
