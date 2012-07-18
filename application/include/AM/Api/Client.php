@@ -166,6 +166,8 @@ class AM_Api_Client extends AM_Api
                         if (!is_null($oPurchase)) {
                             $this->getLogger()->debug(sprintf('Found purchase record: %s', $sUdid));
                             $aIssue['paid'] = true;
+                        } else {
+                            $this->getLogger()->debug(sprintf('Purchases not found: %s', $sUdid));
                         }
                     }
                 }
