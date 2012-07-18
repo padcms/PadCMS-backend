@@ -65,7 +65,7 @@ abstract class AM_Api
     public function getLogger()
     {
         if (is_null($this->_oLogger)) {
-            $this->_oLogger = Zend_Registry::get('logger');
+            $this->_oLogger = Zend_Registry::get('log');
             $this->_oLogger->setEventItem('file', get_class($this));
         }
 

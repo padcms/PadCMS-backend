@@ -74,8 +74,8 @@ class AM_Api_Client extends AM_Api
 
         if (!empty($sUdid)) {
             $oDevice = AM_Model_Db_Table_Abstract::factory('device')->findOneBy(array('identifer' => $sUdid));
-
             if (!is_null($oDevice)) {
+                $this->getLogger()->debug(sprintf('Existing device given: %s', $sUdid));
                 $oUser = $oDevice->getUser();
                 if (!is_null($oUser)) {
                     $bIsUdidUserAdmin = (bool) $oUser->is_admin;
@@ -120,9 +120,10 @@ class AM_Api_Client extends AM_Api
                     $oSubscription = AM_Model_Db_Table_Abstract::factory('purchase')
                             ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $sProductId, 'deleted' => 'no'));
                     /* @var $oSubscription AM_Model_Db_Purchase */
-
                     if (!is_null($oSubscription)) {
+                        $this->getLogger()->debug(sprintf('Found subscription for device: %s', $sUdid));
                         if ($oSubscription->isExpired()) {
+                            $this->getLogger()->debug(sprintf('Subscription is expired: %s', $sUdid));
                             $oSubscription = null;
                         } else {
                             break;
@@ -159,11 +160,15 @@ class AM_Api_Client extends AM_Api
                         $aIssue['paid']              = true;
                         $aIssue['subscription_type'] = $oSubscription->subscription_type;
                     } else {
+                        $this->getLogger()->debug(sprintf('Checking purchase: %s', $sUdid));
                         $oPurchase = AM_Model_Db_Table_Abstract::factory('purchase')
                                 ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $oIssue->product_id, 'deleted' => 'no'));
 
                         if (!is_null($oPurchase)) {
+                            $this->getLogger()->debug(sprintf('Found purchase record: %s', $sUdid));
                             $aIssue['paid'] = true;
+                        } else {
+                            $this->getLogger()->debug(sprintf('Purchases not found: %s', $sUdid));
                         }
                     }
                 }
