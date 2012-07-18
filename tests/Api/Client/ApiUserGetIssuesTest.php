@@ -65,6 +65,7 @@ class ApiUserGetIssuesTest extends AM_Test_PHPUnit_DatabaseTestCase
                     'application_notification_email_title' => 'Email title',
                     'application_notification_twitter'     => 'Twitter message',
                     'application_notification_facebook'    => 'Facebook message',
+                    'application_preview'                  => 2,
                     'issues' => array (
                         1 => array(
                             'issue_id'              => 1,

@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `application`;
 CREATE TABLE IF NOT EXISTS `application` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
-  `version` varchar(16) NOT NULL DEFAULT '1',
+  `preview` int(4) NOT NULL DEFAULT '0',
   `product_id` varchar(255) DEFAULT NULL,
   `description` text,
   `client` int(8) NOT NULL,
