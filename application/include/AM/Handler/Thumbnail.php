@@ -36,8 +36,6 @@
  */
 
 /**
- * Temp handler - creates temporary files in system temp dir, deletes files/dirs in destructor
- *
  * @ingroup AM_Handler
  */
 class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thumbnail_Interface
