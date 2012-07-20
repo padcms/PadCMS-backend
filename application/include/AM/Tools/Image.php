@@ -219,15 +219,13 @@ class AM_Tools_Image
     /**
      * http://www.imagemagick.org/Usage/crop/#crop_equal
      * @param string $sImagePath
+     * @param string $sArchivePath
      * @return void
      * @throws AM_Exception
      */
-    public static function cropImage($sImagePath, $iBlockSize = 256)
+    public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = 256)
     {
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
-
-        $sArchivePath = pathinfo($sImagePath, PATHINFO_DIRNAME);
-        $sArchiveName = pathinfo($sImagePath, PATHINFO_FILENAME);
 
         $sCmd = sprintf('convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
 
@@ -238,9 +236,8 @@ class AM_Tools_Image
                 ->sort_by_name()
                 ->in($sTempDir);
 
-        $sZipPath         = $sArchivePath . DIRECTORY_SEPARATOR . $sArchiveName .'.zip';
         $oZip             = new ZipArchive();
-        $rArchiveResource = $oZip->open($sZipPath, ZIPARCHIVE::CREATE);
+        $rArchiveResource = $oZip->open($sArchivePath, ZIPARCHIVE::CREATE);
 
         if ($rArchiveResource !== true) {
             throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);

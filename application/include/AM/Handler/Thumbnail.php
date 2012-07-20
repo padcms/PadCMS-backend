@@ -48,6 +48,9 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     protected $_aThumbnails = array(); /**< @type array */
     /** @var AM_Resource_Processor **/
     protected $_oResourceProcessor = null; /**< @type AM_Resource_Processor */
+    /** @var AM_Handler_Thumbnail_Storage_Abstract **/
+    protected $_oResourceStorage = null; /**< @type AM_Handler_Thumbnail_Storage_Abstract */
+
 
     /**
      * @param array | null $aFiles array of image files
@@ -79,6 +82,23 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         }
 
         return $this->_oResourceProcessor;
+    }
+
+    /**
+     * Returns the storage
+     * @return AM_Handler_Thumbnail_Storage_Abstract
+     * @throws AM_Handler_Thumbnail_Exception
+     */
+    public function getResourceStorage()
+    {
+        if (is_null($this->_oResourceStorage)) {
+            $this->_oResourceStorage = Zend_Registry::get('resourcestorage');
+            if (!is_object($this->_oResourceStorage)) {
+                throw new AM_Handler_Thumbnail_Exception(sprintf('Wrong resource storage given', 501));
+            }
+        }
+
+        return $this->_oResourceStorage;
     }
 
     /**
@@ -203,30 +223,47 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
 
                 $oPresetConfig = $this->getConfig()->{$sPreset};
                 //Get path without 'sourceFolder'
-                $sSourceFilePath = substr($oSource->getSourceFileDir(), strlen($this->getConfig()->common->sourceFolder));
-                $sOutputFilePath = $sOutputFolder
-                        . DIRECTORY_SEPARATOR
-                        . $sPreset
-                        . DIRECTORY_SEPARATOR
-                        . trim($sSourceFilePath, DIRECTORY_SEPARATOR);
-                AM_Tools_Standard::getInstance()->mkdir($sOutputFilePath, octdec($this->getConfig()->common->thumbnailDirChmod), true);
-                $sOutputFile = $sOutputFilePath
-                        . DIRECTORY_SEPARATOR
-                        . $oSource->getSourceFileName()
-                        . '.'
-                        . pathinfo($sInputFile, PATHINFO_EXTENSION);
+                $sPathPrefix = substr($oSource->getSourceFileDir(), strlen($this->getConfig()->common->sourceFolder));
+                $sPathPrefix = $sPreset . DIRECTORY_SEPARATOR . trim($sPathPrefix, DIRECTORY_SEPARATOR);
+
+                $this->getResourceStorage()->setPathPrefix($sPathPrefix);
+
+                $sTempPath = AM_Handler_Temp::getInstance()->getDir();
 
                 if ($oSource->isImage()) {
-                    $this->getResourceProcessor()->resizeImage($sInputFile, $sOutputFile, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method);
+                    $sThumbnail = $sTempPath
+                    . DIRECTORY_SEPARATOR
+                    . $oSource->getSourceFileName()
+                    . '.'
+                    . pathinfo($sInputFile, PATHINFO_EXTENSION);
+
+                    $this->getResourceProcessor()->resizeImage($sInputFile, $sThumbnail, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method);
+
+                    $this->getResourceStorage()->addResource($sThumbnail);
+
+                    if ('none' != $sPreset) {
+                        $iBlockSize = 256;
+                        if ($oPresetConfig->width == 1536 || $oPresetConfig->width == 2048) {
+                            $iBlockSize = 512;
+                        }
+
+                        $sArchivePath = $sTempPath
+                        . DIRECTORY_SEPARATOR
+                        . $oSource->getSourceFileName()
+                        . '.zip';
+
+                        $this->getResourceProcessor()->cropImage($sThumbnail, $sArchivePath, $iBlockSize);
+
+                        $this->getResourceStorage()->addResource($sArchivePath);
+                    }
                 } else {
                     //We have to copy not image resource only to the 'none' preset folder
-                    if ($sPreset == 'none') {
-                        AM_Tools_Standard::getInstance()->copy($sInputFile, $sOutputFile);
+                    if ('none' != $sPreset) {
+                        $this->getResourceStorage()->addResource($sInputFile);
                     }
                 }
-
-                AM_Tools_Standard::getInstance()->chmod($sOutputFile, octdec($this->getConfig()->common->thumbnailFileChmod));
-                $this->_aThumbnails[] = $sOutputFile;
+                $this->getResourceStorage()->save();
+                $this->_aThumbnails[] = $sThumbnail;
             }
         }
 

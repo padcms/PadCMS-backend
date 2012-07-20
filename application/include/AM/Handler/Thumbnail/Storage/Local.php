@@ -43,6 +43,22 @@ class AM_Handler_Thumbnail_Storage_Local extends AM_Handler_Thumbnail_Storage_Ab
      */
     public function save()
     {
+        $sPath = $this->_getSavePath() . DIRECTORY_SEPARATOR . $this->getPathPrefix();
+        AM_Tools_Standard::getInstance()->mkdir($sPath, octdec($this->getConfig()->thumbnailDirChmod), true);
 
+        foreach ($this->getResources() as $sResource) {
+            $sDestinationFile = $sPath . DIRECTORY_SEPARATOR . pathinfo($sResource, PATHINFO_BASENAME);
+            AM_Tools_Standard::getInstance()->copy($sResource, $sDestinationFile);
+            AM_Tools_Standard::getInstance()->chmod($sDestinationFile, octdec($this->getConfig()->thumbnailFileChmod));
+        }
+
+        $this->_aResources = array();
+    }
+
+    private function _getSavePath()
+    {
+        $sPath = rtrim($this->getConfig()->thumbnailFolder, DIRECTORY_SEPARATOR);
+
+        return $sPath;
     }
 }

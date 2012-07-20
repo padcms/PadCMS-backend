@@ -40,6 +40,47 @@ abstract class AM_Handler_Thumbnail_Storage_Abstract implements AM_Handler_Thumb
 {
     /** @var array */
     protected $_aResources = array(); /**< @type array */
+    /** @var AM_Handler_Thumbnail */
+    protected $_oThumbnailHandler = null; /**<@type AM_Handler_Thumbnail */
+    /** @var Zend_Config */
+    protected $_oConfig = null; /**<@type Zend_Config */
+    /** @var string */
+    protected $_sPathPrefix = null; /**<@type string */
+
+    /**
+     * @param AM_Handler_Abstract $oThumbnailHandler
+     * @param Zend_Config $oConfig
+     */
+    public function __construct(AM_Handler_Abstract $oThumbnailHandler, Zend_Config $oConfig)
+    {
+        $this->_oThumbnailHandler = $oThumbnailHandler;
+        $this->_oConfig           = $oConfig;
+    }
+
+    /**
+     * @return Zend_Config
+     */
+    public function getConfig()
+    {
+        return $this->_oConfig;
+    }
+
+    /**
+     * @param type $sSourcePathPrefix
+     */
+    public function setPathPrefix($sSourcePathPrefix)
+    {
+        $this->_sPathPrefix = trim($sSourcePathPrefix, DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Returns path prefix. Usually it is part of path with element id (00/00/01)
+     * @return string
+     */
+    public function getPathPrefix()
+    {
+        return $this->_sPathPrefix;
+    }
 
     /**
      * Add resource to the stack
@@ -49,13 +90,21 @@ abstract class AM_Handler_Thumbnail_Storage_Abstract implements AM_Handler_Thumb
      */
     public function addResource($sResourcePath)
     {
-        if (AM_Tools_Standard::getInstance()->is_readable($sResourcePath)) {
+        if (!AM_Tools_Standard::getInstance()->is_file($sResourcePath)) {
             throw new AM_Handler_Thumbnail_Storage_Exception(sprintf('Can\'t read resource \"%s\"', $sResourcePath));
         }
 
-        $this->_aResources[] =- $sResourcePath;
+        $this->_aResources[] = $sResourcePath;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResources()
+    {
+        return $this->_aResources;
     }
 
     /**
