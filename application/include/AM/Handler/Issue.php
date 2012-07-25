@@ -113,7 +113,7 @@ class AM_Handler_Issue extends AM_Handler_Abstract
         $oElement->save();
 
         AM_Tools::clearContent(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->id);
-        AM_Tools::clearResizerCache(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->id);
+        AM_Tools::clearResizerCache(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->getResources()->getThumbnailPresetName(), $oElement->id);
 
         //Prepare resources for the element
         $sImage = array_shift($aImages);
@@ -157,7 +157,7 @@ class AM_Handler_Issue extends AM_Handler_Abstract
             $oElement->save();
 
             AM_Tools::clearContent(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->id);
-            AM_Tools::clearResizerCache(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->id);
+            AM_Tools::clearResizerCache(AM_Model_Db_Element::RESOURCE_TYPE, $oElement->getResources()->getThumbnailPresetName(), $oElement->id);
 
             //Prepare resources for the element
             $oElement->getResources()

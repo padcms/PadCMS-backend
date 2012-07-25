@@ -39,7 +39,7 @@ interface AM_Handler_Thumbnail_Storage_Interface
 {
     /**
      * Add resources to process
-     * @var string $sResourcePath the path of the resource
+     * @param string $sResourcePath the path of the resource
      */
     public function addResource($sResourcePath);
 
@@ -47,4 +47,21 @@ interface AM_Handler_Thumbnail_Storage_Interface
      * Saves all the resources to the storage
      */
     public function save();
+
+    /**
+     * Returns image's URL
+     * @param string $sPreset
+     * @param string $sType
+     * @param int $iId
+     * @param string $sFileName
+     */
+    public function getResourceUrl($sPreset, $sType, $iId, $sFileName);
+
+    /**
+     * Remove recources
+     * @param string $sResourceType
+     * @param int $iId
+     * @param string $sFileName
+     */
+    public function clearResources($sFileName = null);
 }

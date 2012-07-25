@@ -82,7 +82,7 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
         AM_Model_Db_Table_Abstract::factory('page_horisontal')->deleteBy(array('id_issue' => $this->getIssue()->id));
 
         AM_Tools::clearContent(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE, $this->getIssue()->id);
-        AM_Tools::clearResizerCache(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE, $this->getIssue()->id);
+        AM_Tools::clearResizerCache(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE, AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE, $this->getIssue()->id);
 
         if (!count($this->getIssue()->getHorizontalPdfs())) {
             return $this;

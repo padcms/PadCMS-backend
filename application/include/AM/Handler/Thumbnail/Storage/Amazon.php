@@ -36,20 +36,61 @@
 /**
  * @ingroup AM_Handler
  */
-class AM_Handler_Thumbnail_Storage_Local extends AM_Handler_Thumbnail_Storage_Abstract
+class AM_Handler_Thumbnail_Storage_Amazon extends AM_Handler_Thumbnail_Storage_Abstract
 {
+    /** @var Zend_Service_Amazon_S3 */
+    private $_oService = null; /**< @type Zend_Service_Amazon_S3 */
+    /** @var string */
+    private $_sBucketName = null; /**< @type string */
+
+    /**
+     * @return Zend_Service_Amazon_S3
+     */
+    public function getService()
+    {
+        return $this->_oService;
+    }
+
+    /**
+     * @param Zend_Service_Amazon_S3 $oService
+     * @return AM_Handler_Thumbnail_Storage_Amazon
+     */
+    public function setService(Zend_Service_Amazon_S3 $oService)
+    {
+        $this->_oService = $oService;
+
+        return $this;
+    }
+
+    /**
+     * Returns the default bucket name
+     * @return string
+     */
+    public function getBucketName()
+    {
+        if (is_null($this->_sBucketName)) {
+            $this->_sBucketName = $this->getConfig()->bucketName;
+        }
+
+        return $this->_sBucketName;
+    }
+
+    /**
+     * Init the Amazon S3 storage
+     */
+    protected function _init()
+    {
+        $this->setService(new Zend_Service_Amazon_S3($this->getConfig()->accessKey, $this->getConfig()->secretKey));
+    }
+
     /**
      * Saves all the resources to the local storage
      */
     public function save()
     {
-        $sPath = $this->_getSavePath() . DIRECTORY_SEPARATOR . $this->getPathPrefix();
-        AM_Tools_Standard::getInstance()->mkdir($sPath, octdec($this->getConfig()->thumbnailDirChmod), true);
-
         foreach ($this->getResources() as $sResource) {
-            $sDestinationFile = $sPath . DIRECTORY_SEPARATOR . pathinfo($sResource, PATHINFO_BASENAME);
-            AM_Tools_Standard::getInstance()->copy($sResource, $sDestinationFile);
-            AM_Tools_Standard::getInstance()->chmod($sDestinationFile, octdec($this->getConfig()->thumbnailFileChmod));
+            $sObjectName =  $this->getBucketName() . '/' . $this->getPathPrefix() . '/' . pathinfo($sResource, PATHINFO_BASENAME);
+            $this->getService()->putFileStream($sResource, $sObjectName, array(Zend_Service_Amazon_S3::S3_ACL_HEADER => Zend_Service_Amazon_S3::S3_ACL_PUBLIC_READ));
         }
 
         $this->_aResources = array();
@@ -65,9 +106,9 @@ class AM_Handler_Thumbnail_Storage_Local extends AM_Handler_Thumbnail_Storage_Ab
      */
     public function getResourceUrl($sPreset, $sType, $iId, $sFileName)
     {
-        $sThumbailUri = trim($this->getConfig()->thumbnailUrl, '/');
+        $sEndpoint = 'http://' . $this->getBucketName() . '.' . Zend_Service_Amazon_S3::S3_ENDPOINT;
 
-        $sImageUrl = '/' . $sThumbailUri
+        $sImageUrl = $sEndpoint
             . '/' . (string) $sPreset
             . '/' . (string) $sType
             . '/' . AM_Tools_String::generatePathFromId(intval($iId), '/')
@@ -84,29 +125,13 @@ class AM_Handler_Thumbnail_Storage_Local extends AM_Handler_Thumbnail_Storage_Ab
      */
     public function clearResources($sFileName = null)
     {
-        $sPath = $this->_getSavePath() . DIRECTORY_SEPARATOR . $this->getPathPrefix();
+        $sFileName        = str_replace('*', '', $sFileName);
+        $sSeartchPrefix   = $this->getPathPrefix() . '/' . $sFileName;
 
-        if (!empty($sFileName)) {
-            $aFiles = glob($sPath . DIRECTORY_SEPARATOR . $sFileName);
-            if ($aFiles) {
-                foreach ($aFiles as $sFile) {
-                    AM_Tools_Standard::getInstance()->unlink($sFile);
-                }
-            }
-            return;
+        $aObjects = $this->getService()->getObjectsByBucket($this->getBucketName(), array('prefix' => $sSeartchPrefix));
+
+        foreach ($aObjects as &$sObject) {
+            $this->getService()->removeObject($this->getBucketName() . '/' . $sObject);
         }
-
-        AM_Tools_Standard::getInstance()->clearDir($sPath);
-    }
-
-    /**
-     * Returns path to the resource's folder
-     * @return string
-     */
-    private function _getSavePath()
-    {
-        $sPath = rtrim($this->getConfig()->thumbnailFolder, DIRECTORY_SEPARATOR);
-
-        return $sPath;
     }
 }

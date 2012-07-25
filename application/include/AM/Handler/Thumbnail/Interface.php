@@ -1,7 +1,5 @@
 <?php
 /**
- * @file
- * AM_Handler_Thumbnail_Interface class definition.
  *
  * LICENSE
  *
@@ -43,4 +41,24 @@ interface AM_Handler_Thumbnail_Interface
     const PRESET_FIELD        = 'field-thumbnail';
     const PRESET_EXPORT_COVER = 'export-cover';
     const PRESET_MAP_ITEM     = 'map-item';
+
+    /**
+     * Remove thumbnails
+     */
+    public function clearThumbnails($sResourceType, $sPresetGroup = null, $iId = null, $sFileName = null);
+
+    /**
+     * Add file for thumbnailing
+     */
+    public function addSourceFile($sFilePath);
+
+    /**
+     * Returns path to the resized resource
+     */
+    public function getResourceUrl($sPreset, $sResourceType, $iId = null, $sFileName = null);
+
+    /**
+     *Create thumbnails for each source
+     */
+    public function createThumbnails();
 }

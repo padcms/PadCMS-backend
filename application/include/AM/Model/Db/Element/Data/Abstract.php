@@ -339,7 +339,7 @@ abstract class AM_Model_Db_Element_Data_Abstract implements AM_Model_Db_Element_
      *
      * @return void
      */
-    protected function _postDelete($sKey)
+    protected function _postDelete($sKey = null)
     { }
 
     /**
@@ -365,5 +365,15 @@ abstract class AM_Model_Db_Element_Data_Abstract implements AM_Model_Db_Element_
         $oElement->save();
 
         return $oElement;
+    }
+
+    /**
+     * Retruns name of the resource's preset name to resize
+     *
+     * @return string
+     */
+    public function getThumbnailPresetName()
+    {
+        return self::TYPE . '-' . $this->getElement()->getPage()->getOrientation();
     }
 }

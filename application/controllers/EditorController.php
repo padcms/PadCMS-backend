@@ -687,8 +687,8 @@ class EditorController extends AM_Controller_Action
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }
 
-            AM_Tools::clearContent('toc', $oTerm->id, 'stripe.*');
-            AM_Tools::clearResizerCache('toc', $oTerm->id, 'stripe.*');
+            AM_Tools::clearContent(AM_Model_Db_Term_Data_Abstract::TYPE, $oTerm->id, 'stripe.*');
+            AM_Tools::clearResizerCache(AM_Model_Db_Term_Data_Abstract::TYPE, AM_Model_Db_Term_Data_Abstract::TYPE, $oTerm->id, 'stripe.*');
 
             $oTerm->thumb_stripe = null;
             $oTerm->updated      = new Zend_Db_Expr('NOW()');
@@ -736,8 +736,8 @@ class EditorController extends AM_Controller_Action
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }
 
-            AM_Tools::clearContent('toc', $oTerm->id, 'sumary.*');
-            AM_Tools::clearResizerCache('toc', $oTerm->id, 'sumary.*');
+            AM_Tools::clearContent(AM_Model_Db_Term_Data_Abstract::TYPE, $oTerm->id, 'sumary.*');
+            AM_Tools::clearResizerCache(AM_Model_Db_Term_Data_Abstract::TYPE, AM_Model_Db_Term_Data_Abstract::TYPE, $oTerm->id, 'sumary.*');
 
             $oTerm->thumb_summary = null;
             $oTerm->updated       = new Zend_Db_Expr('NOW()');

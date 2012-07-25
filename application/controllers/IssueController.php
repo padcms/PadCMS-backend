@@ -305,7 +305,7 @@ class IssueController extends AM_Controller_Action
             AM_Model_Db_Table_Abstract::factory('issue_simple_pdf')->deleteBy(array('id_issue'=>$iIssueId));
 
             AM_Tools::clearContent(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $iIssueId);
-            AM_Tools::clearResizerCache(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $iIssueId);
+            AM_Tools::clearResizerCache(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $iIssueId);
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {

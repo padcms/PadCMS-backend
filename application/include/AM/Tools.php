@@ -76,16 +76,17 @@ class AM_Tools extends Volcano_Tools
     /**
      * Removes resized resource(s)
      *
-     * @param string $sType The type of resource (element, toc, static-pdf, etc.)
+     * @param string $sResourceType The type of resource (element, toc, static-pdf, etc.)
+     * @param string $sPresetGroup The name of presets group (it usualy trhe same as resource type, except elements- element-horizontal, element-vertical, etc)
      * @param int $iId
      * @param string $sFileName
      * @return void
      */
-    public static function clearResizerCache($sType, $iId = null, $sFileName = null)
+    public static function clearResizerCache($sResourceType, $sPresetGroup = null, $iId = null, $sFileName = null)
     {
         $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
         /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
-        $oThumbnailerHandler->clearThumbnails($sType, $iId, $sFileName);
+        $oThumbnailerHandler->clearThumbnails($sResourceType, $sPresetGroup, $iId, $sFileName);
     }
 
     /**
@@ -162,27 +163,7 @@ class AM_Tools extends Volcano_Tools
         $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
         /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
 
-        $sBaseUrl = '';
-
-        if (is_null($iId) || is_null($sFileName)) {
-            $sImageUrl = $sBaseUrl . '/' . ltrim($oThumbnailerHandler->getPresetDefaultThumbnailUrl($sPreset), '/');
-
-            return $sImageUrl;
-        }
-
-        $aPathInfo = pathinfo($sFileName);
-        if ('pdf' == Zend_Filter::filterStatic($aPathInfo['extension'], 'StringToLower', array('encoding' => 'UTF-8'))) {
-            $sFileName = $aPathInfo['filename'] . '.png';
-        }
-
-        $sThumbailUri = trim($oThumbnailerHandler->getConfig()->common->thumbnailUrl, '/');
-
-        $sImageUrl = $sBaseUrl
-            . '/' . $sThumbailUri
-            . '/' . $sPreset
-            . '/' . $sType
-            . '/' . AM_Tools_String::generatePathFromId($iId, '/')
-            . '/' . $sFileName;
+        $sImageUrl = $oThumbnailerHandler->getResourceUrl($sPreset, $sType, $iId, $sFileName);
 
         return $sImageUrl;
     }

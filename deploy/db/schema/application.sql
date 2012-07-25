@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `application` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
   `preview` int(4) NOT NULL DEFAULT '0',
+  `version` varchar(16) NOT NULL DEFAULT '1',
   `product_id` varchar(255) DEFAULT NULL,
   `description` text,
   `client` int(8) NOT NULL,

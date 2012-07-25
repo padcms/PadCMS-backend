@@ -206,13 +206,38 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     }
 
     /**
+     * Returns path to the resized resource
+     *
+     * @param string $sPreset The name of resizing preset
+     * @param string $sResourceType The type of resource (element, toc, static-pdf, etc.)
+     * @param int $iId
+     * @param string $sFileName
+     * @return string
+     */
+    public function getResourceUrl($sPreset, $sResourceType, $iId = null, $sFileName = null)
+    {
+        if (is_null($iId) || is_null($sFileName)) {
+            $sImageUrl = '/' . ltrim($this->getPresetDefaultThumbnailUrl($sPreset), '/');
+
+            return $sImageUrl;
+        }
+
+        $aPathInfo = pathinfo($sFileName);
+        if ('pdf' == Zend_Filter::filterStatic($aPathInfo['extension'], 'StringToLower', array('encoding' => 'UTF-8'))) {
+            $sFileName = $aPathInfo['filename'] . '.png';
+        }
+
+        $sImageUrl = $this->getResourceStorage()->getResourceUrl($sPreset, $sResourceType, $iId, $sFileName);
+
+        return $sImageUrl;
+    }
+
+    /**
      * Create thumbnails for each source
      * @return AM_Handler_Thumbnail
      */
     public function createThumbnails()
     {
-        $sOutputFolder = $this->getThumbnailsPath();
-
         foreach ($this->_aSources as $oSource) {
             /* @var $oSource AM_Resource_Abstract */
             $sInputFile  = $oSource->getFileForThumbnail();
@@ -283,18 +308,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     }
 
     /**
-     * Returns folder path where thumbnails are
-     *
-     * @return type
-     */
-    public function getThumbnailsUri()
-    {
-        $sPath = $this->getConfig()->common->thumbnailUrl;
-
-        return $sPath;
-    }
-
-    /**
      * Return list of created thumbnail
      * @return array
      */
@@ -347,34 +360,33 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         return $aResult;
     }
 
-    public function clearThumbnails($sType, $iId = null, $sFileName = null)
+    /**
+     * @param type $sResourceType
+     * @param type $iId
+     * @param type $sFileName
+     */
+    public function clearThumbnails($sResourceType, $sPresetGroup = null, $iId = null, $sFileName = null)
     {
-        $this->loadAllPresets($sType);
+        if (is_null($sPresetGroup)) {
+            $sPresetGroup = $sResourceType;
+        }
+
+        $this->loadAllPresets($sPresetGroup);
 
         $sSplittedIdPath = is_null($iId) ? null : trim(AM_Tools_String::generatePathFromId($iId), DIRECTORY_SEPARATOR);
 
         foreach ($this->_aPresets as &$sValue) {
-            $sPath = $this->getThumbnailsPath() . DIRECTORY_SEPARATOR . $sValue;
+            $sPath = $sValue;
 
-            if (!empty($sType)) {
-                $sPath .= DIRECTORY_SEPARATOR . $sType;
+            if (!empty($sResourceType)) {
+                $sPath .= DIRECTORY_SEPARATOR . $sResourceType;
             }
 
             if (!is_null($sSplittedIdPath)) {
                 $sPath .= DIRECTORY_SEPARATOR . $sSplittedIdPath;
             }
 
-            if (!empty($sFileName)) {
-                $aFiles = glob($sPath . DIRECTORY_SEPARATOR . $sFileName);
-                if ($aFiles) {
-                    foreach ($aFiles as $sFile) {
-                        AM_Tools_Standard::getInstance()->unlink($sFile);
-                    }
-                }
-                continue;
-            }
-
-            AM_Tools_Standard::getInstance()->clearDir($sPath);
+            $this->getResourceStorage()->setPathPrefix($sPath)->clearResources($sFileName);
         }
     }
 }

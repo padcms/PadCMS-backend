@@ -55,7 +55,15 @@ abstract class AM_Handler_Thumbnail_Storage_Abstract implements AM_Handler_Thumb
     {
         $this->_oThumbnailHandler = $oThumbnailHandler;
         $this->_oConfig           = $oConfig;
+
+        $this->_init();
     }
+
+    /**
+     * Init the storage
+     */
+    protected function _init()
+    { }
 
     /**
      * @return Zend_Config
@@ -67,10 +75,13 @@ abstract class AM_Handler_Thumbnail_Storage_Abstract implements AM_Handler_Thumb
 
     /**
      * @param type $sSourcePathPrefix
+     * @return AM_Handler_Thumbnail_Storage_Abstract
      */
     public function setPathPrefix($sSourcePathPrefix)
     {
         $this->_sPathPrefix = trim($sSourcePathPrefix, DIRECTORY_SEPARATOR);
+
+        return $this;
     }
 
     /**
@@ -111,4 +122,14 @@ abstract class AM_Handler_Thumbnail_Storage_Abstract implements AM_Handler_Thumb
      * Saves all the resources to the storage
      */
     abstract public function save();
+
+    /**
+     * @see AM_Handler_Thumbnail_Storage_Interface::getResourceUrl()
+     */
+    abstract public function getResourceUrl($sPreset, $sType, $iId, $sFileName);
+
+    /**
+     * @see AM_Handler_Thumbnail_Storage_Interface::clearResources()
+     */
+    abstract public function clearResources($sFileName = null);
 }
