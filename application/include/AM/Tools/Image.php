@@ -69,6 +69,14 @@ class AM_Tools_Image
         $sImageType = self::getImageType($sSrc);
         $iSrcWidth  = imagesx($rSrcImage);
         $iSrcHeight = imagesy($rSrcImage);
+
+        //Hack for horizontal images in vertical orientations
+        if ($iSrcWidth > $iSrcHeight && $iWidth < $iHeight && $sMode == 'width') {
+            $iTmpHeight = $iHeight;
+            $iHeight    = $iWidth;
+            $iWidth     = $iTmpHeight;
+        }
+
         switch ($sMode) {
             case "force":
                 if ($iSrcWidth == $iWidth && $iSrcHeight == $iHeight) {
@@ -158,12 +166,12 @@ class AM_Tools_Image
 
         switch ($sType) {
             case "png":
-                return @imagecreatefrompng($sPath);
+                return imagecreatefrompng($sPath);
             case "jpg":
             case "jpeg":
-                return @imagecreatefromjpeg($sPath);
+                return imagecreatefromjpeg($sPath);
             case "gif":
-                return @imagecreatefromgif($sPath);
+                return imagecreatefromgif($sPath);
         }
 
         return false;

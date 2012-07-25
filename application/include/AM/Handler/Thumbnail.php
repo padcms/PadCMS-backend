@@ -44,8 +44,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     protected $_aSources = array(); /**< @type array */
     /** @var array */
     protected $_aPresets = array(); /**< @type array */
-    /** @var array List of created thumbnail **/
-    protected $_aThumbnails = array(); /**< @type array */
     /** @var AM_Resource_Processor **/
     protected $_oResourceProcessor = null; /**< @type AM_Resource_Processor */
     /** @var AM_Handler_Thumbnail_Storage_Abstract **/
@@ -288,7 +286,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     }
                 }
                 $this->getResourceStorage()->save();
-                $this->_aThumbnails[] = $sThumbnail;
             }
         }
 
@@ -305,15 +302,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         $sPath = $this->getConfig()->common->thumbnailFolder;
 
         return $sPath;
-    }
-
-    /**
-     * Return list of created thumbnail
-     * @return array
-     */
-    public function getThumbnails()
-    {
-        return $this->_aThumbnails;
     }
 
     /**
