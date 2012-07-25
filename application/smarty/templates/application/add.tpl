@@ -60,13 +60,12 @@
                             </div>
                         </div>
 
-                        <div class="form-item{if isset($version) && $version.errors} error{/if}">
-                            <label>{if isset($version)}{$version.title|escape}{/if} <span>*</span></label>
-                            <div class="form-item-wrapper">{if isset($version)}{include file="Volcano/input.tpl" control=$version _class="form-text"}{/if}</div>
+                        <div class="form-item{if isset($previe) && $preview.errors} error{/if}">
+                            <label>{if isset($preview)}{$preview.title|escape}{/if}</label>
+                            <div class="form-item-wrapper">{if isset($preview)}{include file="Volcano/input.tpl" control=$preview _class="form-text"}{/if}</div>
                             <div class="clr"></div>
                             <div class="description">
-                                {'Use versioning to be keep track of your internal updates. Optional field. Example : '|translate}
-                                <i>{'1.0'|translate}</i>
+                                {'Specify the number of pages, available for preview. If you specify 0, the preview function will be disabled.'|translate}
                             </div>
                         </div>
 

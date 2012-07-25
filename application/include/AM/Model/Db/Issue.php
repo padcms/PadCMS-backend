@@ -372,7 +372,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
             //Remove all static pdfs
             AM_Model_Db_Table_Abstract::factory('static_pdf')->deleteBy(array('issue' => $this->id));
             AM_Tools::clearContent(AM_Model_Db_StaticPdf_Data_Abstract::TYPE, $this->id);
-            AM_Tools::clearResizerCache(AM_Model_Db_StaticPdf_Data_Abstract::TYPE, $this->id);
+            AM_Tools::clearResizerCache(AM_Model_Db_StaticPdf_Data_Abstract::TYPE, AM_Model_Db_StaticPdf_Data_Abstract::TYPE, $this->id);
         }
 
         $oHorizontalPdf = new AM_Model_Db_StaticPdf();
@@ -397,7 +397,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         }
 
         AM_Tools::clearContent(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $this->id);
-        AM_Tools::clearResizerCache(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $this->id);
+        AM_Tools::clearResizerCache(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $this->id);
 
         $oVerticalPdf->setIssue($this);
         $oVerticalPdf->save();

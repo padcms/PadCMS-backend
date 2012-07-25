@@ -69,6 +69,14 @@ class AM_Tools_Image
         $sImageType = self::getImageType($sSrc);
         $iSrcWidth  = imagesx($rSrcImage);
         $iSrcHeight = imagesy($rSrcImage);
+
+        //Hack for horizontal images in vertical orientations
+        if ($iSrcWidth > $iSrcHeight && $iWidth < $iHeight && $sMode == 'width') {
+            $iTmpHeight = $iHeight;
+            $iHeight    = $iWidth;
+            $iWidth     = $iTmpHeight;
+        }
+
         switch ($sMode) {
             case "force":
                 if ($iSrcWidth == $iWidth && $iSrcHeight == $iHeight) {
@@ -158,12 +166,12 @@ class AM_Tools_Image
 
         switch ($sType) {
             case "png":
-                return @imagecreatefrompng($sPath);
+                return imagecreatefrompng($sPath);
             case "jpg":
             case "jpeg":
-                return @imagecreatefromjpeg($sPath);
+                return imagecreatefromjpeg($sPath);
             case "gif":
-                return @imagecreatefromgif($sPath);
+                return imagecreatefromgif($sPath);
         }
 
         return false;
@@ -219,17 +227,15 @@ class AM_Tools_Image
     /**
      * http://www.imagemagick.org/Usage/crop/#crop_equal
      * @param string $sImagePath
+     * @param string $sArchivePath
      * @return void
      * @throws AM_Exception
      */
-    public static function cropImage($sImagePath)
+    public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = 256)
     {
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
 
-        $sArchivePath = pathinfo($sImagePath, PATHINFO_DIRNAME);
-        $sArchiveName = pathinfo($sImagePath, PATHINFO_FILENAME);
-
-        $sCmd = sprintf('convert %s -crop 256x256 -set filename:title "%%[fx:page.y/256+1]_%%[fx:page.x/256+1]" +repage  +adjoin %s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir);
+        $sCmd = sprintf('convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
 
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
@@ -238,9 +244,8 @@ class AM_Tools_Image
                 ->sort_by_name()
                 ->in($sTempDir);
 
-        $sZipPath         = $sArchivePath . DIRECTORY_SEPARATOR . $sArchiveName .'.zip';
         $oZip             = new ZipArchive();
-        $rArchiveResource = $oZip->open($sZipPath, ZIPARCHIVE::CREATE);
+        $rArchiveResource = $oZip->open($sArchivePath, ZIPARCHIVE::CREATE);
 
         if ($rArchiveResource !== true) {
             throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);

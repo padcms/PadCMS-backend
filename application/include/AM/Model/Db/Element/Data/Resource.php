@@ -389,16 +389,6 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
     }
 
     /**
-     * Retruns name of the resource's preset name to resize
-     *
-     * @return string
-     */
-    public function getThumbnailPresetName()
-    {
-        return self::TYPE . '-' . $this->getElement()->getPage()->getOrientation();
-    }
-
-    /**
      * Clear resources and thumbnail
      *
      * @param string|null $sKey Have to delete data by $key or all data
@@ -410,7 +400,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
             $sKey = '*';
         }
         AM_Tools::clearContent(self::TYPE, $this->getElement()->id, $sKey . '.*');
-        AM_Tools::clearResizerCache(self::TYPE, $this->getElement()->id, $sKey . '.*');
+        AM_Tools::clearResizerCache(self::TYPE, $this->getElement()->getResources()->getThumbnailPresetName(), $this->getElement()->id, $sKey . '.*');
     }
 
     /**

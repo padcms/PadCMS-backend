@@ -55,7 +55,7 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
         $aControls   = array();
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'client', $iClientId);
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'version', 'Version', array(array('require'), array('numeric')), 'version');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'preview', 'Preview', array(array('numeric')), 'preview');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'description', 'Description', array(array('require')), 'description');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id');
 
@@ -97,8 +97,8 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
     public function show()
     {
         if (!$this->isSubmitted) {
-            if (!$this->controls['version']->getValue())
-                $this->controls['version']->setValue(1);
+            if (!$this->controls['preview']->getValue())
+                $this->controls['preview']->setValue(0);
 
             if (!$this->controls['title']->getValue()) {
                 $maxId = $this->getMaxId();

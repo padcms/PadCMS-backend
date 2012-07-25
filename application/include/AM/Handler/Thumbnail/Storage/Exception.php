@@ -1,8 +1,5 @@
 <?php
 /**
- * @file
- * AM_Resource_Processor class definition.
- *
  * LICENSE
  *
  * This software is governed by the CeCILL-C  license under French law and
@@ -36,29 +33,8 @@
  */
 
 /**
- * @ingroup AM_Resource
+ * @ingroup AM_Handler
+ * @ingroup AM_Exception
  */
-class AM_Resource_Processor implements AM_Resource_Processor_Interface
-{
-    /**
-     * @param string $sSrc
-     * @param string $sDst
-     * @param int $iWidth
-     * @param int $iHeight
-     * @param string $sMode
-     */
-    public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode)
-    {
-        AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
-    }
-
-    /**
-     * @param string $sSrc
-     * @param type $sDst
-     * @param type $iBlockSize
-     */
-    public function cropImage($sSrc, $sDst, $iBlockSize)
-    {
-        AM_Tools_Image::cropImage($sSrc, $sDst, $iBlockSize);
-    }
-}
+class AM_Handler_Thumbnail_Storage_Exception extends AM_Handler_Exception
+{}

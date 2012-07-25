@@ -128,6 +128,7 @@ class AM_Api_User extends AM_Api
                 'application_notification_email_title' => $oApplication->{'nt_email_' . $sPlatform},
                 'application_notification_twitter'     => $oApplication->{'nm_twitter_' . $sPlatform},
                 'application_notification_facebook'    => $oApplication->{'nm_fbook_' . $sPlatform},
+                'application_preview'                  => $oApplication->preview,
                 'issues'                               => array()
             );
 

@@ -241,6 +241,6 @@ class AM_Model_Db_IssueSimplePdf_Data_Resource extends AM_Model_Db_IssueSimplePd
     public function clearResources()
     {
         AM_Tools::clearContent(self::TYPE, $this->_getIssueSimplePdf()->id_issue);
-        AM_Tools::clearResizerCache(self::TYPE, $this->_getIssueSimplePdf()->id_issue);
+        AM_Tools::clearResizerCache(self::TYPE, self::TYPE, $this->_getIssueSimplePdf()->id_issue);
     }
 }

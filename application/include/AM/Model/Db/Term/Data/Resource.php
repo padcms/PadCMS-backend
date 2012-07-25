@@ -318,8 +318,8 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
         if (is_null($sResourceKey)) {
             $sResourceKey = '*';
         }
-        AM_Tools::clearContent('toc', $this->getTerm()->id, $sResourceKey . '.*');
-        AM_Tools::clearResizerCache('toc', $this->getTerm()->id, $sResourceKey . '.*');
+        AM_Tools::clearContent(AM_Model_Db_Term_Data_Abstract::TYPE, $this->getTerm()->id, $sResourceKey . '.*');
+        AM_Tools::clearResizerCache(AM_Model_Db_Term_Data_Abstract::TYPE, AM_Model_Db_Term_Data_Abstract::TYPE, $this->getTerm()->id, $sResourceKey . '.*');
     }
 
     /**

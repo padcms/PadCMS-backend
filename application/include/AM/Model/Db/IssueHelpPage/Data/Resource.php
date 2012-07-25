@@ -125,7 +125,7 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
     public function upload()
     {
         AM_Tools::clearContent($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
-        AM_Tools::clearResizerCache($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
+        AM_Tools::clearResizerCache($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
 
         if (!AM_Tools_Standard::getInstance()->is_dir($this->_sResourceDir)) {
             if (!AM_Tools_Standard::getInstance()->mkdir($this->_sResourceDir, 0777, true)) {
@@ -245,6 +245,6 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
     public function clearResources()
     {
         AM_Tools::clearContent($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
-        AM_Tools::clearResizerCache($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
+        AM_Tools::clearResizerCache($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
     }
 }

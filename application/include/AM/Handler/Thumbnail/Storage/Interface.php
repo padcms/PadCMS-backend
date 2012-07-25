@@ -1,8 +1,5 @@
 <?php
 /**
- * @file
- * AM_Resource_Processor class definition.
- *
  * LICENSE
  *
  * This software is governed by the CeCILL-C  license under French law and
@@ -36,29 +33,35 @@
  */
 
 /**
- * @ingroup AM_Resource
+ * @ingroup AM_Handler
  */
-class AM_Resource_Processor implements AM_Resource_Processor_Interface
+interface AM_Handler_Thumbnail_Storage_Interface
 {
     /**
-     * @param string $sSrc
-     * @param string $sDst
-     * @param int $iWidth
-     * @param int $iHeight
-     * @param string $sMode
+     * Add resources to process
+     * @param string $sResourcePath the path of the resource
      */
-    public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode)
-    {
-        AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
-    }
+    public function addResource($sResourcePath);
 
     /**
-     * @param string $sSrc
-     * @param type $sDst
-     * @param type $iBlockSize
+     * Saves all the resources to the storage
      */
-    public function cropImage($sSrc, $sDst, $iBlockSize)
-    {
-        AM_Tools_Image::cropImage($sSrc, $sDst, $iBlockSize);
-    }
+    public function save();
+
+    /**
+     * Returns image's URL
+     * @param string $sPreset
+     * @param string $sType
+     * @param int $iId
+     * @param string $sFileName
+     */
+    public function getResourceUrl($sPreset, $sType, $iId, $sFileName);
+
+    /**
+     * Remove recources
+     * @param string $sResourceType
+     * @param int $iId
+     * @param string $sFileName
+     */
+    public function clearResources($sFileName = null);
 }

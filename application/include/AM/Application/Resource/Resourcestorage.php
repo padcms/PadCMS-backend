@@ -1,8 +1,5 @@
 <?php
 /**
- * @file
- * AM_Resource_Processor class definition.
- *
  * LICENSE
  *
  * This software is governed by the CeCILL-C  license under French law and
@@ -36,29 +33,41 @@
  */
 
 /**
- * @ingroup AM_Resource
+ * Resource for initializing the storage for resources
+ * @ingroup AM_Application
+ * @ingroup AM_Handler
  */
-class AM_Resource_Processor implements AM_Resource_Processor_Interface
+class AM_Application_Resource_Resourcestorage extends Zend_Application_Resource_ResourceAbstract
 {
-    /**
-     * @param string $sSrc
-     * @param string $sDst
-     * @param int $iWidth
-     * @param int $iHeight
-     * @param string $sMode
-     */
-    public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode)
-    {
-        AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
-    }
+    const CLASS_PREFIX = 'AM_Handler_Thumbnail_Storage';
 
     /**
-     * @param string $sSrc
-     * @param type $sDst
-     * @param type $iBlockSize
+     * Defined by Zend_Application_Resource_Resource
+     *
+     * @return AM_Handler_Thumbnail_Storage_Abstract
      */
-    public function cropImage($sSrc, $sDst, $iBlockSize)
+    public function init()
     {
-        AM_Tools_Image::cropImage($sSrc, $sDst, $iBlockSize);
+        $this->getBootstrap()->bootstrap('handlermanager');
+
+        $aOptions = $this->getOptions();
+
+        $sAdapter          = $aOptions['adapter'];
+        $sAdapterClassName = self::CLASS_PREFIX . '_' . ucfirst($sAdapter);
+
+        $sFile = str_replace('_', DIRECTORY_SEPARATOR, $sAdapterClassName) . '.php';
+        if (!AM_Tools_Standard::getInstance()->isReadable($sFile)) {
+            throw new AM_Exception(sprintf('Adapter class \'%s\' not found', $sAdapterClassName), 502);
+        }
+
+        $oThumbnailHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
+
+        $oStorage = new $sAdapterClassName($oThumbnailHandler, new Zend_Config($aOptions['options']));
+
+        if (!$oStorage instanceof AM_Handler_Thumbnail_Storage_Abstract) {
+            throw new AM_Exception(sprintf('Wrong resource storage given', 501));
+        }
+
+        return $oStorage;
     }
 }

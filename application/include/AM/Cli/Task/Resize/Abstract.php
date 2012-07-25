@@ -40,6 +40,8 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
 {
     /** @var AM_Handler_Thumbnail */
     protected $_oThumbnailer = null; /**< @type AM_Handler_Thumbnail */
+    /** @var string */
+    protected $_sPreset = null; /**< @type string */
 
     /**
      * Resizes given image
@@ -62,9 +64,15 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
                     . $sResourceKeyName . '.' . $sFileExtension;
 
         $this->_oThumbnailer->clearSources()
-                ->addSourceFile($sFilePath)
-                ->loadAllPresets($sResourcePresetName)
-                ->createThumbnails();
+                ->addSourceFile($sFilePath);
+
+        if (empty($this->_sPreset)) {
+            $this->_oThumbnailer->loadAllPresets($sResourcePresetName);
+        } else {
+            $this->_oThumbnailer->clearPresets()->addPreset($this->_sPreset);
+        }
+
+        $this->_oThumbnailer->createThumbnails();
 
         $this->_echo(sprintf('%s', $sFilePath), 'success');
     }

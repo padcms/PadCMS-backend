@@ -33,6 +33,7 @@ application:
     nm_fbook_ios: Facebook message
     nt_email_ios: Email title
     nm_email_ios: Email message
+    preview: 2
 
 issue:
   -
