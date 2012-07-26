@@ -131,6 +131,7 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
 
         $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
 
+        $iCounter = 0;
         foreach ($oElementDatas as $oElementData) {
             try {
                 $oData = $oElementData->getData();
@@ -139,6 +140,11 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
                 }
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
+            }
+
+            if ($iCounter++ > 100) {
+                $iCounter = 0;
+                AM_Handler_Temp::getInstance()->end();
             }
         }
     }
