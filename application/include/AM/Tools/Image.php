@@ -70,7 +70,7 @@ class AM_Tools_Image
         $iSrcWidth  = imagesx($rSrcImage);
         $iSrcHeight = imagesy($rSrcImage);
 
-        //Hack for horizontal images in vertical orientations
+        //For images with horizontal proportions in vertical issue
         if ($iSrcWidth > $iSrcHeight && $iWidth < $iHeight && $sMode == 'width') {
             $iTmpHeight = $iHeight;
             $iHeight    = $iWidth;

@@ -281,7 +281,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     }
                 } else {
                     //We have to copy not image resource only to the 'none' preset folder
-                    if ('none' != $sPreset) {
+                    if ('none' == $sPreset) {
                         $this->getResourceStorage()->addResource($sInputFile);
                     }
                 }
