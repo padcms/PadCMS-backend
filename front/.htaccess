@@ -10,7 +10,7 @@ php_flag magic_quotes_gpc Off
 php_value upload_max_filesize 2000M
 php_value max_execution_time 3600
 php_value max_input_time 3600
-php_value memory_limit 640M
+php_value memory_limit 8000M
 php_value post_max_size 2000M
 
 Options FollowSymLinks
