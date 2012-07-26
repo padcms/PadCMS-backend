@@ -147,11 +147,13 @@ class AM_Handler_Temp extends AM_Handler_Abstract
     public function end()
     {
         if (empty($this->_sDirectory)) {
-            return $this;;
+            return $this;
         }
 
         AM_Tools_Standard::getInstance()->clearDir($this->_sDirectory);
         AM_Tools_Standard::getInstance()->rmdir($this->_sDirectory);
+
+        $this->_sDirectory = null;
 
         return $this;
     }

@@ -101,11 +101,17 @@ class AM_Cli_Task_ResizeHzpages extends AM_Cli_Task_Resize_Abstract
 
         $oPagesHorizaontal = AM_Model_Db_Table_Abstract::factory('page_horisontal')->fetchAll($oQuery);
 
+        $iCounter = 0;
         foreach ($oPagesHorizaontal as $oPageHorizontal) {
             try {
                 $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal->id_issue, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
+            }
+
+            if ($iCounter++ > 100) {
+                $iCounter = 0;
+                AM_Handler_Temp::getInstance()->end();
             }
         }
     }
