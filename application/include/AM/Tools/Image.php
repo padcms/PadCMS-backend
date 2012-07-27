@@ -235,8 +235,13 @@ class AM_Tools_Image
     {
         $sTempDir = AM_Handler_Temp::getInstance()->getDir();
 
-        $sCmd = sprintf('convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
-
+        //Making thumbnail with bad quality for resource
+        $sResourceThumbnailPath  = $sTempDir . DIRECTORY_SEPARATOR . 'resourceBQ.png';
+        $sCmd = sprintf('nice -n 15 convert %s -resize 25%% %s', $sImagePath, $sResourceThumbnailPath);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+        self::optimizePng($sResourceThumbnailPath);
+        //Cropping image
+        $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
         $aFiles = AM_Tools_Finder::type('file')
@@ -250,9 +255,23 @@ class AM_Tools_Image
         if ($rArchiveResource !== true) {
             throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);
         }
+
+        $oZip->addFile($sResourceThumbnailPath, 'resourceBQ.png');
         foreach ($aFiles as $sFile) {
+            //Optimization
+            self::optimizePng($sFile);
             $oZip->addFile($sFile, pathinfo($sFile, PATHINFO_BASENAME));
         }
         $oZip->close();
+    }
+
+    /**
+     * Optimize png image with optipng tool
+     * @param string $sFilePath
+     */
+    public static function optimizePng($sFilePath)
+    {
+        $sCmd = sprintf('nice -n 15 optipng -zc9 -zm8 -zs0 -f5 %s > /dev/null 2>&1', $sFilePath);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
     }
 }
