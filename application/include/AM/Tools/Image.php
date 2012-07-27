@@ -233,8 +233,13 @@ class AM_Tools_Image
      */
     public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = 256)
     {
-        $sTempDir = AM_Handler_Temp::getInstance()->getDir();
-
+        //Making thumbnail with bad quality for resource
+        $sTempDir       = AM_Handler_Temp::getInstance()->getDir();
+        $sThumbFileName = 'BQ' . pathinfo($sImagePath, PATHINFO_BASENAME);
+        $sThumbnailPath = $sTempDir . DIRECTORY_SEPARATOR . $sThumbFileName;
+        $sCmd           = sprintf('nice -n 15 convert %s -resize 25%% %s', $sImagePath, $sThumbnailPath);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+        self::optimizePng($sThumbnailPath);
         //Cropping image
         $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
@@ -251,10 +256,12 @@ class AM_Tools_Image
             throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);
         }
 
+        $oZip->addFile($sThumbnailPath, $sThumbFileName);
+
         foreach ($aFiles as $sFile) {
             //Making thumbnail with bad quality for resource
             $sThumbFileName = 'BQ' . pathinfo($sFile, PATHINFO_BASENAME);
-            $sThumbnailPath = $sTempDir . $sThumbFileName;
+            $sThumbnailPath = $sTempDir . DIRECTORY_SEPARATOR . $sThumbFileName;
             $sCmd           = sprintf('nice -n 15 convert %s -resize 25%% %s', $sFile, $sThumbnailPath);
             AM_Tools_Standard::getInstance()->passthru($sCmd);
             self::optimizePng($sThumbnailPath);
