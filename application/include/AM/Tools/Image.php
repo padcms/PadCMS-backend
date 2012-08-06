@@ -44,6 +44,12 @@
  */
 class AM_Tools_Image
 {
+    const TILE_SIZE_RETINA = 1024;
+    const TILE_SIZE        = 512;
+
+    const TILE_BAD_QUALITY_SIZE_PROPORTION        = 25;
+    const TILE_BAD_QUALITY_SIZE_PROPORTION_RETINA = 7;
+
     /**
      * Resize image and save
      * @param string $sSrc Path to source image
@@ -231,13 +237,13 @@ class AM_Tools_Image
      * @return void
      * @throws AM_Exception
      */
-    public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = 256)
+    public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = self::TILE_SIZE)
     {
         //Making thumbnail with bad quality for resource
         $sTempDir       = AM_Handler_Temp::getInstance()->getDir();
         $sThumbFileName = 'BQ' . pathinfo($sImagePath, PATHINFO_BASENAME);
         $sThumbnailPath = $sTempDir . DIRECTORY_SEPARATOR . $sThumbFileName;
-        $sCmd           = sprintf('nice -n 15 convert %s -resize 25%% %s', $sImagePath, $sThumbnailPath);
+        $sCmd           = sprintf('nice -n 15 convert %s -resize %d%% %s', $sImagePath, self::TILE_BAD_QUALITY_SIZE_PROPORTION, $sThumbnailPath);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
         self::optimizePng($sThumbnailPath);
         //Cropping image
@@ -260,9 +266,10 @@ class AM_Tools_Image
 
         foreach ($aFiles as $sFile) {
             //Making thumbnail with bad quality for resource
-            $sThumbFileName = 'BQ' . pathinfo($sFile, PATHINFO_BASENAME);
-            $sThumbnailPath = $sTempDir . DIRECTORY_SEPARATOR . $sThumbFileName;
-            $sCmd           = sprintf('nice -n 15 convert %s -resize 25%% %s', $sFile, $sThumbnailPath);
+            $sThumbFileName             = 'BQ' . pathinfo($sFile, PATHINFO_BASENAME);
+            $sThumbnailPath             = $sTempDir . DIRECTORY_SEPARATOR . $sThumbFileName;
+            $iBadQualityBlockProportion = (self::TILE_SIZE_RETINA == $iBlockSize) ? self::TILE_BAD_QUALITY_SIZE_PROPORTION_RETINA : self::TILE_BAD_QUALITY_SIZE_PROPORTION;
+            $sCmd                       = sprintf('nice -n 15 convert %s -resize %d%% %s', $sFile, $iBadQualityBlockProportion, $sThumbnailPath);
             AM_Tools_Standard::getInstance()->passthru($sCmd);
             self::optimizePng($sThumbnailPath);
             $oZip->addFile($sThumbnailPath, $sThumbFileName);
