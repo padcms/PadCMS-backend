@@ -504,7 +504,7 @@ tocEditor.currentTree = {
         $('#toc-current-pdf-page-input').val(data.pdf_page);
         $('#toc-current-color-input').val(data.color);
 
-        colorPicker.init();
+        colorPickerHandler.init($('.toc-color-picker'));
 
         $('#colorSelectorBg').css('background-color', '#' + data.color);
 

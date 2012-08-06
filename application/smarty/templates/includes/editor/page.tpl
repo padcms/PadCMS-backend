@@ -34,6 +34,17 @@
             <a id="page-machine-name-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
         </div>
 
+        <span class="labe">{'Color'|translate}</span>
+        <div class="toc">
+            <div class="form-item-wrapper page-color-picker">
+                <input id="page-color-input" value="{$page.color}" type="text" class="form-text cpicker_fld"/>
+                <div id="colorSelector">
+                    <div id="colorSelectorBg" style="background-color: #{if isset($page.color)}{$page.color}{/if};"></div>
+                </div>
+            </div>
+            <a id="page-color-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>
+        </div>
+
         {if $page.showPdfPage}
         <span class="labe">{'Horizontal page'|translate}</span>
         <div class="pdf-page">

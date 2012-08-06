@@ -10,6 +10,8 @@ window.pageInfo = {
     init: function() {
         var context = this;
 
+        colorPickerHandler.init($('.page-color-picker'));
+
         $('ul.ui-autocomplete').remove();
 
         $("#page-tag-input").autocomplete({
@@ -77,6 +79,11 @@ window.pageInfo = {
         });
         $('#page-machine-name-btn').click(function() {
             context.onSave('machine_name', $('#page-machine-name-input').val());
+            return false;
+        });
+
+        $('#page-color-btn').click(function() {
+            context.onSave('color', $('#page-color-input').val());
             return false;
         });
 

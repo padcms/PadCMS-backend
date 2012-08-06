@@ -7,6 +7,7 @@ CREATE TABLE `page`
        horisontal_page_id INTEGER NOT NULL DEFAULT "0",
        template INTEGER NOT NULL DEFAULT "0" ,
        machine_name TEXT,
+       color TEXT,
        PRIMARY KEY(id)
 );
 

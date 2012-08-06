@@ -50,7 +50,8 @@ class AM_Mapper_Sqlite_Page extends AM_Mapper_Sqlite_Abstract
             'title'              => $this->getModel()->title,
             'horisontal_page_id' => intval($this->getModel()->pdf_page),
             'template'           => intval($this->getModel()->template),
-            'machine_name'       => $this->getModel()->machine_name
+            'machine_name'       => $this->getModel()->machine_name,
+            'color'              => $this->getModel()->color
         );
 
         $this->_getSqliteGateway()->insert($aData);

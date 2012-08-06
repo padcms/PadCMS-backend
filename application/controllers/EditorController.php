@@ -151,7 +151,7 @@ class EditorController extends AM_Controller_Action
             $oPage->setUpdated(false);
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message']      = sprintf('%s %s', $this->__('Error'), $oException->getMessage());
+            $aMessage['message'] = sprintf('%s %s', $this->__('Error'), $oException->getMessage());
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
