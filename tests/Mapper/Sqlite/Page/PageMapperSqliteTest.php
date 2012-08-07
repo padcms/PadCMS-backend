@@ -68,6 +68,7 @@ CREATE TABLE `page`
        horisontal_page_id INTEGER NOT NULL DEFAULT "-1",
        template INTEGER NOT NULL DEFAULT "-1" ,
        machine_name TEXT,
+       color TEXT,
        PRIMARY KEY(id)
 )
 SQL;
@@ -90,7 +91,7 @@ SQL;
         $oMapper->unmap();
 
         //THEN
-        $oGivenDataSet    = $this->_oSqliteConnectionMock->createQueryTable("page", "SELECT id, title, horisontal_page_id, template, machine_name FROM page ORDER BY id");
+        $oGivenDataSet    = $this->_oSqliteConnectionMock->createQueryTable("page", "SELECT id, title, horisontal_page_id, template, machine_name, color FROM page ORDER BY id");
         $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/PageMapperSqliteTest.xml')
                               ->getTable('page');
 

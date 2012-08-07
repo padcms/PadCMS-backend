@@ -2520,6 +2520,6 @@ span.radio{
     border: none;
 }
 
-#toc-current-color-input {
+#toc-current-color-input, #page-color-input {
     width: 220px;
 }

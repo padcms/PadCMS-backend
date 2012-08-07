@@ -64,7 +64,7 @@
 
                         <span class="labe">{'Color'|translate}</span>
                         <div class="toc">
-                            <div class="form-item-wrapper">
+                            <div class="form-item-wrapper page-color-picker">
                                 <input id="toc-current-color-input" value="" type="text" class="form-text cpicker_fld"/>
                                 <div id="colorSelector">
                                     <div id="colorSelectorBg"></div>

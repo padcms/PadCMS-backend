@@ -265,9 +265,9 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     $this->getResourceStorage()->addResource($sThumbnail);
 
                     if ('none' != $sPreset) {
-                        $iBlockSize = 256;
+                        $iBlockSize = AM_Tools_Image::TILE_SIZE;
                         if ($oPresetConfig->width == 1536 || $oPresetConfig->width == 2048) {
-                            $iBlockSize = 512;
+                            $iBlockSize = AM_Tools_Image::TILE_SIZE_RETINA;
                         }
 
                         $sArchivePath = $sTempPath

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `page` (
   `deleted` enum('yes','no') NOT NULL DEFAULT 'no',
   `connections` TINYINT NOT NULL DEFAULT 0,
   `toc` int(12) DEFAULT NULL,
+  `color` char(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `template` (`template`),
   KEY `revision` (`revision`),

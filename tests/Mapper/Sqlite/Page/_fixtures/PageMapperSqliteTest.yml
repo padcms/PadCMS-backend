@@ -6,4 +6,5 @@ page:
     template: 1
     machine_name: Machine name
     pdf_page: 1
+    color: ff00ff
     updated: 2011-11-23 15:00:00
