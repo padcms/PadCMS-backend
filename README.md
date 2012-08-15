@@ -22,7 +22,7 @@ Installation
 
 * Install all required packages
 
-        sudo apt-get install git apache2 mysql-server php5 sqlite3 poppler-utils xorg-dev php5-mysql php5-sqlite php5-imagick php5-gd php-apc php-pear
+        sudo apt-get install git apache2 mysql-server php5 sqlite3 poppler-utils xorg-dev php5-mysql php5-sqlite php5-imagick php5-gd php-apc php-pear php5-dev optipng
 * Compile MuPdf utils
 
         mkdir /tmp/mupdf && cd /tmp/mupdf
