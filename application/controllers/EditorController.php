@@ -143,11 +143,18 @@ class EditorController extends AM_Controller_Action
             }
 
             $oPage = AM_Model_Db_Table_Abstract::factory('page')->findOneBy('id', $iPageId);
+            /* @var $oPage AM_Model_Db_Page */
             if (is_null($oPage)) {
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }
 
             $oPage->$sKey = $sValue;
+
+            $sCallbackName = '_save' . Zend_Filter::filterStatic($sKey, 'Word_UnderscoreToCamelCase');
+            if (method_exists($this, $sCallbackName)) {
+                $this->$sCallbackName($oPage, $sValue);
+            }
+
             $oPage->setUpdated(false);
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
@@ -155,6 +162,16 @@ class EditorController extends AM_Controller_Action
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
+    }
+
+    /**
+     * Callback for save logic
+     * @param AM_Model_Db_Page $oPage
+     * @param string $sValue
+     */
+    protected function _savePdfPage(AM_Model_Db_Page $oPage, $sValue)
+    {
+        $oPage->setPdfPageForChild($sValue);
     }
 
     /**

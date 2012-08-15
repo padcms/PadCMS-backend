@@ -72,7 +72,7 @@ class AM_Handler_Temp extends AM_Handler_Abstract
      */
     public function begin()
     {
-        $this->_sDirectory = sys_get_temp_dir()
+        $this->_sDirectory = $this->_getTempDir()
                             . DIRECTORY_SEPARATOR . self::BASE_TEMP_DIR
                             . DIRECTORY_SEPARATOR . uniqid();
 
@@ -81,6 +81,21 @@ class AM_Handler_Temp extends AM_Handler_Abstract
         }
 
         return $this;
+    }
+
+    /**
+     * Returns path to the temp dirrectory
+     * @return string
+     */
+    protected function _getTempDir()
+    {
+        $sPath = rtrim($this->getConfig()->temp->base, DIRECTORY_SEPARATOR);
+
+        if (empty($sPath)) {
+            $sPath = sys_get_temp_dir();
+        }
+
+        return $sPath;
     }
 
     /**
