@@ -377,9 +377,8 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
             if ($oSource->isPdf() && self::DATA_KEY_RESOURCE == $sKey) {
                 //Remove old pdf_info
                 $this->delete(self::PDF_INFO, false);
-                $aPdfInfo = $oSource->getPdfInfo();
-                $aPdfInfo = json_encode($aPdfInfo);
-                $this->addKeyValue(self::PDF_INFO, $aPdfInfo);
+                $sPdfInfo = $oSource->getPdfInfo();
+                $this->addKeyValue(self::PDF_INFO, $sPdfInfo);
 
                 return $this;
             }

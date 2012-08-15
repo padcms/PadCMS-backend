@@ -64,12 +64,8 @@
         <propertyprompt propertyName="Db.Test.Password" defaultValue=""
             promptText="Enter test mysql database password" />
 
-        <propertyprompt propertyName="Bin.PdfDrawLocation" defaultValue="/usr/bin/pdfdraw"
-            promptText="Enter location for pdfdraw tool from MuPDF library" />
-        <propertyprompt propertyName="Bin.PdfToTextLocation" defaultValue="/usr/bin/pdftotext"
-            promptText="Enter location for pdftotext tool from Poppler library" />
-        <propertyprompt propertyName="Bin.PdfInfoLocation" defaultValue="/usr/bin/pdfinfo"
-            promptText="Enter location for pdfinfo tool from Poppler library" />
+        <propertyprompt propertyName="Bin.PadcmsDrawLocation" defaultValue="/usr/bin/padcmsdraw"
+            promptText="Enter location for padcmsdraw tool" />
         <exportproperties targetfile="${phing.config.file}" />
 
         <copy file="./application/configs/application_sample.ini" tofile="./application/configs/application.ini" overwrite="true">
@@ -96,9 +92,7 @@
                 <replacetokens begintoken="%%" endtoken="%%">
                     <token key="CommonBaseDomain" value="${Common.BaseDomain}" />
 
-                    <token key="BinPdfDrawLocation" value="${Bin.PdfDrawLocation}" />
-                    <token key="BinPdfToTextLocation" value="${Bin.PdfToTextLocation}" />
-                    <token key="BinPdfInfoLocation" value="${Bin.PdfInfoLocation}" />
+                    <token key="BinPadcmsDrawLocation" value="${Bin.PadcmsDrawLocation}" />
 
                 </replacetokens>
             </filterchain>
