@@ -80,7 +80,7 @@ class AM_Model_Db_Table_Page extends AM_Model_Db_Table_Abstract
     }
 
     /**
-     * Returns page that has specified page on the specified side
+     * Returns parrent page that has specified page on the specified side
      *
      * @param AM_Model_Db_Page $oPage
      * @param string $sLinkType
@@ -92,6 +92,27 @@ class AM_Model_Db_Table_Page extends AM_Model_Db_Table_Abstract
                       ->setIntegrityCheck(false)
                       ->joinLeft('page_imposition', 'page_imposition.page = page.id', array('link_type' => 'link_type'))
                       ->where('page_imposition.is_linked_to = ?', $oPage->id)
+                      ->where('page_imposition.link_type = ?', $sLinkType)
+                      ->where('page.deleted = ?', 'no');
+
+        $oPageConnected = $this->fetchRow($oQuery);
+
+        return $oPageConnected;
+    }
+
+    /**
+     * Returns child page that has specified page on the specified side
+     *
+     * @param AM_Model_Db_Page $oPage
+     * @param string $sLinkType
+     * @return AM_Model_Db_Page
+     */
+    public function findChildConnectedPage(AM_Model_Db_Page $oPage, $sLinkType)
+    {
+        $oQuery = $this->select()->from('page')
+                      ->setIntegrityCheck(false)
+                      ->joinLeft('page_imposition', 'page_imposition.is_linked_to = page.id', array('link_type' => 'link_type'))
+                      ->where('page_imposition.page = ?', $oPage->id)
                       ->where('page_imposition.link_type = ?', $sLinkType)
                       ->where('page.deleted = ?', 'no');
 

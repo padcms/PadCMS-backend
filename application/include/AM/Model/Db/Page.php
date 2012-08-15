@@ -850,11 +850,10 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
 
     /**
      * Filter for toc field
-     *
      * @param integer $iValue
      * @return integer
      */
-    public function filterValueToc($iValue)
+    public function preSetToc($iValue)
     {
         $iValue = intval($iValue);
 
@@ -874,11 +873,10 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
 
     /**
      * Filter for machine_name field
-     *
      * @param string $sValue
      * @return string
      */
-    public function filterValueMachineName($sValue)
+    public function preSetMachineName($sValue)
     {
         $sValue = AM_Tools::filter_xss($sValue);
 
@@ -891,11 +889,10 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
 
     /**
      * Filter for pdf_page field
-     *
      * @param integer $iValue
      * @return integer
      */
-    public function filterValuePdfPage($iValue)
+    public function preSetPdfPage($iValue)
     {
         $iValue = intval($iValue);
 
@@ -903,12 +900,36 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
     }
 
     /**
+     * Set pdf_page value for child page on the top and bottom
+     * @param integer $iValue
+     * @return AM_Model_Db_Page
+     */
+    public function setPdfPageForChild($iValue)
+    {
+        $aPages = array();
+
+        $oTable = $this->getTable();
+        $aPages[] = $oTable->findChildConnectedPage($this, self::LINK_BOTTOM);
+        $aPages[] = $oTable->findChildConnectedPage($this, self::LINK_TOP);
+        foreach ($aPages as $oPage) {
+            if (!is_null($oPage) && empty($oPage->pdf_page)) {
+                /* @var $oPage AM_Model_Db_Page */
+                $oPage->setReadOnly(false);
+                $oPage->pdf_page = $iValue;
+                $oPage->save();
+                $oPage->setPdfPageForChild($iValue);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Filter for title field
-     *
      * @param string $sValue
      * @return string
      */
-    public function filterValueTitle($sValue)
+    public function preSetTitle($sValue)
     {
         $sValue = AM_Tools::filter_xss($sValue);
 

@@ -281,7 +281,7 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
      * @param string $sValue
      * @return string
      */
-    public function filterValueTitle($sValue)
+    public function preSetTitle($sValue)
     {
         $sValue = AM_Tools::filter_xss($sValue);
 
@@ -294,7 +294,7 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
      * @param string $sValue
      * @return string
      */
-    public function filterValueDescription($sValue)
+    public function preSetDescription($sValue)
     {
         $sValue = AM_Tools::filter_xss($sValue);
 
@@ -307,7 +307,7 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
      * @param string $sValue
      * @return string
      */
-    public function filterValueColor($sValue)
+    public function preSetColor($sValue)
     {
         if (!preg_match('/^#?+([0-9a-f]{3}(?:[0-9a-f]{3})?)$/iD', $sValue, $aMatches) || count($aMatches) < 2) {
             $sValue = null;

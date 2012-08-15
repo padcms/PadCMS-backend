@@ -226,12 +226,19 @@ abstract class AM_Model_Db_Abstract extends Zend_Db_Table_Row_Abstract
         }
 
         //Filter value by user defined callback
-        $sCallbackName = 'filterValue' . Zend_Filter::filterStatic($sColumnName, 'Word_UnderscoreToCamelCase');
-        if (method_exists($this, $sCallbackName)) {
-            $sValue = $this->$sCallbackName($sValue);
+        $sCallbackPostfix     = Zend_Filter::filterStatic($sColumnName, 'Word_UnderscoreToCamelCase');
+        $sCallbackPreSetName  = 'preSet' . $sCallbackPostfix;
+        $sCallbackPostSetName = 'postSet' . $sCallbackPostfix;
+
+        if (method_exists($this, $sCallbackPreSetName)) {
+            $sValue = $this->$sCallbackPreSetName($sValue);
         }
 
         $this->_data[$sColumnName]           = $sValue;
         $this->_modifiedFields[$sColumnName] = true;
+
+        if (method_exists($this, $sCallbackPostSetName)) {
+            $this->$sCallbackPostSetName($sValue);
+        }
     }
 }
