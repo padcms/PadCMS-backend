@@ -23,13 +23,17 @@ Installation
 * Install all required packages
 
         sudo apt-get install git apache2 mysql-server php5 sqlite3 poppler-utils xorg-dev php5-mysql php5-sqlite php5-imagick php5-gd php-apc php-pear php5-dev optipng
-* Compile MuPdf utils
-
-        mkdir /tmp/mupdf && cd /tmp/mupdf
-        git clone git://git.ghostscript.com/mupdf.git .
+* Install PadCMSdraw util
+    * Compile from sources
+        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+        git clone git://github.com/padcms/padcms-draw.git .
         wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
         unzip mupdf-thirdparty-2012-04-23.zip
-        sudo make prefix=/usr/local install
+        make && sudo make install
+    * Install from package
+        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+        wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
+        dpkg -i padcmsdraw_1.0-1_i386.deb
 
 * Install needed packages from PEAR
 
