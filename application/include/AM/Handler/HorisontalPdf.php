@@ -112,7 +112,9 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
             }
             $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
             /* @var $oThumbnailer AM_Handler_Thumbnail */
-            $oThumbnailer->clearSources()->loadAllPresets(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE);
+            $oThumbnailer->clearSources()
+                    ->loadAllPresets(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE)
+                    ->setImageType(AM_Handler_Thumbnail::IMAGE_TYPE_JPEG);
 
             foreach ($aFiles as $sFile) {
                 $sFilename    = pathinfo($sFile, PATHINFO_BASENAME);
