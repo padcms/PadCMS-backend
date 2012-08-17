@@ -282,15 +282,16 @@ class AM_Controller_Action_Field extends AM_Controller_Action
 
             $this->_postUpload($oElement);
 
-            $sResourceFile = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE);
+            $sResourceFile      = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE);
+            $sResourceImageType = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_IMAGE_TYPE);
 
             $aFileInfo      = pathinfo($sResourceFile);
             $sFileName      = $aFileInfo['filename'];
-            $sFileExtension = $aFileInfo['extension'];
+            $sFileExtension = empty($sResourceImageType) ? $aFileInfo['extension'] : $sResourceImageType;
 
             $aResourceFileViewInfo                  = array();
-            $aResourceFileViewInfo['fileName']      = $sFileName . '.' . $sFileExtension;
-            $aResourceFileViewInfo['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $sFileExtension;
+            $aResourceFileViewInfo['fileName']      = $sFileName . '.' . $aFileInfo['extension'];
+            $aResourceFileViewInfo['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $aFileInfo['extension'];
 
             $sResourceFileName = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $sFileExtension;
             if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {

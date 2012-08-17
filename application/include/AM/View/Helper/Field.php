@@ -94,16 +94,17 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
      */
     protected function _getResourceViewData(AM_Model_Db_Element $oElement, $sResourceKeyName = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE)
     {
-        $sFile        = $oElement->getResources()->getDataValue($sResourceKeyName);
+        $sFile              = $oElement->getResources()->getDataValue($sResourceKeyName);
+        $sResourceImageType = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_IMAGE_TYPE);
         $aElementView = array();
 
         if ($sFile) {
             $aFileInfo      = pathinfo($sFile);
             $sFileName      = $aFileInfo['filename'];
-            $sFileExtension = $aFileInfo['extension'];
+            $sFileExtension = empty($sResourceImageType) ? $aFileInfo['extension'] : $sResourceImageType;
 
-            $aElementView['fileName']      = $sFileName . '.' . $sFileExtension;
-            $aElementView['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $sFileExtension;
+            $aElementView['fileName']      = $sFileName . '.' . $aFileInfo['extension'];
+            $aElementView['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $aFileInfo['extension'];
 
             $sResourceFileName = $sResourceKeyName . '.' . $sFileExtension;
             if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {

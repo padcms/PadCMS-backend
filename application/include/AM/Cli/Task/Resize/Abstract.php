@@ -57,6 +57,14 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
             $sResourcePresetName = $sResourceType;
         }
 
+        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('id' => $iElementId));
+        /* @var $oElement AM_Model_Db_Element */
+        $sImageType = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_IMAGE_TYPE);
+
+        if (empty($sImageType)) {
+            $sImageType = $oElement->getResources()->getImageType();
+        }
+
         $sFileExtension = strtolower(pathinfo($sFileBaseName, PATHINFO_EXTENSION));
 
         $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)

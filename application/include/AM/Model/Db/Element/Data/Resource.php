@@ -42,8 +42,9 @@
  */
 abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Data_Abstract
 {
-    const DATA_KEY_RESOURCE = 'resource';
-    const PDF_INFO          = 'pdf_info';
+    const DATA_KEY_RESOURCE   = 'resource';
+    const DATA_KEY_IMAGE_TYPE = 'image_type';
+    const PDF_INFO            = 'pdf_info';
 
     /** @var string The name of resource */
     protected $_sResourceName            = null; /**< @type string */
@@ -351,6 +352,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         }
 
         $this->addKeyValue($sResourceKey, $sGivenFileName);
+        $this->addKeyValue(self::DATA_KEY_IMAGE_TYPE, $this->getImageType());
 
         $this->_postUpload($sDestination, $sResourceKey);
 
@@ -454,8 +456,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         }
 
         $sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
-        $sFileExtension = Zend_Filter::filterStatic($sFileExtension, 'StringToLower', array('encoding' => 'UTF-8'));
-        $sFileExtension = ('pdf' == $sFileExtension) ? 'png' : $sFileExtension;
+        $sFileExtension = $this->getImageType();
 
         if (empty($sFileExtension)) {
             return false;

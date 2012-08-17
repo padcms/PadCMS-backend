@@ -45,6 +45,6 @@ class AM_Model_Db_Element_Data_Background extends AM_Model_Db_Element_Data_Resou
 
     public function getImageType()
     {
-        return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
     }
 }
