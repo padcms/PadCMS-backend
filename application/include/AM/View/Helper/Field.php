@@ -101,7 +101,7 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
         if ($sFile) {
             $aFileInfo      = pathinfo($sFile);
             $sFileName      = $aFileInfo['filename'];
-            $sFileExtension = empty($sResourceImageType) ? $aFileInfo['extension'] : $sResourceImageType;
+            $sFileExtension = empty($sResourceImageType) ? $oElement->getResources()->getImageType() : $sResourceImageType;
 
             $aElementView['fileName']      = $sFileName . '.' . $aFileInfo['extension'];
             $aElementView['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $aFileInfo['extension'];
