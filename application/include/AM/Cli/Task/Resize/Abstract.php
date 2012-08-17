@@ -69,10 +69,11 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
 
         $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
                     . DIRECTORY_SEPARATOR
-                    . $sResourceKeyName . '.' . $sImageType;
+                    . $sResourceKeyName . '.' . $sFileExtension;
 
         $this->_oThumbnailer->clearSources()
-                ->addSourceFile($sFilePath);
+                ->addSourceFile($sFilePath)
+                ->setImageType($sImageType);
 
         if (empty($this->_sPreset)) {
             $this->_oThumbnailer->loadAllPresets($sResourcePresetName);
