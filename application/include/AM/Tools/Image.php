@@ -239,13 +239,13 @@ class AM_Tools_Image
      */
     public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = self::TILE_SIZE)
     {
-        $sTempDir       = AM_Handler_Temp::getInstance()->getDir();
-        //Cropping image
-        $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
+        $sTempDir  = AM_Handler_Temp::getInstance()->getDir();
+        $aFileInfo = pathinfo($sImagePath);
+        $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].%4$s"', $sImagePath, $sTempDir, $iBlockSize, $aFileInfo['extension']);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
         $aFiles = AM_Tools_Finder::type('file')
-                ->name('resource_*.png')
+                ->name('resource_*.' . $aFileInfo['extension'])
                 ->sort_by_name()
                 ->in($sTempDir);
 
