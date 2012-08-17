@@ -198,7 +198,7 @@ class AM_Tools_Image
                 return @imagepng($rImg, $sPath);
             case "jpg":
             case "jpeg":
-                return @imagejpeg($rImg, $sPath);
+                return @imagejpeg($rImg, $sPath, 90);
             case "gif":
                 return @imagegif($rImg, $sPath);
         }

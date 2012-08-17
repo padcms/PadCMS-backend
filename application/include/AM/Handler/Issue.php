@@ -78,7 +78,7 @@ class AM_Handler_Issue extends AM_Handler_Abstract
      */
     public function createRevisionFromSimplePdf(AM_Model_Db_IssueSimplePdf $oSimplePdf)
     {
-        $aImages = $oSimplePdf->getAllPagesAsPng();
+        $aImages = $oSimplePdf->getAllPagesThumbnails();
 
         //Create revision
         $oRevision        = new AM_Model_Db_Revision();

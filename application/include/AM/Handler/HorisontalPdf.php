@@ -181,7 +181,7 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
         $aConvertedPdfs = array();
         $oStaticPdf      = $this->getIssue()->getHorizontalPdfs()->current();
         //Get first page of PDF, connver to the PNG and push to the stack
-        $aConvertedPdfs = $oStaticPdf->getAllPagesAsPng();
+        $aConvertedPdfs = $oStaticPdf->getAllPagesThumbnails();
 
         $aFiles = $this->_glueImages($aConvertedPdfs);
 
@@ -272,13 +272,19 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
      */
     protected function _writeImage(&$oTargetImage, &$aTargetFiles, &$sTempDir, &$iPageCounter)
     {
-        $sImagePath = $sTempDir . '/' . ($iPageCounter + 1) . '.png';
+        $sFileInput = $sTempDir . '/' . ($iPageCounter + 1) . '.png';
 
         $oTargetImage->setImageFormat('png');
         $oTargetImage->setImageCompressionQuality(100);
-        $oTargetImage->writeImage($sImagePath);
+        $oTargetImage->writeImage($sFileInput);
 
-        $aTargetFiles[] = $sImagePath;
+        $sFileInputInfo = pathinfo($sFileInput);
+        $sFileOutput    = $sFileInputInfo['dirname'] . DIRECTORY_SEPARATOR . $sFileInputInfo['filename'] . '.jpg';
+
+        $sCmd = sprintf('nice -n 15 convert %s -background white -flatten -quality 90 %s', $sFileInput, $sFileOutput);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+
+        $aTargetFiles[] = $sFileOutput;
     }
 
     /**

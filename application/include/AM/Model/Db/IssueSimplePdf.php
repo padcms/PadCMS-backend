@@ -155,9 +155,9 @@ class AM_Model_Db_IssueSimplePdf extends AM_Model_Db_Abstract
      * Get all page of PDF and convert them to the png
      * @return array
      */
-    public function getAllPagesAsPng()
+    public function getAllPagesThumbnails()
     {
-        $aFilesPath = $this->getResource()->getAllPagesAsPng();
+        $aFilesPath = $this->getResource()->getAllPagesThumbnails();
 
         return $aFilesPath;
     }

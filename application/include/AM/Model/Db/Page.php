@@ -335,15 +335,14 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
 
         $sFileName = $oBackground->filename;
         $aFileInfo = pathinfo($oBackground->filename);
-        if ('pdf' == $aFileInfo['extension']) {
-            $sFileName = $aFileInfo['filename'] . '.png';
-        }
+
+        $sImageType = $oBackground->getElement()->getResources()->getImageType();
 
         $sUri = AM_Tools::getImageUrl(
                     AM_Handler_Thumbnail_Interface::PRESET_MAP_ITEM . '-' . $this->getOrientation(),
                     $oBackground->type,
                     $oBackground->id,
-                    $sFileName . '?' . strtotime($this->updated)
+                    $aFileInfo['filename'] . '.' . $sImageType . '?' . strtotime($this->updated)
                 );
 
         return $sUri;

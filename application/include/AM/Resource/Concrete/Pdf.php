@@ -90,7 +90,7 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
      * Convert pdf to png files
      * @return type
      */
-    public function getAllPagesAsPng()
+    public function getAllPagesThumbnails()
     {
         $sTempDir    = AM_Handler_Temp::getInstance()->getDir();
         $sPdfDrawBin = $this->_getPadcmsdrawPath();
@@ -99,12 +99,12 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
 
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
-        $aFiles = AM_Tools_Finder::type('file')
+        $aFilesPng = AM_Tools_Finder::type('file')
                 ->name('splitted-*.png')
                 ->sort_by_name()
                 ->in($sTempDir);
 
-        return $aFiles;
+        return $aFilesPng;
     }
 
     /**
