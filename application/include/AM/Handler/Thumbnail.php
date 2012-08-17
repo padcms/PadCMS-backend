@@ -264,7 +264,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     {
         foreach ($this->_aSources as $oSource) {
             /* @var $oSource AM_Resource_Abstract */
-            $sInputFile  = $oSource->getFileForThumbnail();
+            $sInputFile  = $oSource->getFileForThumbnail($this->getImageType());
             foreach ($this->_aPresets as $sPreset) {
                 if (!isset($this->getConfig()->{$sPreset})) {
                     continue;
@@ -284,7 +284,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     . DIRECTORY_SEPARATOR
                     . $oSource->getSourceFileName()
                     . '.'
-                    //. pathinfo($sInputFile, PATHINFO_EXTENSION);
                     . $this->getImageType();
 
                     $this->getResourceProcessor()->resizeImage($sInputFile, $sThumbnail, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method);

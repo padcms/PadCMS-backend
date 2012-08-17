@@ -56,10 +56,11 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
 
     /**
      * Get file wich will be resized for thumbnail
+     * @param string $sImageType set what image type (png, jpg) we have to get
      * @return string Path to file
      * @throws AM_Resource_Exception
      */
-    public function getFileForThumbnail()
+    public function getFileForThumbnail($sImageType = null)
     {
         if (!is_null($this->_sFileForThumbnail)) {
             return $this->_sFileForThumbnail;
@@ -82,6 +83,16 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
         }
 
         $this->_sFileForThumbnail = $aFiles[0];
+
+        if (!is_null($sImageType) && AM_Handler_Thumbnail::IMAGE_TYPE_PNG != $sImageType) {
+            $sFileInputInfo = pathinfo($this->_sFileForThumbnail);
+            $sFileOutput    = $sFileInputInfo['dirname'] . DIRECTORY_SEPARATOR . $sFileInputInfo['filename'] . '.' . $sImageType;
+
+            $sCmd = sprintf('nice -n 15 convert %s -background white -flatten -quality 90 %s', $this->_sFileForThumbnail, $sFileOutput);
+            AM_Tools_Standard::getInstance()->passthru($sCmd);
+
+            $this->_sFileForThumbnail = $sFileOutput;
+        }
 
         return $this->_sFileForThumbnail;
     }

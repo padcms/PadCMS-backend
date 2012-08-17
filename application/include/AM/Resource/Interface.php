@@ -46,9 +46,10 @@ interface AM_Resource_Interface
 {
     /**
      * Get file wich will be resized for thumbnail
+     * @param string $sImageType set what image type (png, jpg) we have to get
      * @return string Path to file
      */
-    public function getFileForThumbnail();
+    public function getFileForThumbnail($sImageType = null);
 
     /**
      * Get source file path
