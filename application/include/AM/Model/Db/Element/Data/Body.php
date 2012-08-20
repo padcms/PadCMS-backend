@@ -104,7 +104,14 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
         //checking if template has background layer
         $oPage            = $this->getElement()->getPage();
         $oFieldBackground = AM_Model_Db_Table_Abstract::factory('field')->findOneBy(array('template' => $oPage->template, 'name' => AM_Model_Db_FieldType::TYPE_BACKGROUND));
+        //If template doesn't have background layer body is alone and we don't need to have transparancy - using jpg
         if (is_null($oFieldBackground)) {
+            return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+        }
+
+        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('page' => $oPage->id, 'field' => $oFieldBackground->id));
+        //If template has background layer but it's empty
+        if (is_null($oElement)) {
             return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
         }
 

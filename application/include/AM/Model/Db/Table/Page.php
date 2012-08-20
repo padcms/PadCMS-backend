@@ -245,4 +245,5 @@ class AM_Model_Db_Table_Page extends AM_Model_Db_Table_Abstract
         $oPage->deleted = 'yes';
         $oPage->save();
     }
+    
 }
