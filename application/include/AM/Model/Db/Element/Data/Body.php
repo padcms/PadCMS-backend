@@ -98,4 +98,16 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
 
         return $iValue;
     }
+
+    public function getImageType()
+    {
+        //checking if template has background layer
+        $oPage            = $this->getElement()->getPage();
+        $oFieldBackground = AM_Model_Db_Table_Abstract::factory('field')->findOneBy(array('template' => $oPage->template, 'name' => AM_Model_Db_FieldType::TYPE_BACKGROUND));
+        if (is_null($oFieldBackground)) {
+            return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+        }
+
+        return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
+    }
 }
