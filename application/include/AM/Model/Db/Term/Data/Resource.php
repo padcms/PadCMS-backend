@@ -283,12 +283,22 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
             $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
             /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
             $oThumbnailerHandler->clearSources()
+                    ->setImageType($this->getImageType())
                     ->addSourceFile($sDestination)
                     ->loadAllPresets(self::TYPE)
                     ->createThumbnails();
         }
 
         return $this;
+    }
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType()
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
     }
 
     /**

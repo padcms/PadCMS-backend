@@ -109,11 +109,11 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
             return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
         }
 
-        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('page' => $oPage->id, 'field' => $oFieldBackground->id));
-        //If template has background layer but it's empty
-        if (is_null($oElement)) {
-            return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
-        }
+//        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('page' => $oPage->id, 'field' => $oFieldBackground->id));
+//        //If template has background layer but it's empty
+//        if (is_null($oElement)) {
+//            return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+//        }
 
         return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
     }
