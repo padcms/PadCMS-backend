@@ -106,7 +106,7 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
             $aElementView['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $aFileInfo['extension'];
 
             $sResourceFileName = $sResourceKeyName . '.' . $sFileExtension;
-            if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {
+            if (AM_Tools::isAllowedImageExtension($sFile)) {
                 $sUniq                    = '?' . strtotime($oElement->updated);
                 $aElementView['smallUri'] = AM_Tools::getImageUrl($this->_getThumbnailPresetName(), 'element', $oElement->id, $sResourceFileName) . $sUniq;
                 $aElementView['bigUri']   = AM_Tools::getImageUrl('none', 'element', $oElement->id, $sResourceFileName) . $sUniq;
