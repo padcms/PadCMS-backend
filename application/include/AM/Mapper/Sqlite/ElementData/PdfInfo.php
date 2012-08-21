@@ -46,7 +46,7 @@ class AM_Mapper_Sqlite_ElementData_PdfInfo extends AM_Mapper_Sqlite_Abstract
     protected function _unmapCustom()
     {
         if (!empty($this->getModel()->value)) {
-            $aPdfInfo     = json_decode($this->getModel()->value, true);
+            $aPdfInfo     = Zend_Json_Decoder::decode($this->getModel()->value, true);
             $sContentText = $aPdfInfo['text'];
             $this->_unmapPdfInfo($aPdfInfo);
         }

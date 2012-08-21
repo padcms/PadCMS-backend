@@ -58,20 +58,4 @@ class AM_Tools_String
 
         return $sPath;
     }
-
-    public static function jsonDecode($sPayload)
-    {
-        $sPayload = utf8_decode($sPayload);
-        $sPayload = mb_convert_encoding($sPayload, 'UTF-8', 'ASCII,UTF-8,ISO-8859-1');
-
-        if(substr($sPayload, 0, 3) == pack("CCC", 0xEF, 0xBB, 0xBF))
-        {
-            $sPayload = substr($sPayload, 3);
-        }
-        $aResult = json_decode($sPayload, true);
-
-        $sError = json_last_error();
-
-        return $aResult;
-    }
 }

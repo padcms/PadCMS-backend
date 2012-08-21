@@ -134,7 +134,7 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
             throw new AM_Resource_Exception('Unable to get info from file ' . $this->_sSourceFile);
         }
 
-        $aPageInfo = implode('', $aCommandOutput);
+        $aPageInfo = json_encode(Zend_Json_Decoder::decode(implode('', $aCommandOutput)));
 
         return $aPageInfo;
     }
