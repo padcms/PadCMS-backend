@@ -42,4 +42,17 @@
 class AM_Model_Db_Element_Data_Sound extends AM_Model_Db_Element_Data_Resource
 {
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('mp3', 'mp4'));
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType()
+    {
+        $sResource = $this->getDataValue(self::DATA_KEY_RESOURCE, 'resource.mp3');
+
+        $sExtension = pathinfo($sResource, PATHINFO_EXTENSION);
+
+        return $sExtension;
+    }
 }

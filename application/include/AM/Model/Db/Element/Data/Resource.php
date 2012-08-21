@@ -455,7 +455,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
             return false;
         }
 
-        $sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
+        //$sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
         $sFileExtension = $this->getImageType();
 
         if (empty($sFileExtension)) {

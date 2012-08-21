@@ -294,7 +294,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aResourceFileViewInfo['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $aFileInfo['extension'];
 
             $sResourceFileName = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $sFileExtension;
-            if (AM_Tools::isAllowedImageExtension($sResourceFileName)) {
+            if (AM_Tools::isAllowedImageExtension($sResourceFile)) {
                 $sOrientation = $oPage->getOrientation();
                 if (AM_Model_Db_Template::TPL_SCROLLING_PAGE_HORIZONTAL == $oPage->template) {
                     $sOrientation = AM_Model_Db_Issue::ORIENTATION_HORIZONTAL;
