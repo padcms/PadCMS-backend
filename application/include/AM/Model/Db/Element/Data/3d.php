@@ -42,4 +42,9 @@
 class AM_Model_Db_Element_Data_3d extends AM_Model_Db_Element_Data_Resource
 {
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('pod'));
+
+    public function getImageType()
+    {
+        return 'pod';
+    }
 }

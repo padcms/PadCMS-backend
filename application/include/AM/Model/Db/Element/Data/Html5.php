@@ -87,4 +87,9 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
 
         return $sValue;
     }
+
+    public function getImageType()
+    {
+        return 'zip';
+    }
 }
