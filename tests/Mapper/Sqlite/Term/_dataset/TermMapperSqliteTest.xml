@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <menu title="Test term" description="Test description" thumb_stripe="/toc/00/00/00/01/stripe.png" thumb_summary="/toc/00/00/00/01/summary.png" color="ffffff" firstpage_id="1" />
+    <menu title="Test term" description="Test description" thumb_stripe="/toc/00/00/00/01/stripe.jpg" thumb_summary="/toc/00/00/00/01/summary.jpg" color="ffffff" firstpage_id="1" />
 </dataset>
