@@ -99,9 +99,7 @@ class AM_Tools_Image
                 break;
             case "out":
             default:
-                $sCmd = sprintf('nice -n 15 %s %s -resize %dx %s', self::getConfig()->bin->convert, $sPathSrc, $iWidth, $sPathDst);
-                AM_Tools_Standard::getInstance()->passthru($sCmd);
-                $sCmd = sprintf('nice -n 15 %s %s -crop %dx%d+0+0 %s', self::getConfig()->bin->convert, $sPathDst, $iWidth, $iHeight, $sPathDst);
+                $sCmd = sprintf('nice -n 15 %1$s %2$s -resize %3$dx -crop %3$dx%4$d+0+0 %5$s', self::getConfig()->bin->convert, $sPathSrc, $iWidth, $iHeight, $sPathDst);
                 break;
         }
 
