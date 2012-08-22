@@ -40,6 +40,9 @@
  */
 class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thumbnail_Interface
 {
+    const IMAGE_TYPE_PNG  = 'png';
+    const IMAGE_TYPE_JPEG = 'jpg';
+
     /** @var array */
     protected $_aSources = array(); /**< @type array */
     /** @var array */
@@ -48,6 +51,29 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     protected $_oResourceProcessor = null; /**< @type AM_Resource_Processor */
     /** @var AM_Handler_Thumbnail_Storage_Abstract **/
     protected $_oResourceStorage = null; /**< @type AM_Handler_Thumbnail_Storage_Abstract */
+    /** @var string **/
+    protected $_sImageType = self::IMAGE_TYPE_PNG; /**< @type string */
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType()
+    {
+        return $this->_sImageType;
+    }
+
+    /**
+     * Set type of image for conversion
+     * @param string $sImageType
+     * @return AM_Handler_Thumbnail
+     */
+    public function setImageType($sImageType)
+    {
+        $this->_sImageType = $sImageType;
+
+        return $this;
+    }
 
 
     /**
@@ -238,7 +264,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     {
         foreach ($this->_aSources as $oSource) {
             /* @var $oSource AM_Resource_Abstract */
-            $sInputFile  = $oSource->getFileForThumbnail();
+            $sInputFile  = $oSource->getFileForThumbnail($this->getImageType());
             foreach ($this->_aPresets as $sPreset) {
                 if (!isset($this->getConfig()->{$sPreset})) {
                     continue;
@@ -258,7 +284,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     . DIRECTORY_SEPARATOR
                     . $oSource->getSourceFileName()
                     . '.'
-                    . pathinfo($sInputFile, PATHINFO_EXTENSION);
+                    . $this->getImageType();
 
                     $this->getResourceProcessor()->resizeImage($sInputFile, $sThumbnail, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method);
 

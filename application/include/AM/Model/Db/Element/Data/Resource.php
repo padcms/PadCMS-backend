@@ -42,8 +42,9 @@
  */
 abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Data_Abstract
 {
-    const DATA_KEY_RESOURCE = 'resource';
-    const PDF_INFO          = 'pdf_info';
+    const DATA_KEY_RESOURCE   = 'resource';
+    const DATA_KEY_IMAGE_TYPE = 'image_type';
+    const PDF_INFO            = 'pdf_info';
 
     /** @var string The name of resource */
     protected $_sResourceName            = null; /**< @type string */
@@ -351,6 +352,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         }
 
         $this->addKeyValue($sResourceKey, $sGivenFileName);
+        $this->addKeyValue(self::DATA_KEY_IMAGE_TYPE, $this->getImageType());
 
         $this->_postUpload($sDestination, $sResourceKey);
 
@@ -370,6 +372,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         /* @var $oThumbnailer AM_Handler_Thumbnail */
         $oThumbnailer->clearSources()
                 ->addSourceFile($sDestination)
+                ->setImageType($this->getImageType($sKey))
                 ->loadAllPresets($this->getThumbnailPresetName())
                 ->createThumbnails();
 
@@ -385,6 +388,15 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         }
 
         return $this;
+    }
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
     }
 
     /**
@@ -433,7 +445,6 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
 
     /**
      * Returns path to resource for manifest
-     *
      * @param string $sKey
      * @return boolean|string
      */
@@ -444,9 +455,8 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
             return false;
         }
 
-        $sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
-        $sFileExtension = Zend_Filter::filterStatic($sFileExtension, 'StringToLower', array('encoding' => 'UTF-8'));
-        $sFileExtension = ('pdf' == $sFileExtension) ? 'png' : $sFileExtension;
+        //$sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
+        $sFileExtension = $this->getImageType($sKey);
 
         if (empty($sFileExtension)) {
             return false;

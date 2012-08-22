@@ -208,7 +208,7 @@ class AM_Model_Db_IssueSimplePdf_Data_Resource extends AM_Model_Db_IssueSimplePd
      * @return array
      * @throws AM_Model_Db_IssueSimplePdf_Data_Exception
      */
-    public function getAllPagesAsPng()
+    public function getAllPagesThumbnails()
     {
         $sResource = $this->_sResourceDir  . DIRECTORY_SEPARATOR . $this->getResourceBaseName();
 
@@ -218,7 +218,7 @@ class AM_Model_Db_IssueSimplePdf_Data_Resource extends AM_Model_Db_IssueSimplePd
             throw new AM_Model_Db_IssueSimplePdf_Data_Exception(sptintf('Wrong resource given "%s". Must be a PDF resource', $sResource));
         }
 
-        $aFiles = $oImageSource->getAllPagesAsPng();
+        $aFiles = $oImageSource->getAllPagesThumbnails();
 
         return $aFiles;
     }

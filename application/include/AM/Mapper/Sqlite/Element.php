@@ -56,7 +56,7 @@ class AM_Mapper_Sqlite_Element extends AM_Mapper_Sqlite_Abstract
 
             if (AM_Model_Db_Element_Data_Resource::PDF_INFO == $oElementData->key_name) {
                 if (!empty($oElementData->value)) {
-                    $aPdfInfo     = json_decode($oElementData->value, true);
+                    $aPdfInfo     = Zend_Json_Decoder::decode($oElementData->value, true);
                     $sContentText = $aPdfInfo['text'];
                 }
             }

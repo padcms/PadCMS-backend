@@ -283,12 +283,22 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
             $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
             /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
             $oThumbnailerHandler->clearSources()
+                    ->setImageType($this->getImageType())
                     ->addSourceFile($sDestination)
                     ->loadAllPresets(self::TYPE)
                     ->createThumbnails();
         }
 
         return $this;
+    }
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType()
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
     }
 
     /**
@@ -345,13 +355,9 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
     {
         $sFileName = $this->getTerm()->thumb_summary;
         if (!empty($sFileName)) {
-            $sExtension = pathinfo($sFileName, PATHINFO_EXTENSION);
-            $sExtension = Zend_Filter::filterStatic($sExtension, 'StringToLower', array('encoding' => 'UTF-8'));
-            $sExtension = ('pdf' == $sExtension) ? 'png' : $sExtension;
-
             $sPath =   '/' . AM_Model_Db_Term_Data_Abstract::TYPE
                     . '/' . AM_Tools_String::generatePathFromId($this->getTerm()->id)
-                    . '/' . self::RESOURCE_KEY_SUMMARY . '.' . $sExtension;
+                    . '/' . self::RESOURCE_KEY_SUMMARY . '.' . $this->getImageType();
 
             return $sPath;
         }
@@ -363,13 +369,9 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
     {
         $sFileName = $this->getTerm()->thumb_stripe;
         if (!empty($sFileName)) {
-            $sExtension = pathinfo($sFileName, PATHINFO_EXTENSION);
-            $sExtension = Zend_Filter::filterStatic($sExtension, 'StringToLower', array('encoding' => 'UTF-8'));
-            $sExtension = ('pdf' == $sExtension) ? 'png' : $sExtension;
-
             $sPath =   '/' . AM_Model_Db_Term_Data_Abstract::TYPE
                     . '/' . AM_Tools_String::generatePathFromId($this->getTerm()->id)
-                    . '/' . self::RESOURCE_KEY_STRIPE . '.' . $sExtension;
+                    . '/' . self::RESOURCE_KEY_STRIPE . '.' . $this->getImageType();
 
             return $sPath;
         }

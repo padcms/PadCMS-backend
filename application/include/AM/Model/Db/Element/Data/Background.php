@@ -42,4 +42,9 @@
 class AM_Model_Db_Element_Data_Background extends AM_Model_Db_Element_Data_Resource
 {
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('pdf', 'jpg', 'jpeg', 'png', 'zip'));
+
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+    }
 }

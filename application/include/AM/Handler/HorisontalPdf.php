@@ -112,7 +112,9 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
             }
             $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
             /* @var $oThumbnailer AM_Handler_Thumbnail */
-            $oThumbnailer->clearSources()->loadAllPresets(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE);
+            $oThumbnailer->clearSources()
+                    ->loadAllPresets(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE)
+                    ->setImageType(AM_Handler_Thumbnail::IMAGE_TYPE_JPEG);
 
             foreach ($aFiles as $sFile) {
                 $sFilename    = pathinfo($sFile, PATHINFO_BASENAME);
@@ -181,7 +183,7 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
         $aConvertedPdfs = array();
         $oStaticPdf      = $this->getIssue()->getHorizontalPdfs()->current();
         //Get first page of PDF, connver to the PNG and push to the stack
-        $aConvertedPdfs = $oStaticPdf->getAllPagesAsPng();
+        $aConvertedPdfs = $oStaticPdf->getAllPagesThumbnails();
 
         $aFiles = $this->_glueImages($aConvertedPdfs);
 
@@ -272,13 +274,19 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
      */
     protected function _writeImage(&$oTargetImage, &$aTargetFiles, &$sTempDir, &$iPageCounter)
     {
-        $sImagePath = $sTempDir . '/' . ($iPageCounter + 1) . '.png';
+        $sFileInput = $sTempDir . '/' . ($iPageCounter + 1) . '.png';
 
         $oTargetImage->setImageFormat('png');
         $oTargetImage->setImageCompressionQuality(100);
-        $oTargetImage->writeImage($sImagePath);
+        $oTargetImage->writeImage($sFileInput);
 
-        $aTargetFiles[] = $sImagePath;
+        $sFileInputInfo = pathinfo($sFileInput);
+        $sFileOutput    = $sFileInputInfo['dirname'] . DIRECTORY_SEPARATOR . $sFileInputInfo['filename'] . '.jpg';
+
+        $sCmd = sprintf('nice -n 15 %s %s -background white -flatten -quality 90 %s', $this->getConfig()->bin->convert, $sFileInput, $sFileOutput);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+
+        $aTargetFiles[] = $sFileOutput;
     }
 
     /**

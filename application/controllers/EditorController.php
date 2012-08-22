@@ -541,7 +541,7 @@ class EditorController extends AM_Controller_Action
             $aThumbStripe['name']      = $oTerm->thumb_stripe;
             $aThumbStripe['nameShort'] = $this->getHelper('String')->cut($oTerm->thumb_stripe);
             if (!empty($oTerm->thumb_stripe)) {
-                $sThumbStripeExtension    = strtolower(pathinfo($oTerm->thumb_stripe, PATHINFO_EXTENSION));
+                $sThumbStripeExtension    = $oTerm->getResources()->getImageType();
                 $aThumbStripe['smallUri'] = AM_Tools::getImageUrl('toc-stripe', 'toc', $iTocTermId, 'stripe.' . $sThumbStripeExtension) . $sUniq;
                 $aThumbStripe['bigUri']   = AM_Tools::getImageUrl('none', 'toc', $iTocTermId, 'stripe.' . $sThumbStripeExtension) . $sUniq;
             } else {
@@ -657,8 +657,8 @@ class EditorController extends AM_Controller_Action
             $aResourceFileViewInfo['name']      = $sFileName . '.' . $sFileExtension;
             $aResourceFileViewInfo['nameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $sFileExtension;
 
-            $sFileName = $sKey . '.' . $sFileExtension;
-            if (AM_Tools::isAllowedImageExtension($sFileName)) {
+            $sFileName = $sKey . '.' . $oTerm->getResources()->getImageType();
+            if (AM_Tools::isAllowedImageExtension($sResourceFile)) {
                 $uniq                             = '?' . strtotime($oTerm->updated);
                 $aResourceFileViewInfo['smallUri'] = AM_Tools::getImageUrl('toc-' . $sKey, 'toc', $oTerm->id, $sFileName) . $uniq;
                 $aResourceFileViewInfo['bigUri']   = AM_Tools::getImageUrl('none', 'toc', $oTerm->id, $sFileName) . $uniq;

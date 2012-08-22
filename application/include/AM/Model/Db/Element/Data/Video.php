@@ -75,4 +75,17 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
 
         return $sValue;
     }
+
+    /**
+     * Returns type of image for conversion
+     * @return string
+     */
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
+    {
+        $sResource = $this->getDataValue(self::DATA_KEY_RESOURCE, 'resource.mp4');
+
+        $sExtension = pathinfo($sResource, PATHINFO_EXTENSION);
+
+        return $sExtension;
+    }
 }

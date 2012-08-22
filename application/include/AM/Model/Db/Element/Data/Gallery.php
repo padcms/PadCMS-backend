@@ -86,4 +86,9 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 
         return $iValue;
     }
+
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+    }
 }

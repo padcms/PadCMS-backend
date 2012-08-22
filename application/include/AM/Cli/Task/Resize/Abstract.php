@@ -57,6 +57,11 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
             $sResourcePresetName = $sResourceType;
         }
 
+        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('id' => $iElementId));
+        /* @var $oElement AM_Model_Db_Element */
+        $sImageType = $oElement->getResources()->getImageType();
+        $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_IMAGE_TYPE, $oElement->getResources()->getImageType());
+
         $sFileExtension = strtolower(pathinfo($sFileBaseName, PATHINFO_EXTENSION));
 
         $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
@@ -64,7 +69,8 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
                     . $sResourceKeyName . '.' . $sFileExtension;
 
         $this->_oThumbnailer->clearSources()
-                ->addSourceFile($sFilePath);
+                ->addSourceFile($sFilePath)
+                ->setImageType($sImageType);
 
         if (empty($this->_sPreset)) {
             $this->_oThumbnailer->loadAllPresets($sResourcePresetName);
