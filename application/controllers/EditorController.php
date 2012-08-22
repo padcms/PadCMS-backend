@@ -552,7 +552,7 @@ class EditorController extends AM_Controller_Action
             $aThumbSummary['name']      = $oTerm->thumb_summary;
             $aThumbSummary['nameShort'] = $this->getHelper('String')->cut($oTerm->thumb_summary);
             if (!empty($oTerm->thumb_summary)) {
-                $aThumbSummaryExtension    = strtolower(pathinfo($oTerm->thumb_summary, PATHINFO_EXTENSION));
+                $aThumbSummaryExtension    = $oTerm->getResources()->getImageType();
                 $aThumbSummary['smallUri'] = AM_Tools::getImageUrl('toc-summary', 'toc', $iTocTermId, 'summary.' . $aThumbSummaryExtension) . $sUniq;
                 $aThumbSummary['bigUri']   = AM_Tools::getImageUrl('none', 'toc', $iTocTermId, 'summary.' . $aThumbSummaryExtension) . $sUniq;
             } else {

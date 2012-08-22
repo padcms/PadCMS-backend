@@ -85,6 +85,8 @@ class AM_Cli_Task_ResizeHzpages extends AM_Cli_Task_Resize_Abstract
 
                 ->where('resource IS NOT NULL')
 
+                ->columns(array('id' => 'page_horisontal.id'))
+
                 ->order('page_horisontal.id_issue ASC');
 
         if ($this->_iFromIssueId > 0) {
@@ -104,7 +106,7 @@ class AM_Cli_Task_ResizeHzpages extends AM_Cli_Task_Resize_Abstract
         $iCounter = 0;
         foreach ($oPagesHorizaontal as $oPageHorizontal) {
             try {
-                $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal->id_issue, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
+                $this->_resizeImage($oPageHorizontal->resource, $oPageHorizontal, AM_Model_Db_PageHorisontal::RESOURCE_TYPE, $oPageHorizontal->weight);
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
             }

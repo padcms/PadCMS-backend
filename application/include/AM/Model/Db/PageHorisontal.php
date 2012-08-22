@@ -60,4 +60,22 @@ class AM_Model_Db_PageHorisontal extends AM_Model_Db_Abstract
 
         return $sValue;
     }
+
+    /**
+     * Method for compatibility with Element and Term ifaces
+     * @return AM_Model_Db_PageHorisontal
+     */
+    public function getResources()
+    {
+        return $this;
+    }
+
+    /**
+     * Method for compatibility with Element and Term ifaces
+     * @return string
+     */
+    public function getImageType()
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+    }
 }
