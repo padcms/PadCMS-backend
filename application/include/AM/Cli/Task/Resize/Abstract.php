@@ -46,25 +46,22 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
     /**
      * Resizes given image
      * @param string $sFileBaseName
-     * @param int $iElementId The id of element, term, horisontal page
+     * @param object $oResource The instance of element | term | horisontal page
      * @param string $sResourceType The type of resource's parent (element, toc, cache-static-pdf)
      * @param string $sResourceKeyName The name of the resource type (resource, thumbnail, etc)
      * @return @void
      */
-    protected function _resizeImage($sFileBaseName, $iElementId, $sResourceType, $sResourceKeyName, $sResourcePresetName = null)
+    protected function _resizeImage($sFileBaseName, $oResource, $sResourceType, $sResourceKeyName, $sResourcePresetName = null)
     {
         if (is_null($sResourcePresetName)) {
             $sResourcePresetName = $sResourceType;
         }
 
-        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy(array('id' => $iElementId));
-        /* @var $oElement AM_Model_Db_Element */
-        $sImageType = $oElement->getResources()->getImageType();
-        $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_IMAGE_TYPE, $oElement->getResources()->getImageType());
+        $sImageType = $oResource->getResources()->getImageType();
 
         $sFileExtension = strtolower(pathinfo($sFileBaseName, PATHINFO_EXTENSION));
 
-        $sFilePath = AM_Tools::getContentPath($sResourceType, $iElementId)
+        $sFilePath = AM_Tools::getContentPath($sResourceType, $oResource->id)
                     . DIRECTORY_SEPARATOR
                     . $sResourceKeyName . '.' . $sFileExtension;
 

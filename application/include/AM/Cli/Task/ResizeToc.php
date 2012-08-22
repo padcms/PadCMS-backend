@@ -33,19 +33,15 @@
  */
 
 /**
- * Task creates thumbnail for elements
+ * Task creates thumbnail for TOC
  * @ingroup AM_Cli
  */
-class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
+class AM_Cli_Task_ResizeToc extends AM_Cli_Task_Resize_Abstract
 {
     /** @var int */
     protected $_iFromId = null; /**< @type int */
     /** @var int */
-    protected $_iElementId = null; /**< @type int */
-    /** @var int */
     protected $_iRevisionId = null; /**< @type int */
-    /** @var int */
-    protected $_iPageId = null; /**< @type int */
     /** @var int */
     protected $_iIssueId = null; /**< @type int */
     /** @var int */
@@ -53,70 +49,55 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
 
     protected function _configure()
     {
-        $this->addOption('from', 'fr', '=i', 'Resize element with ID > FROM');
-        $this->addOption('element', 'el', '=i', 'Resize element with selected ID');
-        $this->addOption('revision', 'rev', '=i', 'Resize elements with selected revision ID');
-        $this->addOption('page', 'p', '=i', 'Resize elements with selected page ID');
-        $this->addOption('issue', 'is', '=i', 'Resize elements with selected issue ID');
-        $this->addOption('application', 'app', '=i', 'Resize elements with selected application ID');
-        $this->addOption('preset', 'pr', '=s', 'Resize elements using selected preset');
+        $this->addOption('from', 'fr', '=i', 'Resize terms with ID > FROM');
+        $this->addOption('revision', 'rev', '=i', 'Resize terms with selected revision ID');
+        $this->addOption('issue', 'is', '=i', 'Resize terms with selected issue ID');
+        $this->addOption('application', 'app', '=i', 'Resize terms with selected application ID');
     }
 
     public function execute()
     {
         $this->_iFromId        = intval($this->_getOption('from'));
-        $this->_iElementId     = intval($this->_getOption('element'));
         $this->_iRevisionId    = intval($this->_getOption('revision'));
-        $this->_iPageId        = intval($this->_getOption('page'));
         $this->_iIssueId       = intval($this->_getOption('issue'));
         $this->_iApplicationId = intval($this->_getOption('application'));
-        $this->_sPreset        = (string) $this->_getOption('preset');
 
         $this->_oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
 
-        $this->_echo('Resizing elements');
-        $this->_resizeElements();
+        $this->_echo('Resizing TOC');
+        $this->_resizeTOC();
     }
 
     /**
-     * Resizes elements
+     * Resizes all TOC terms
      */
-    protected function _resizeElements()
+    protected function _resizeTOC()
     {
-        $oQuery = AM_Model_Db_Table_Abstract::factory('element_data')
+        $oQuery = AM_Model_Db_Table_Abstract::factory('term')
                 ->select()
                 ->setIntegrityCheck(false)
-                ->from('element_data')
-                ->joinInner('element', 'element.id = element_data.id_element')
-                ->joinInner('page', 'page.id = element.page')
-                ->joinInner('revision', 'revision.id = page.revision')
+                ->from('term')
+
+                ->joinInner('revision', 'revision.id = term.revision')
                 ->joinInner('issue', 'issue.id = revision.issue')
                 ->joinInner('application', 'application.id = issue.application')
                 ->joinInner('client', 'client.id = application.client')
-                ->where(sprintf('element_data.key_name IN ("%s", "%s", "%s")', AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE
-                                                                , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL
-                                                                , AM_Model_Db_Element_Data_MiniArticle::DATA_KEY_THUMBNAIL_SELECTED))
-                ->where('page.deleted = ?', 'no')
+
+                ->where('term.thumb_stripe IS NOT NULL OR term.thumb_summary IS NOT NULL')
+                ->where('term.deleted = ?', 'no')
                 ->where('revision.deleted = ?', 'no')
                 ->where('issue.deleted = ?', 'no')
                 ->where('application.deleted = ?', 'no')
                 ->where('client.deleted = ?', 'no')
 
-                ->columns(array('id' => 'element_data.id_element'))
+                ->columns(array('id' => 'term.id'))
 
-                ->order('element_data.id_element ASC');
+                ->order('term.id ASC');
+
         /* @var $oQuery Zend_Db_Table_Select */
 
         if ($this->_iFromId > 0) {
-            $oQuery->where('element_data.id_element > ?', $this->_iFromId);
-        }
-
-        if ($this->_iElementId > 0) {
-            $oQuery->where('element_data.id_element = ?', $this->_iElementId);
-        }
-
-        if ($this->_iPageId > 0) {
-            $oQuery->where('page.id = ?', $this->_iPageId);
+            $oQuery->where('term.id > ?', $this->_iFromId);
         }
 
         if ($this->_iRevisionId > 0) {
@@ -131,14 +112,17 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
             $oQuery->where('application.id = ?', $this->_iApplicationId);
         }
 
-        $oElementDatas = AM_Model_Db_Table_Abstract::factory('element_data')->fetchAll($oQuery);
+        $oTerms = AM_Model_Db_Table_Abstract::factory('term')->fetchAll($oQuery);
 
         $iCounter = 0;
-        foreach ($oElementDatas as $oElementData) {
+
+        foreach ($oTerms as $oTerm) {
             try {
-                $oData = $oElementData->getData();
-                if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName')) {
-                    $this->_resizeImage($oElementData->value, $oElementData->getElement(), AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName());
+                if (!empty($oTerm->thumb_stripe)) {
+                    $this->_resizeImage($oTerm->thumb_stripe, $oTerm, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_STRIPE);
+                }
+                if (!empty($oTerm->thumb_summary)) {
+                    $this->_resizeImage($oTerm->thumb_summary, $oTerm, AM_Model_Db_Term_Data_Resource::TYPE, AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_SUMMARY);
                 }
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
