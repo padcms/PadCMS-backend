@@ -241,7 +241,10 @@ class AM_Tools_Image
     {
         $sTempDir       = AM_Handler_Temp::getInstance()->getDir();
         //Cropping image
-        $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize);
+        $oConfig = Zend_Registry::get('config');
+        $sConvertBin = $oConfig->bin->get('convert', '/usr/local/bin/convert');
+        $sCmd = sprintf('nice -n 15 %4$s %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].png"', $sImagePath, $sTempDir, $iBlockSize, $sConvertBin);
+
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
         $aFiles = AM_Tools_Finder::type('file')

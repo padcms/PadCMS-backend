@@ -66,6 +66,8 @@
 
         <propertyprompt propertyName="Bin.PadcmsDrawLocation" defaultValue="/usr/bin/padcmsdraw"
             promptText="Enter location for padcmsdraw tool" />
+        <propertyprompt propertyName="Bin.PadcmsConvertLocation" defaultValue="/usr/local/bin/convert"
+            promptText="Enter location imagemagick convert tool" />
         <exportproperties targetfile="${phing.config.file}" />
 
         <copy file="./application/configs/application_sample.ini" tofile="./application/configs/application.ini" overwrite="true">
@@ -93,6 +95,7 @@
                     <token key="CommonBaseDomain" value="${Common.BaseDomain}" />
 
                     <token key="BinPadcmsDrawLocation" value="${Bin.PadcmsDrawLocation}" />
+                    <token key="BinPadcmsConvertLocation" value="${Bin.PadcmsConvertLocation}" />
 
                 </replacetokens>
             </filterchain>
