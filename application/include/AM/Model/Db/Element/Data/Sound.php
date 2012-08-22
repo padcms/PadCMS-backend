@@ -47,7 +47,7 @@ class AM_Model_Db_Element_Data_Sound extends AM_Model_Db_Element_Data_Resource
      * Returns type of image for conversion
      * @return string
      */
-    public function getImageType()
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
         $sResource = $this->getDataValue(self::DATA_KEY_RESOURCE, 'resource.mp3');
 

@@ -115,4 +115,17 @@ class AM_Model_Db_Element_Data_MiniArticle extends AM_Model_Db_Element_Data_Reso
 
         return $sValue;
     }
+
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
+    {
+        switch ($sKeyName) {
+            case self::DATA_KEY_THUMBNAIL:
+            case self::DATA_KEY_THUMBNAIL_SELECTED:
+                $sType = AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+            default:
+                $sType = AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
+        }
+
+        return $sType;
+    }
 }

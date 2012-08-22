@@ -95,7 +95,7 @@ class AM_Model_Db_Element_Data_Html extends AM_Model_Db_Element_Data_Resource
         return $sValue;
     }
 
-    public function getImageType()
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
         return 'zip';
     }

@@ -99,7 +99,7 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
         return $iValue;
     }
 
-    public function getImageType()
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
         //checking if template has background layer
         $oPage            = $this->getElement()->getPage();

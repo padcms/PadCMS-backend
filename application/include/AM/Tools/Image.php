@@ -51,30 +51,35 @@ class AM_Tools_Image
     const TILE_BAD_QUALITY_SIZE_PROPORTION_RETINA = 7;
 
     /**
+     * Returns confgi instance
+     * @return Zend_Config
+     */
+    public static function getConfig()
+    {
+        return Zend_Registry::get('config');
+    }
+
+    /**
      * Resize image and save
-     * @param string $sSrc Path to source image
-     * @param string $sDst Path to output image
+     * @param string $sPathSrc Path to source image
+     * @param string $sPathDst Path to output image
      * @param integer $iWidth Width of output image
      * @param integer $iHeight Height of output image
      * @param string $sMode Transformation mode
      */
-    public static function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode = "in")
+    public static function resizeImage($sPathSrc, $sPathDst, $iWidth, $iHeight, $sMode = "out")
     {
-        if (empty($sDst)) {
-          $sDst = $sSrc;
+        if (empty($sPathDst)) {
+          $sPathDst = $sPathSrc;
         }
 
         if ($sMode == 'noresize') {
-            return AM_Tools_Standard::getInstance()->copy($sSrc, $sDst);
+            return AM_Tools_Standard::getInstance()->copy($sPathSrc, $sPathDst);
         }
 
-        $rSrcImage = self::loadImage($sSrc);
-        if (!$rSrcImage) {
-            return false;
-        }
-        $sImageType = self::getImageType($sSrc);
-        $iSrcWidth  = imagesx($rSrcImage);
-        $iSrcHeight = imagesy($rSrcImage);
+        $oSrcImage  = new Imagick($sPathSrc);
+        $iSrcWidth  = $oSrcImage->getimagewidth();
+        $iSrcHeight = $oSrcImage->getimageheight();
 
         //For images with horizontal proportions in vertical issue
         if ($iSrcWidth > $iSrcHeight && $iWidth < $iHeight && $sMode == 'width') {
@@ -83,151 +88,24 @@ class AM_Tools_Image
             $iWidth     = $iTmpHeight;
         }
 
+        $sCmd = null;
+
         switch ($sMode) {
-            case "force":
-                if ($iSrcWidth == $iWidth && $iSrcHeight == $iHeight) {
-                    return @copy($sSrc, $sDst);
-                }
-                $rDstImage = imagecreatetruecolor($iWidth, $iHeight);
-                self::ImageCopyResampled($sImageType, $rDstImage, $rSrcImage,0, 0, 0, 0, $iWidth, $iHeight, $iSrcWidth, $iSrcHeight);
-                break;
             case "width":
-                $iDstWidth = $iWidth;
-                $iDstHeight = round($iSrcHeight / $iSrcWidth * $iDstWidth);
-                if ($iSrcWidth == $iWidth && $iSrcHeight == $iHeight) {
-                    return @copy($sSrc, $sDst);
-                }
-                $rDstImage = imagecreatetruecolor($iDstWidth, $iDstHeight);
-                self::ImageCopyResampled($sImageType, $rDstImage, $rSrcImage,0, 0, 0, 0, $iDstWidth, $iDstHeight, $iSrcWidth, $iSrcHeight);
+                $sCmd = sprintf('nice -n 15 %s %s -resize %dx %s', self::getConfig()->bin->convert, $sPathSrc, $iWidth, $sPathDst);
                 break;
             case "height":
-                $iDstHeight = $iHeight;
-                $iDstWidth = round($iSrcWidth / $iSrcHeight * $iDstHeight);
-                if ($iSrcWidth == $iWidth && $iSrcHeight == $iHeight) {
-                    return @copy($sSrc, $sDst);
-                }
-                $rDstImage = imagecreatetruecolor($iDstWidth, $iDstHeight);
-                self::ImageCopyResampled($sImageType, $rDstImage, $rSrcImage,0, 0, 0, 0, $iDstWidth, $iDstHeight, $iSrcWidth, $iSrcHeight);
+                $sCmd = sprintf('nice -n 15 %s %s -resize x%d %s', self::getConfig()->bin->convert, $sPathSrc, $iHeight, $sPathDst);
                 break;
             case "out":
-                $fRatioWidth  = $iSrcWidth / $iWidth;
-                $fRatioHeight = $iSrcHeight / $iHeight;
-                $fRatio       = min($fRatioHeight, $fRatioWidth);
-                $iDstWidth    = $iWidth;
-                $iDstHeight   = $iHeight;
-                $iX           = round(abs($iSrcWidth - $iDstWidth * $fRatio) / 2);
-                $iY           = round(abs($iSrcHeight - $iDstHeight * $fRatio) / 2);
-                if ($iX == 0 && $iY == 0 && $iDstWidth == $iSrcWidth && $iDstHeight == $iSrcHeight) {
-                    return @copy($sSrc, $sDst);
-                }
-                $rDstImage = imagecreatetruecolor($iDstWidth, $iDstHeight);
-                self::ImageCopyResampled($sImageType, $rDstImage, $rSrcImage, 0, 0, 0, 0, $iDstWidth, $iDstHeight, ($iSrcWidth - 2 * $iX), ($iSrcHeight - 2 * $iY));
-                break;
-            case "in":
             default:
-                $fRatioWidth = $iSrcWidth / $iWidth;
-                $fRatioHeight = $iSrcHeight / $iHeight;
-                $fRatio = max($fRatioHeight, $fRatioWidth);
-                $iDstWidth = $iSrcWidth / $fRatio;
-                $iDstHeight = $iSrcHeight / $fRatio;
-                if (round($iSrcWidth) == $iWidth && round($iSrcHeight) == $iHeight) {
-                    return @copy($sSrc, $sDst);
-                }
-
-                $rDstImage = imagecreatetruecolor($iDstWidth, $iDstHeight);
-                self::ImageCopyResampled($sImageType, $rDstImage, $rSrcImage, 0, 0, 0, 0, $iDstWidth, $iDstHeight, $iSrcWidth, $iSrcHeight);
+                $sCmd = sprintf('nice -n 15 %s %s -resize %dx %s', self::getConfig()->bin->convert, $sPathSrc, $iWidth, $sPathDst);
+                AM_Tools_Standard::getInstance()->passthru($sCmd);
+                $sCmd = sprintf('nice -n 15 %s %s -crop %dx%d+0+0 %s', self::getConfig()->bin->convert, $sPathDst, $iWidth, $iHeight, $sPathDst);
                 break;
         }
 
-        return self::saveImage($sImageType, $rDstImage, $sDst);
-    }
-
-    /**
-     * Parse the results of
-     *
-     * @param string $sPath
-     * @return false | string Image type
-     */
-    public static function getImageType($sPath)
-    {
-        list($iWidth, $iHeight, $sType, $sAttr) = @getimagesize($sPath);
-
-        if (!isset($iWidth) || $iWidth <= 0) {
-            return false;
-        }
-
-        $sType = image_type_to_extension($sType, false);
-
-        return $sType;
-    }
-
-    /**
-     * Determinate type of image by extension and load image
-     *
-     * @param string $sPath Path to the image
-     * @return resource Image link
-     */
-    public static function loadImage($sPath) {
-        $sType = self::getImageType($sPath);
-
-        switch ($sType) {
-            case "png":
-                return imagecreatefrompng($sPath);
-            case "jpg":
-            case "jpeg":
-                return imagecreatefromjpeg($sPath);
-            case "gif":
-                return imagecreatefromgif($sPath);
-        }
-
-        return false;
-    }
-
-    /**
-     * Determinate type of image by extension and save image
-     *
-     * @param string $sType
-     * @param resource $rImg
-     * @param string $sPath
-     * @return resource Image link
-     */
-    public static function saveImage($sType, $rImg, $sPath) {
-        $extension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
-        switch ($extension) {
-            case "png":
-                return @imagepng($rImg, $sPath);
-            case "jpg":
-            case "jpeg":
-                return @imagejpeg($rImg, $sPath, 90);
-            case "gif":
-                return @imagegif($rImg, $sPath);
-        }
-        return false;
-    }
-
-    /**
-     *
-     * @param resource $rDstImage
-     * @param resource $rSrcImage
-     * @param int $iDstX
-     * @param int $iDstY
-     * @param int $iSrcX
-     * @param int $iSrcY
-     * @param int $iDstW
-     * @param int $iDstH
-     * @param int $iSrcW
-     * @param int $iSrcH
-     */
-    public static function ImageCopyResampled($sType, $rDstImage, $rSrcImage, $iDstX, $iDstY, $iSrcX, $iSrcY, $iDstW, $iDstH, $iSrcW, $iSrcH)
-    {
-        // preserve transparency
-        if ($sType == "gif" || $sType == "png") {
-            imagecolortransparent($rDstImage, imagecolorallocatealpha($rDstImage, 0, 0, 0, 127));
-            imagealphablending($rDstImage, false);
-            imagesavealpha($rDstImage, true);
-        }
-
-        return imagecopyresampled($rDstImage, $rSrcImage, $iDstX, $iDstY, $iSrcX, $iSrcY, $iDstW, $iDstH, $iSrcW, $iSrcH);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
     }
 
     /**
@@ -241,7 +119,7 @@ class AM_Tools_Image
     {
         $sTempDir  = AM_Handler_Temp::getInstance()->getDir();
         $aFileInfo = pathinfo($sImagePath);
-        $sCmd = sprintf('nice -n 15 convert %1$s -crop %3$dx%3$d -set filename:title "%%[fx:page.y/%3$d+1]_%%[fx:page.x/%3$d+1]" +repage  +adjoin %2$s/"resource_%%[filename:title].%4$s"', $sImagePath, $sTempDir, $iBlockSize, $aFileInfo['extension']);
+        $sCmd = sprintf('nice -n 15 %1$s %2$s -crop %4$dx%4$d -set filename:title "%%[fx:page.y/%4$d+1]_%%[fx:page.x/%4$d+1]" +repage  +adjoin %3$s/"resource_%%[filename:title].%5$s"', self::getConfig()->bin->convert, $sImagePath, $sTempDir, $iBlockSize, $aFileInfo['extension']);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
         $aFiles = AM_Tools_Finder::type('file')
@@ -258,7 +136,9 @@ class AM_Tools_Image
 
         foreach ($aFiles as $sFile) {
             //Optimization
-            self::optimizePng($sFile);
+            if ('png' == pathinfo($sFile, PATHINFO_EXTENSION)) {
+                self::optimizePng($sFile);
+            }
             $oZip->addFile($sFile, pathinfo($sFile, PATHINFO_BASENAME));
         }
         $oZip->close();
@@ -270,7 +150,8 @@ class AM_Tools_Image
      */
     public static function optimizePng($sFilePath)
     {
-        $sCmd = sprintf('nice -n 15 optipng -zc9 -zm8 -zs0 -f5 %s > /dev/null 2>&1', $sFilePath);
+        $sOptipngPath = Zend_Registry::get('config')->bin->optipng;
+        $sCmd         = sprintf('nice -n 15 %s -zc9 -zm8 -zs0 -f5 %s > /dev/null 2>&1', $sOptipngPath, $sFilePath);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
     }
 }

@@ -88,7 +88,7 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
             $sFileInputInfo = pathinfo($this->_sFileForThumbnail);
             $sFileOutput    = $sFileInputInfo['dirname'] . DIRECTORY_SEPARATOR . $sFileInputInfo['filename'] . '.' . $sImageType;
 
-            $sCmd = sprintf('nice -n 15 convert %s -background white -flatten -quality 90 %s', $this->_sFileForThumbnail, $sFileOutput);
+            $sCmd = sprintf('nice -n 15 %s %s -background white -flatten -quality 90 %s', $this->getConfig()->bin->convert, $this->_sFileForThumbnail, $sFileOutput);
             AM_Tools_Standard::getInstance()->passthru($sCmd);
 
             $this->_sFileForThumbnail = $sFileOutput;

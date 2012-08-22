@@ -372,7 +372,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         /* @var $oThumbnailer AM_Handler_Thumbnail */
         $oThumbnailer->clearSources()
                 ->addSourceFile($sDestination)
-                ->setImageType($this->getImageType())
+                ->setImageType($this->getImageType($sKey))
                 ->loadAllPresets($this->getThumbnailPresetName())
                 ->createThumbnails();
 
@@ -394,7 +394,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
      * Returns type of image for conversion
      * @return string
      */
-    public function getImageType()
+    public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
         return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
     }
@@ -456,7 +456,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         }
 
         //$sFileExtension = pathinfo($sValue, PATHINFO_EXTENSION);
-        $sFileExtension = $this->getImageType();
+        $sFileExtension = $this->getImageType($sKey);
 
         if (empty($sFileExtension)) {
             return false;

@@ -65,7 +65,11 @@
             promptText="Enter test mysql database password" />
 
         <propertyprompt propertyName="Bin.PadcmsDrawLocation" defaultValue="/usr/bin/padcmsdraw"
-            promptText="Enter location for padcmsdraw tool" />
+            promptText="Enter location for 'padcmsdraw' tool" />
+        <propertyprompt propertyName="Bin.ConvertLocation" defaultValue="/usr/bin/convert"
+            promptText="Enter location for 'convert' tool from ImageMagick package" />
+        <propertyprompt propertyName="Bin.OptipngLocation" defaultValue="/usr/bin/optipng"
+            promptText="Enter location for 'optipng' tool" />
         <exportproperties targetfile="${phing.config.file}" />
 
         <copy file="./application/configs/application_sample.ini" tofile="./application/configs/application.ini" overwrite="true">
@@ -93,6 +97,8 @@
                     <token key="CommonBaseDomain" value="${Common.BaseDomain}" />
 
                     <token key="BinPadcmsDrawLocation" value="${Bin.PadcmsDrawLocation}" />
+                    <token key="BinConvertLocation" value="${Bin.ConvertLocation}" />
+                    <token key="BinOptipngLocation" value="${Bin.OptipngLocation}" />
 
                 </replacetokens>
             </filterchain>

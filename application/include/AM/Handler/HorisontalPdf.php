@@ -283,7 +283,7 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
         $sFileInputInfo = pathinfo($sFileInput);
         $sFileOutput    = $sFileInputInfo['dirname'] . DIRECTORY_SEPARATOR . $sFileInputInfo['filename'] . '.jpg';
 
-        $sCmd = sprintf('nice -n 15 convert %s -background white -flatten -quality 90 %s', $sFileInput, $sFileOutput);
+        $sCmd = sprintf('nice -n 15 %s %s -background white -flatten -quality 90 %s', $this->getConfig()->bin->convert, $sFileInput, $sFileOutput);
         AM_Tools_Standard::getInstance()->passthru($sCmd);
 
         $aTargetFiles[] = $sFileOutput;
