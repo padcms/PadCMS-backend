@@ -961,8 +961,7 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
             return null;
         }
 
-        $sFileExtension = pathinfo($sResource, PATHINFO_EXTENSION);
-        $sFileName      = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $sFileExtension;
+        $sFileName = AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $oElementBody->getResources()->getImageType();
 
         $sUri = AM_Tools::getImageUrl(
             AM_Handler_Thumbnail_Interface::PRESET_EXPORT_COVER . '-' . $this->getOrientation(),
