@@ -84,7 +84,7 @@ var fieldGallery = {
                                     + image
                                     + '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>'
                                     + '<div class="actions">'
-                                       + '<a title="Enable zooming" href="#" class="action-1-disabled enable-zoom-btn"></a>'
+                                       + '<a title="Enable zooming" href="#" class="action-2-disabled enable-zoom-btn"></a>'
                                     + '</div>'
                                     +'<a href="#" title="Delete image" class="close delete-btn"></a>'
                                 + '</div>'

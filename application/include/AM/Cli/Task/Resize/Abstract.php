@@ -49,9 +49,10 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
      * @param object $oResource The instance of element | term | horisontal page
      * @param string $sResourceType The type of resource's parent (element, toc, cache-static-pdf)
      * @param string $sResourceKeyName The name of the resource type (resource, thumbnail, etc)
+     * @param bool $bZoom
      * @return @void
      */
-    protected function _resizeImage($sFileBaseName, $oResource, $sResourceType, $sResourceKeyName, $sResourcePresetName = null)
+    protected function _resizeImage($sFileBaseName, $oResource, $sResourceType, $sResourceKeyName, $sResourcePresetName = null, $bZoom = false)
     {
         if (is_null($sResourcePresetName)) {
             $sResourcePresetName = $sResourceType;
@@ -67,7 +68,8 @@ abstract class AM_Cli_Task_Resize_Abstract extends AM_Cli_Task_Abstract
 
         $this->_oThumbnailer->clearSources()
                 ->addSourceFile($sFilePath)
-                ->setImageType($sImageType);
+                ->setImageType($sImageType)
+                ->setZooming($bZoom);
 
         if (empty($this->_sPreset)) {
             $this->_oThumbnailer->loadAllPresets($sResourcePresetName);

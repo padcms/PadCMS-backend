@@ -47,18 +47,20 @@ class AM_Resource_Processor implements AM_Resource_Processor_Interface
      * @param int $iHeight
      * @param string $sMode
      */
-    public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode)
+    public function resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode, $sImageForZoomPath = null)
     {
-        AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode);
+        AM_Tools_Image::resizeImage($sSrc, $sDst, $iWidth, $iHeight, $sMode, $sImageForZoomPath);
     }
 
     /**
-     * @param string $sSrc
-     * @param type $sDst
-     * @param type $iBlockSize
+     * @param string $sImageOriginal - the original image with high resolution
+     * @param string $sImageThumbnail - the thumbnail given from original image
+     * @param string $sArchivePath - path of the archive with cropped image
+     * @param integer $iBlockSize - the tile size (size of the square to crop)
+     * @param boolean $bZooming - do we have to create larger image for zooming
      */
-    public function cropImage($sSrc, $sDst, $iBlockSize)
+    public function cropImage($sImageOriginal, $sImageThumbnail, $sArchivePath, $iBlockSize, $sImageForZoomPath = null)
     {
-        AM_Tools_Image::cropImage($sSrc, $sDst, $iBlockSize);
+        AM_Tools_Image::cropImage($sImageOriginal, $sImageThumbnail, $sArchivePath, $iBlockSize, $sImageForZoomPath);
     }
 }

@@ -66,8 +66,9 @@ class AM_Tools_Image
      * @param integer $iWidth Width of output image
      * @param integer $iHeight Height of output image
      * @param string $sMode Transformation mode
+     * @param string $sImageForZoomPath Path for zoom thumbnail
      */
-    public static function resizeImage($sPathSrc, $sPathDst, $iWidth, $iHeight, $sMode = "out")
+    public static function resizeImage($sPathSrc, $sPathDst, $iWidth, $iHeight, $sMode = "out", $sImageForZoomPath = null)
     {
         if (empty($sPathDst)) {
           $sPathDst = $sPathSrc;
@@ -88,6 +89,24 @@ class AM_Tools_Image
             $iWidth     = $iTmpHeight;
         }
 
+        self::_resizeImage($sPathSrc, $sPathDst, $iWidth, $iHeight, $sMode);
+
+        if (!is_null($sImageForZoomPath)) {
+            self::_resizeImage($sPathSrc, $sImageForZoomPath, $iWidth*2, $iHeight*2, $sMode);
+        }
+    }
+
+    /**
+     * Resize image and save
+     * @todo rename
+     * @param string $sPathSrc Path to source image
+     * @param string $sPathDst Path to output image
+     * @param integer $iWidth Width of output image
+     * @param integer $iHeight Height of output image
+     * @param string $sMode Transformation mode
+     */
+    protected static function _resizeImage($sPathSrc, $sPathDst, $iWidth, $iHeight, $sMode = "out")
+    {
         $sCmd = null;
 
         switch ($sMode) {
@@ -108,29 +127,30 @@ class AM_Tools_Image
 
     /**
      * http://www.imagemagick.org/Usage/crop/#crop_equal
-     * @param string $sImagePath
-     * @param string $sArchivePath
+     * @param string $sImageOriginal - the original image with high resolution
+     * @param string $sImageThumbnail - the thumbnail given from original image
+     * @param string $sArchivePath - path of the archive with cropped image
+     * @param integer $iBlockSize - the tile size (size of the square to crop)
+     * @param string $sImageForZoomPath Path for zoom thumbnail
      * @return void
      * @throws AM_Exception
      */
-    public static function cropImage($sImagePath, $sArchivePath, $iBlockSize = self::TILE_SIZE)
+    public static function cropImage($sImageOriginal, $sImageThumbnail, $sArchivePath, $iBlockSize = self::TILE_SIZE, $sImageForZoomPath = null)
     {
-        $sTempDir  = AM_Handler_Temp::getInstance()->getDir();
-        $aFileInfo = pathinfo($sImagePath);
-        $sCmd = sprintf('nice -n 15 %1$s %2$s -crop %4$dx%4$d -set filename:title "%%[fx:page.y/%4$d+1]_%%[fx:page.x/%4$d+1]" +repage  +adjoin %3$s/"resource_%%[filename:title].%5$s"', self::getConfig()->bin->convert, $sImagePath, $sTempDir, $iBlockSize, $aFileInfo['extension']);
-
-        AM_Tools_Standard::getInstance()->passthru($sCmd);
-
-        $aFiles = AM_Tools_Finder::type('file')
-                ->name('resource_*.' . $aFileInfo['extension'])
-                ->sort_by_name()
-                ->in($sTempDir);
+        $sTempDir = AM_Handler_Temp::getInstance()->getDir();
+        $aFiles   = self::_cropImage($sImageThumbnail, $sTempDir, $iBlockSize);
 
         $oZip             = new ZipArchive();
         $rArchiveResource = $oZip->open($sArchivePath, ZIPARCHIVE::CREATE);
 
         if ($rArchiveResource !== true) {
             throw new AM_Exception('I/O error. Can\'t create zip file: ' . $sZipPath);
+        }
+
+        if (!is_null($sImageForZoomPath)) {
+            $aFilesZoom = self::_cropImage($sImageForZoomPath, $sTempDir, $iBlockSize, '_2x');
+
+            $aFiles = array_merge($aFiles, $aFilesZoom);
         }
 
         foreach ($aFiles as $sFile) {
@@ -140,7 +160,30 @@ class AM_Tools_Image
             }
             $oZip->addFile($sFile, pathinfo($sFile, PATHINFO_BASENAME));
         }
+
+
         $oZip->close();
+    }
+
+    /**
+     * @todo rename
+     * @param string $sImage
+     * @param string $sOutputFolder
+     * @param int $iBlockSize
+     * @return array - array of cropped images
+     */
+    protected static function _cropImage($sImage, $sOutputFolder, $iBlockSize, $sPathPostFix = '')
+    {
+        $aFileInfo = pathinfo($sImage);
+        $sCmd = sprintf('nice -n 15 %1$s %2$s -crop %4$dx%4$d -set filename:title "%%[fx:page.y/%4$d+1]_%%[fx:page.x/%4$d+1]" +repage  +adjoin %3$s/"resource_%%[filename:title]%6$s.%5$s"', self::getConfig()->bin->convert, $sImage, $sOutputFolder, $iBlockSize, $aFileInfo['extension'], $sPathPostFix);
+        AM_Tools_Standard::getInstance()->passthru($sCmd);
+
+        $aFiles = AM_Tools_Finder::type('file')
+                ->name('resource_*' . $sPathPostFix . '.' . $aFileInfo['extension'])
+                ->sort_by_name()
+                ->in($sOutputFolder);
+
+        return $aFiles;
     }
 
     /**

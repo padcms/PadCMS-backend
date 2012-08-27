@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <element id="1" page_id="1" element_type_name="body" weight="100" content_text="" />
-    <element_data element_id="1" type="resource"  value="/element/00/00/00/01/resource.jpg" />
+    <element_data element_id="1" type="resource"  value="/element/00/00/00/01/resource.png" />
 </dataset>

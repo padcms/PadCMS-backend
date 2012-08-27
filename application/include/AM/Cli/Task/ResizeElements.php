@@ -137,8 +137,9 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
         foreach ($oElementDatas as $oElementData) {
             try {
                 $oData = $oElementData->getData();
+                $bZoom = (boolean) $oElementData->getData()->getDataValue(AM_Model_Db_Element_Data_Gallery::DATA_KEY_ENABLE_ZOOM, false);
                 if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName')) {
-                    $this->_resizeImage($oElementData->value, $oElementData->getElement(), AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName());
+                    $this->_resizeImage($oElementData->value, $oElementData->getElement(), AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName(), $bZoom);
                 }
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
