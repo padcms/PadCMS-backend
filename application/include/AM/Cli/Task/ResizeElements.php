@@ -140,6 +140,20 @@ class AM_Cli_Task_ResizeElements extends AM_Cli_Task_Resize_Abstract
                 $bZoom = (boolean) $oElementData->getData()->getDataValue(AM_Model_Db_Element_Data_Gallery::DATA_KEY_ENABLE_ZOOM, false);
                 if (!is_null($oData) && method_exists($oData, 'getThumbnailPresetName')) {
                     $this->_resizeImage($oElementData->value, $oElementData->getElement(), AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->key_name, $oElementData->getData()->getThumbnailPresetName(), $bZoom);
+
+                    $sFileExtension = strtolower(pathinfo($oElementData->value, PATHINFO_EXTENSION));
+                    if ('pdf' == $sFileExtension && AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE == $oElementData->key_name) {
+                        $oData->delete(AM_Model_Db_Element_Data_Resource::PDF_INFO, false);
+
+                        $sFilePath  = AM_Tools::getContentPath(AM_Model_Db_Element_Data_Resource::TYPE, $oElementData->getElement()->id)
+                                . DIRECTORY_SEPARATOR
+                                . AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE . '.' . $sFileExtension;
+
+                        $oResource = AM_Resource_Factory::create($sFilePath);
+                        $sPdfInfo  = $oResource->getPdfInfo();
+
+                        $oData->addKeyValue(AM_Model_Db_Element_Data_Resource::PDF_INFO, $sPdfInfo);
+                    }
                 }
             } catch (Exception $oException) {
                 $this->_echo(sprintf('%s', $oException->getMessage()), 'error');
