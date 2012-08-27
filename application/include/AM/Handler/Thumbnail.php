@@ -53,6 +53,29 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     protected $_oResourceStorage = null; /**< @type AM_Handler_Thumbnail_Storage_Abstract */
     /** @var string **/
     protected $_sImageType = self::IMAGE_TYPE_PNG; /**< @type string */
+    /** @var boolean */
+    protected $_bZooming = false; /**< @type boolean */
+
+    /**
+     * Returns is zooming enabled
+     * @return boolean
+     */
+    public function getZooming()
+    {
+        return $this->_bZooming;
+    }
+
+    /**
+     * Sets zooming enabling/disabling
+     * @param boolean $bZooming
+     * @return AM_Handler_Thumbnail
+     */
+    public function setZooming($bZooming)
+    {
+        $this->_bZooming = (boolean) $bZooming;
+
+        return $this;
+    }
 
     /**
      * Returns type of image for conversion
@@ -286,7 +309,18 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                     . '.'
                     . $this->getImageType();
 
-                    $this->getResourceProcessor()->resizeImage($sInputFile, $sThumbnail, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method);
+                    $sThumbnailZoom = null;
+
+                    if ('none' != $sPreset && $this->getZooming()) {
+                        $sThumbnailZoom = $sTempPath
+                                . DIRECTORY_SEPARATOR
+                                . $oSource->getSourceFileName()
+                                . '_2x'
+                                . '.'
+                                . $this->getImageType();
+                    }
+
+                    $this->getResourceProcessor()->resizeImage($sInputFile, $sThumbnail, $oPresetConfig->width, $oPresetConfig->height, $oPresetConfig->method, $sThumbnailZoom);
 
                     $this->getResourceStorage()->addResource($sThumbnail);
 
@@ -301,7 +335,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                         . $oSource->getSourceFileName()
                         . '.zip';
 
-                        $this->getResourceProcessor()->cropImage($sThumbnail, $sArchivePath, $iBlockSize);
+                        $this->getResourceProcessor()->cropImage($sInputFile, $sThumbnail, $sArchivePath, $iBlockSize, $sThumbnailZoom);
 
                         $this->getResourceStorage()->addResource($sArchivePath);
                     }

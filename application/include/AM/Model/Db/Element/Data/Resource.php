@@ -390,6 +390,32 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         return $this;
     }
 
+
+    /**
+     * Resizing resource with zooming enabled
+     * @return void
+     */
+    public function enableZooming()
+    {
+        $sDataPath     = $this->_getResourceDir();
+        $sResourceName = $this->getDataValue(self::DATA_KEY_RESOURCE);
+
+        if (empty($sResourceName)) {
+            return;
+        }
+
+        $sResourcePath = $sDataPath . DIRECTORY_SEPARATOR . self::DATA_KEY_RESOURCE . '.' . pathinfo($sResourceName, PATHINFO_EXTENSION);
+
+        $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
+        /* @var $oThumbnailer AM_Handler_Thumbnail */
+        $oThumbnailer->clearSources()
+                ->setZooming(true)
+                ->addSourceFile($sResourcePath)
+                ->setImageType($this->getImageType(self::DATA_KEY_RESOURCE))
+                ->loadAllPresets($this->getThumbnailPresetName())
+                ->createThumbnails();
+    }
+
     /**
      * Returns type of image for conversion
      * @return string

@@ -81,7 +81,11 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
         $iValue = intval($iValue);
 
         if ($iValue < 0) {
-            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HAS_PHOTO_GALLERY_LINK));
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_ENABLE_ZOOM));
+        }
+
+        if (0 < $iValue) {
+            $this->enableZooming();
         }
 
         return $iValue;
