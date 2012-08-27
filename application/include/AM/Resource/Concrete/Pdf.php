@@ -127,7 +127,7 @@ class AM_Resource_Concrete_Pdf extends AM_Resource_Abstract
     {
         $sPdfDrawBin = $this->_getPadcmsdrawPath();
 
-        $sCmd = sprintf('nice -n 15 %s -j %s 2>&1', $sPdfDrawBin, $this->_sSourceFile);
+        $sCmd = sprintf('nice -n 15 %s -j %s 2>/dev/null', $sPdfDrawBin, $this->_sSourceFile);
 
         AM_Tools_Standard::getInstance()->exec($sCmd, $aCommandOutput);
         if (!$aCommandOutput || count($aCommandOutput) == 0) {
