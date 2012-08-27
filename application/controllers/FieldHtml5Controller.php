@@ -89,6 +89,7 @@ class FieldHtml5Controller extends AM_Controller_Action_Field
 
             $oElement = $oPage->getElementForField($oField);
             /* @var $oElement AM_Model_Db_Element */
+            $oElement->getResources()->delete();
 
             $aBodyFields = array_merge(array('html5_body' => $sBody), $aBodyFields);
             foreach ($aBodyFields as $sKey => $sValue) {

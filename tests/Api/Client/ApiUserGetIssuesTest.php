@@ -79,7 +79,7 @@ class ApiUserGetIssuesTest extends AM_Test_PHPUnit_DatabaseTestCase
                                     'revision_id'               => 1,
                                     'revision_title'            => 'Title',
                                     'revision_state'            => 'published',
-                                    'revision_cover_image_list' => '/resources/export-cover-vertical/element/00/00/00/01/resource.png?',
+                                    'revision_cover_image_list' => '/resources/export-cover-vertical/element/00/00/00/01/resource.jpg?',
                                     'revision_video'            => '/resources/none/element/00/00/00/02/resource.mp4',
                                     'revision_color'            => 'd9411a',
                                     'revision_horizontal_mode'  => '2pages',

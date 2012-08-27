@@ -63,16 +63,16 @@ class AM_View_Helper_Field_Html5 extends AM_View_Helper_Field
                         $sFileName      = $aFileInfo['filename'];
                         $sFileExtension = $aFileInfo['extension'];
 
-                        $aElementView['fileName']      = $sFileName . '.' . $sFileExtension;
-                        $aElementView['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $sFileExtension;
+                        $aElementView['element']['fileName']      = $sFileName . '.' . $sFileExtension;
+                        $aElementView['element']['fileNameShort'] = $this->getHelper('String')->cut($sFileName) . '.' . $sFileExtension;
 
                         $sResourceFileName = AM_Model_Db_Element_Data_Html5::DATA_KEY_RESOURCE . '.' . $sFileExtension;
-                        $aElementView['smallUri'] = AM_Tools::getIconForNonImageFile($sResourceFileName);
+                        $aElementView['element']['smallUri'] = AM_Tools::getIconForNonImageFile($sResourceFileName);
                     }
 
                     $aElementView[$sFieldName] = $sFieldValue;
                 }
-                $aElementView['id'] = $oElement->id;
+                $aElementView['element']['id'] = $oElement->id;
             }
         }
 
