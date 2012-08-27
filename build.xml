@@ -70,6 +70,7 @@
             promptText="Enter location for 'convert' tool from ImageMagick package" />
         <propertyprompt propertyName="Bin.OptipngLocation" defaultValue="/usr/bin/optipng"
             promptText="Enter location for 'optipng' tool" />
+
         <exportproperties targetfile="${phing.config.file}" />
 
         <copy file="./application/configs/application_sample.ini" tofile="./application/configs/application.ini" overwrite="true">
