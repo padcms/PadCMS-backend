@@ -245,5 +245,19 @@ class AM_Model_Db_Table_Page extends AM_Model_Db_Table_Abstract
         $oPage->deleted = 'yes';
         $oPage->save();
     }
-    
+
+    /**
+     * Reset values of the horizontal pdf's on the pages
+     * @param AM_Model_Db_Issue $oIssue
+     * @return int Updated rows amount
+     */
+    public function resetHorizontalPdf(AM_Model_Db_Issue $oIssue)
+    {
+        $sWhere = $this->getAdapter()->quoteInto('revision.issue = ?', $oIssue->id);
+        $sSql   = sprintf('UPDATE page SET page.pdf_page=NULL '
+                         . 'WHERE page.revision IN (SELECT revision.id FROM revision WHERE %s)', $sWhere);
+        $iRowsUpdated = $this->getAdapter()->query($sSql);
+
+        return $iRowsUpdated;
+    }
 }

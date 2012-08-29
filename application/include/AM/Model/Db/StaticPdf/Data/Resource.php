@@ -275,8 +275,9 @@ class AM_Model_Db_StaticPdf_Data_Resource extends AM_Model_Db_StaticPdf_Data_Abs
      */
     public function clearResources()
     {
-        AM_Tools::clearContent(self::TYPE, $this->_getHorizontalPdf()->issue);
-        AM_Tools::clearResizerCache(self::TYPE, self::TYPE, $this->_getHorizontalPdf()->issue);
+        $sFileNameMask = $this->_getHorizontalPdf()->id . '.*';
+        AM_Tools::clearContent(self::TYPE, $this->_getHorizontalPdf()->issue, $sFileNameMask);
+        AM_Tools::clearResizerCache(self::TYPE, self::TYPE, $this->_getHorizontalPdf()->issue, $sFileNameMask);
 
         AM_Tools::clearContent(self::TYPE_CACHE, $this->_getHorizontalPdf()->issue);
         AM_Tools::clearResizerCache(self::TYPE_CACHE, self::TYPE_CACHE, $this->_getHorizontalPdf()->issue);

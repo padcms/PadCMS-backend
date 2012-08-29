@@ -159,30 +159,4 @@ class AM_Model_Db_Table_User extends AM_Model_Db_Table_Abstract
 
         return $oQuery;
     }
-
-    /**
-     * @see Zend_Db_Table_Abstract::fetchRow()
-     */
-//    public function fetchRow($where = null, $order = null)
-//    {
-//        if ($where instanceof Zend_Db_Table_Select) {
-//            $where->setIntegrityCheck(false)
-//                  ->joinLeft("client", "client.id = user.client", array("client_title" => "title"));
-//        }
-//
-//        return parent::fetchRow($where, $order);
-//    }
-//
-//    /**
-//     * @see Zend_Db_Table_Abstract::fetchAll()
-//     */
-//    public function fetchAll($where = null, $order = null, $count = null, $offset = null)
-//    {
-//        if ($where instanceof Zend_Db_Table_Select) {
-//            $where->setIntegrityCheck(false)
-//                  ->joinLeft("client", "client.id = user.client", array("client_title" => "title"));
-//        }
-//
-//        return parent::fetchAll($where, $order, $count, $offset);
-//    }
 }

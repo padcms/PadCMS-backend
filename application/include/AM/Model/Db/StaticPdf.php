@@ -191,7 +191,6 @@ class AM_Model_Db_StaticPdf extends AM_Model_Db_Abstract
     protected function _postDelete()
     {
         $this->getResource()->delete();
-
         $this->getIssue()->compileHorizontalPdfs();
     }
 }
