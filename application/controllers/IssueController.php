@@ -368,6 +368,7 @@ class IssueController extends AM_Controller_Action
             }
 
             $oHorizontalPdf = AM_Model_Db_Table_Abstract::factory('static_pdf')->findOneBy('id', $iStaticPdfId);
+            /* @var $oHorizontalPdf AM_Model_Db_StaticPdf */
             if (is_null($oHorizontalPdf)) {
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }

@@ -79,6 +79,7 @@ class AM_Handler_HorisontalPdf extends AM_Handler_Abstract
      */
     public function compile()
     {
+        AM_Model_Db_Table_Abstract::factory('page')->resetHorizontalPdf($this->getIssue());
         AM_Model_Db_Table_Abstract::factory('page_horisontal')->deleteBy(array('id_issue' => $this->getIssue()->id));
 
         AM_Tools::clearContent(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE, $this->getIssue()->id);
