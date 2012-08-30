@@ -42,11 +42,24 @@ var pageMap = {
     VERTICAL:   'vertical',
     HORIZONTAL: 'horizontal',
 
+    ADD_VERTICAL:   'add_vertical',
+    ADD_HORIZONTAL: 'add_horizontal',
+
     AVERAGE_PAGE_SIZE_HEIGHT: 62.5,
     AVERAGE_PAGE_SIZE_WIDTH: 54,
     MARGIN: 50,
 
     addPage: function (targetPid, tid, type, obj, between, $this) {
+        switch (type) {
+            case $this.LEFT:
+            case $this.RIGHT:
+                $this.type = $this.ADD_VERTICAL;
+                break;
+            case $this.TOP:
+            case $this.BOTTOM:
+                $this.type = $this.ADD_HORIZONTAL;
+                break;
+        }
         $.ajax({
             url: '/page-map/add-page',
             type: 'POST',
@@ -562,6 +575,11 @@ var pageMap = {
 
         window.location.hash = 'page_' + current.pid;
 
+        current.top = parseInt($('#page-map-wrap-b').css('top')) +
+          current.eq.tr * $this.AVERAGE_PAGE_SIZE_HEIGHT;
+        current.left = parseInt($('#page-map-wrap-b').css('left')) +
+          current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
+
         if (!$(event.currentTarget).data('editor')) {
             if (selectedObj.length) {
                 initial.pid = $('div.page-inner', selectedObj).attr('id').split('-')[1];
@@ -570,9 +588,6 @@ var pageMap = {
                 if (current.action != 'deleted') {
                     if (current.eq.tr == initial.eq.tr) {
                         type = $this.VERTICAL;
-
-                        current.top = parseInt($('#page-map-wrap-b').css('top')) +
-                          current.eq.tr * $this.AVERAGE_PAGE_SIZE_HEIGHT;
                         $this.checkLinks(initial.eq, initial.pid, true);
 
                         tmpObj = $('tr:eq(' + initial.eq.tr + ')', '#page-map');
@@ -580,8 +595,6 @@ var pageMap = {
                         tmpObj.nextAll().remove();
                     } else {
                         type = $this.HORIZONTAL;
-                        current.left = parseInt($('#page-map-wrap-b').css('left')) +
-                          current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
                         $this.checkLinks(initial.eq, initial.pid, false);
 
                         $('tr', '#page-map').each(function() {
@@ -604,6 +617,8 @@ var pageMap = {
 
                 $('#page-map-wrap-b').addClass('hidden-page');
                 selectedObj.removeClass('page-selected');
+            } else {
+                type = $this.type;
             }
 
             $.ajax({
@@ -637,22 +652,27 @@ var pageMap = {
                         expand.invoke(data, current.pid, type);
                         $('#page-map-wrap-b').removeClass('hidden-page');
 
-                        if (type != 'both') {
-                            current.eq = $this.getEqObject(current.pid);
+                        current.eq = $this.getEqObject(current.pid);
 
-                            if (type == $this.VERTICAL) {
-                                current.new_top = parseInt($('#page-map-wrap-b').css('top')) +
-                                  current.eq.tr * $this.AVERAGE_PAGE_SIZE_HEIGHT;
-                                current.new_top = current.top - current.new_top;
-                                $('#page-map-wrap-b').css('top', parseInt($('#page-map-wrap-b').css('top')) +
-                                  current.new_top + 'px');
-                            } else {
-                                current.new_left = parseInt($('#page-map-wrap-b').css('left')) +
-                                  current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
-                                current.new_left = current.left - current.new_left;
-                                $('#page-map-wrap-b').css('left', parseInt($('#page-map-wrap-b').css('left')) +
-                                  current.new_left + 'px');
-                            }
+                        switch (type) {
+                            case $this.VERTICAL:
+                                current.new_left = $('#page-map-wrap-a').width() / 2 - current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
+                                //$('#page-map-wrap-b').css('left', current.new_left + 'px');
+                                break;
+                            case $this.HORIZONTAL:
+                                current.new_left = $('#page-map-wrap-a').width() / 2 - current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
+                                $('#page-map-wrap-b').css('left', current.new_left + 'px');
+                                break;
+                            case $this.ADD_VERTICAL:
+                                current.new_left = parseInt($('#page-map-wrap-b').css('left')) - 2 * $this.AVERAGE_PAGE_SIZE_WIDTH;
+                                $('#page-map-wrap-b').css('left', current.new_left + 'px');
+                                break;
+                            case $this.ADD_HORIZONTAL:
+                                current.new_left = $('#page-map-wrap-a').width() / 2 - current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
+                                $('#page-map-wrap-b').css('left', current.new_left + 'px');
+                                current.new_top = parseInt($('#page-map-wrap-b').css('top')) - $this.AVERAGE_PAGE_SIZE_HEIGHT;
+                                $('#page-map-wrap-b').css('top', current.new_top + 'px');
+                                break;
                         }
 
                         current.td = $this._getTd(current.pid);
