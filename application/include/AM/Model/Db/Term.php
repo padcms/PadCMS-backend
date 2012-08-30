@@ -309,8 +309,8 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
      */
     public function preSetColor($sValue)
     {
-        if (!preg_match('/^#?+([0-9a-f]{3}(?:[0-9a-f]{3})?)$/iD', $sValue, $aMatches) || count($aMatches) < 2) {
-            $sValue = null;
+        if (!empty($sValue) && (!preg_match('/^#?+([0-9a-f]{3}(?:[0-9a-f]{3})?)$/iD', $sValue, $aMatches) || count($aMatches) < 2)) {
+            throw new AM_Model_Db_Exception('Error. Invalid color');
         }
 
         return $sValue;

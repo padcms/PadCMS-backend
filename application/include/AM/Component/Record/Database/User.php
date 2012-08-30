@@ -122,4 +122,16 @@ class AM_Component_Record_Database_User extends AM_Component_Record_Database
 
         return $sResult;
     }
+
+    protected function _preOperation()
+    {
+        $sLogin = $this->controls['login']->getValue();
+        $this->controls['login']->setValue(AM_Tools::filter_xss($sLogin));
+
+        $sFirstName = $this->controls['first_name']->getValue();
+        $this->controls['first_name']->setValue(AM_Tools::filter_xss($sFirstName));
+
+        $sLastName = $this->controls['last_name']->getValue();
+        $this->controls['last_name']->setValue(AM_Tools::filter_xss($sLastName));
+    }
 }

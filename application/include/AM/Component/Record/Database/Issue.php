@@ -72,7 +72,7 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color', array(array('color')));
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId);
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()'));
 
@@ -389,5 +389,11 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
     {
         $sTitle = $this->controls['title']->getValue();
         $this->controls['title']->setValue(AM_Tools::filter_xss($sTitle));
+
+        $sNumber = $this->controls['number']->getValue();
+        $this->controls['number']->setValue(AM_Tools::filter_xss($sNumber));
+
+        $sProductId = $this->controls['product_id']->getValue();
+        $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
     }
 }

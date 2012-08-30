@@ -25,7 +25,7 @@ var fieldDragAndDrop = {
         var value = $('input', wrapper);
 
         $('a', wrapper).bind('click', {context: context, value: value}, function(event) {
-            event.data.context.onSave('top_area', $(event.data.value).val());
+            event.data.context.onSave('top_area', $(event.data.value).val(), $(event.data.value));
         });
 
         context.pageId = document.pid;
@@ -258,7 +258,7 @@ var fieldDragAndDrop = {
             }
         });
     },
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         var context = this;
 
         if (!key)
@@ -279,6 +279,10 @@ var fieldDragAndDrop = {
                 try {
                     if (!data.status) {
                         alert(data.message);
+                    }
+                    if (typeof target !== 'undefined' && data.value) {
+                        _value = data.value;
+                        target.val(_value);
                     }
                     if (data.topAreaId != context.topAreaId) {
                         context.topAreaId = data.topAreaId;
