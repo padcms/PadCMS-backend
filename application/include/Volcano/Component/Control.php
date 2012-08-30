@@ -223,6 +223,19 @@ class Volcano_Component_Control extends Volcano_Component {
     }
 
     /**
+     * Validate color
+     * @return boolean
+     */
+    protected function validateColor()
+    {
+        if ((!preg_match('/^#?+([0-9a-f]{3}(?:[0-9a-f]{3})?)$/iD', $this->value, $aMatches) || count($aMatches) < 2)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Validate control value
      * @return boolean Validation result
      */
@@ -298,6 +311,11 @@ class Volcano_Component_Control extends Volcano_Component {
                     break;
                 case "list of values":
                     if (!$empty && !$this->validateListOfValues($rule[1])) {
+                        $errors[] = $this->localizer->translate("Field %1\$s is incorrect", $this->title);
+                    }
+                    break;
+                case "color":
+                    if (!$empty && !$this->validateColor()) {
                         $errors[] = $this->localizer->translate("Field %1\$s is incorrect", $this->title);
                     }
                     break;

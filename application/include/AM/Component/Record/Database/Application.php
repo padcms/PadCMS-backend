@@ -130,5 +130,8 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
 
         $sDescription = $this->controls['description']->getValue();
         $this->controls['description']->setValue(AM_Tools::filter_xss($sDescription));
+
+        $sProductId = $this->controls['product_id']->getValue();
+        $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
     }
 }

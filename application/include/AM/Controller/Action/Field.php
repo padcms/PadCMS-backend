@@ -125,6 +125,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $oPage->setUpdated(false);
             $aMessage['defaultImageUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $oPage->getOrientation(), 'element', null, '');
             $aMessage['status']          = 1;
+            $aMessage['value']           = $oElement->getResources()->getDataValue($sKey);
         } catch (Exception $oException) {
             $aMessage["message"] = $this->__('Error. Can\'t set value! ') . $oException->getMessage();
         }

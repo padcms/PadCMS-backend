@@ -35,14 +35,8 @@ var fieldScrollPane = {
         });
 
         $('#spane-top-btn').click(function() {
-            context.onSave('top', $('#spane-top-input').val());
+            context.onSave('top', $('#spane-top-input').val(), $('#spane-top-input'));
             return false;
-        });
-
-        $('#spane-top-input').keypress(function(event) {
-            if (event.which == 13) {
-                context.onSave('top', $('#spane-top-input').val());
-            }
         });
 
         $("a.single_image", context.domRoot).fancybox();
@@ -127,7 +121,7 @@ var fieldScrollPane = {
         $(this.domRoot).empty();
     },
 
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         var context = this;
 
         if (!key)
@@ -147,6 +141,10 @@ var fieldScrollPane = {
                 try {
                     if (!data.status) {
                         alert(data.message);
+                    }
+                    if (typeof target !== 'undefined' && data.value) {
+                        _value = data.value;
+                        target.val(_value);
                     }
                 } catch (e) {
                     window.ui.log(e);

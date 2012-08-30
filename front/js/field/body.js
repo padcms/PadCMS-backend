@@ -29,20 +29,16 @@ var fieldBody = {
 
         var wrapper = $('#edit-top-wrapper', context.domRoot);
         var value = $('input', wrapper);
-        $('input', wrapper).bind('keypress', {context: context, value: value}, function(event) {
-            if (event.which == 13) event.data.context.onSave('top', $(event.data.value).val());
-        });
+
         $('a', wrapper).bind('click', {context: context, value: value}, function(event) {
-            event.data.context.onSave('top', $(event.data.value).val());
+            event.data.context.onSave('top', $(event.data.value).val(), $(event.data.value));
         });
 
         wrapper = $('#edit-width-wrapper', context.domRoot);
         value = $('input', wrapper);
-        $('input', wrapper).bind('keypress', {context: context, value: value}, function(event) {
-            if (event.which == 13) event.data.context.onSave('width', $(event.data.value).val());
-        });
+
         $('a', wrapper).bind('click', {context: context, value: value}, function(event) {
-            event.data.context.onSave('width', $(event.data.value).val());
+            event.data.context.onSave('width', $(event.data.value).val(), $(event.data.value));
         });
 
         $("a.single_image", context.domRoot).fancybox();
@@ -96,7 +92,7 @@ var fieldBody = {
         });
     },
 
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         var context = this;
 
         if (!key)
@@ -116,6 +112,10 @@ var fieldBody = {
                 try {
                     if (!data.status) {
                         alert(data.message);
+                    }
+                    if (typeof target !== 'undefined' && data.value) {
+                        _value = data.value;
+                        target.val(_value);
                     }
                 } catch (e) {
                     window.ui.log(e);

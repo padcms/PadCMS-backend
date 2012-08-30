@@ -45,7 +45,7 @@ class AM_Component_Record_Database_Device extends AM_Component_Record_Database
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iId)
     {
         $aControls   = array();
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'identifer', 'UDID', array(array('require')));
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'identifer', 'UDID', array(array('require'), array('maxlen', 60)));
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'user', 'User');
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'created', new Zend_Db_Expr('NOW()'));
 
@@ -78,4 +78,9 @@ class AM_Component_Record_Database_Device extends AM_Component_Record_Database
         parent::show();
     }
 
+    protected function _preOperation()
+    {
+        $sIdentifer = $this->controls['identifer']->getValue();
+        $this->controls['identifer']->setValue(AM_Tools::filter_xss($sIdentifer));
+    }
 }

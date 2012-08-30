@@ -25,11 +25,9 @@ var fieldAdvert = {
 
         var wrapper = $('#edit-duration-wrapper', context.domRoot);
         var value = $('input', wrapper);
-        $('input', wrapper).bind('keypress', {context: context, value: value}, function(event) {
-            if (event.which == 13) event.data.context.onSave('advert_duration', $(event.data.value).val());
-        });
+
         $('a', wrapper).bind('click', {context: context, value: value}, function(event) {
-            event.data.context.onSave('advert_duration', $(event.data.value).val());
+            event.data.context.onSave('advert_duration', $(event.data.value).val(), $(event.data.value));
         });
 
         $('a.close', context.domRoot).bind('click', context, function(event){
@@ -85,7 +83,7 @@ var fieldAdvert = {
         });
     },
 
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         var context = this;
 
         if (!key)
@@ -105,6 +103,10 @@ var fieldAdvert = {
                 try {
                     if (!data.status) {
                         alert(data.message);
+                    }
+                    if (typeof target !== 'undefined' && data.value) {
+                        _value = data.value;
+                        target.val(_value);
                     }
                 } catch (e) {
                     alert(translate('unexpected_error'));

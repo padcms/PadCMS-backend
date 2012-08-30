@@ -152,11 +152,12 @@ class EditorController extends AM_Controller_Action
 
             $sCallbackName = '_save' . Zend_Filter::filterStatic($sKey, 'Word_UnderscoreToCamelCase');
             if (method_exists($this, $sCallbackName)) {
-                $this->$sCallbackName($oPage, $sValue);
+                $this->$sCallbackName($oPage, $oPage->$sKey);
             }
 
             $oPage->setUpdated(false);
             $aMessage['status'] = 1;
+            $aMessage['value']  = $oPage->$sKey;
         } catch (Exception $oException) {
             $aMessage['message'] = sprintf('%s %s', $this->__('Error'), $oException->getMessage());
         }
@@ -607,6 +608,7 @@ class EditorController extends AM_Controller_Action
             $oPage->getRevision()->exportRevision();
 
             $aMessage['status'] = 1;
+            $aMessage['value']  = $oTerm->$sKey;
         } catch (Exception $oException) {
             $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t get term data'), $oException->getMessage());
         }

@@ -44,41 +44,18 @@ window.pageInfo = {
             context.onAddTag();
             return false;
         });
-        $('#page-tag-input').keypress(function(event) {
-            if (event.which == 13) {
-                context.onAddTag();
-            } else if (event.keyCode == 27) {
-                $(this).val('');
-            }
-        });
-
-        $('#page-pdf-page-input').keypress(function(event) {
-            if (event.which == 13) {
-                context.onSave('pdf_page', $(event.originalEvent.target).val());
-            }
-        });
         $('#page-pdf-page-btn').click(function(event) {
             context.onSave('pdf_page', $('#page-pdf-page-input').val());
             return false;
         });
 
-        $('#page-title-input').keypress(function(event) {
-            if (event.which == 13) {
-                context.onSave('title', $(event.originalEvent.target).val());
-            }
-        });
         $('#page-title-btn').click(function() {
-            context.onSave('title', $('#page-title-input').val());
+            context.onSave('title', $('#page-title-input').val(), $('#page-title-input'));
             return false;
         });
 
-        $('#page-machine-name-input').keypress(function(event) {
-            if (event.which == 13) {
-                context.onSave('machine_name', $(event.originalEvent.target).val());
-            }
-        });
         $('#page-machine-name-btn').click(function() {
-            context.onSave('machine_name', $('#page-machine-name-input').val());
+            context.onSave('machine_name', $('#page-machine-name-input').val(), $('#page-machine-name-input'));
             return false;
         });
 
@@ -126,7 +103,7 @@ window.pageInfo = {
         });
     },
 
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         if (!key)
             return false;
 
@@ -146,6 +123,10 @@ window.pageInfo = {
                     if (!data.status) {
                         alert(data.message);
                     } else {
+                        if (typeof target !== 'undefined' && data.value) {
+                            _value = data.value;
+                            target.val(_value);
+                        }
                         if (key == 'title') {
                             $('#page-' + window.pid).parent().parent().parent()
                                     .find('span.page-name')

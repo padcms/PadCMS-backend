@@ -147,27 +147,18 @@ tocEditor.currentTree = {
             $('#toc-current-tree').jstree('remove');
         });
 
-        $('#toc-current-title-input').keypress(function(event) {
-            if (event.which == 13) $this.onSave('title', $(event.originalEvent.target).val());
-        });
         $('#toc-current-title-btn').click(function() {
-            $this.onSave('title', $('#toc-current-title-input').val());
+            $this.onSave('title', $('#toc-current-title-input').val(), $('#toc-current-title-input'));
             return false;
         });
 
-        $('#toc-current-description-input').keypress(function(event) {
-            if (event.which == 13) $this.onSave('description', $(event.originalEvent.target).val());
-        });
         $('#toc-current-description-btn').click(function() {
-            $this.onSave('description', $('#toc-current-description-input').val());
+            $this.onSave('description', $('#toc-current-description-input').val(), $('#toc-current-description-input'));
             return false;
         });
 
-        $('#toc-current-color-input').keypress(function(event) {
-            if (event.which == 13) $this.onSave('color', $(event.originalEvent.target).val());
-        });
         $('#toc-current-color-btn').click(function() {
-            $this.onSave('color', $('#toc-current-color-input').val());
+            $this.onSave('color', $('#toc-current-color-input').val(), $('#toc-current-color-btn'));
             return false;
         });
 
@@ -310,7 +301,7 @@ tocEditor.currentTree = {
         });
     },
 
-    onSave: function(key, value) {
+    onSave: function(key, value, target) {
         var $this = this;
 
         var id = $this.selectedItemId;
@@ -335,6 +326,10 @@ tocEditor.currentTree = {
                     if (!data.status) {
                         alert(data.message);
                     } else {
+                        if (typeof target !== 'undefined' && data.value) {
+                            _value = data.value;
+                            target.val(_value);
+                        }
                         if (_key == 'title') {
                             $('#' + id + ' a', '#toc-current-tree').html('<ins class="jstree-icon">&nbsp;</ins>' + _value);
                         }
