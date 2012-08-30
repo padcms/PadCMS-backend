@@ -656,8 +656,6 @@ var pageMap = {
 
                         switch (type) {
                             case $this.VERTICAL:
-                                current.new_left = $('#page-map-wrap-a').width() / 2 - current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
-                                //$('#page-map-wrap-b').css('left', current.new_left + 'px');
                                 break;
                             case $this.HORIZONTAL:
                                 current.new_left = $('#page-map-wrap-a').width() / 2 - current.eq.td * $this.AVERAGE_PAGE_SIZE_WIDTH;
