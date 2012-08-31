@@ -81,7 +81,7 @@ var expand = {
             tmp.lgt = $(this).prevAll().length;
 
             if (tmp.lgt == eq.tr) {
-                html = '<td class="jumper-' + data.pid + '-' + tmp.type + '"><label class="' + tmp.type + '">' +
+                html = '<td class="jumper-' + data.targetPid + '-' + tmp.type + '"><label class="' + tmp.type + '">' +
                        '</label></td><td class="page" background="' + data.pageObj.thumbnailUri + '">'  + content + '</td>';
             } else {
                 html = '<td class="void-' + data.pid + '"></td><td class="void-' + data.pid + '"></td>';
@@ -113,6 +113,7 @@ var expand = {
             tmp.lgt = $(this).prevAll().length;
 
             if (tmp.lgt == eq.tr) {
+                //Using data.pid to save correct numeration of jumpers
                 html = '<td class="page" background="' + data.pageObj.thumbnailUri + '">' + title + '</td>' +
                        '<td class="jumper-' + data.pid + '-' + tmp.type + '"><label class="' + tmp.type + '"></label></td>';
             } else {

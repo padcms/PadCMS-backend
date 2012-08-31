@@ -341,13 +341,13 @@ var pageMap = {
         if (type == this.TOP) {
             html = this._getPageInner(count, title, data.pageObj.thumbnailUri) + this._getJumper(count, data, type);
         } else if (type == this.BOTTOM) {
-            html = this._getJumper(count, data, type) + this._getPageInner(count, title, data.pageObj.thumbnailUri);
+            html = this._getJumper(count, data, type, next) + this._getPageInner(count, title, data.pageObj.thumbnailUri);
         }
 
         return html;
     },
 
-    _getJumper: function(count, data, type) {
+    _getJumper: function(count, data, type, next) {
 
         type = !data.pageObj['jumper_' + this._getReverseType(type)] ? type : data.pageObj['jumper_' + this._getReverseType(type)];
 
@@ -362,7 +362,7 @@ var pageMap = {
 
         _class = type == this.TOP ? 'up' : 'down';
 
-        html += '<td class="jumper-' + data.pid + '-' + type + '"><label class="down-line ' + _class + '">|</label></td>';
+        html += '<td class="jumper-' + data.pageObj[this._getReverseType(type)] + '-' + type + '"><label class="down-line ' + _class + '">|</label></td>';
         counter = 0;
 
         while (counter < count.after) {

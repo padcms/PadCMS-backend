@@ -66,8 +66,7 @@ class AM_Handler_Page extends AM_Handler_Abstract
 
         if ($bBetween) {
             //We trying to insert new page between two pages. We have to get both pages
-            $oPageConnectedToParent = $oPageParent;
-            $oPageParent            = AM_Model_Db_Table_Abstract::factory('page')->findConnectedPage($oPageConnectedToParent, $sConnectionType);
+            $oPageConnectedToParent = AM_Model_Db_Table_Abstract::factory('page')->findChildConnectedPage($oPageParent, $sConnectionType);;
             if (is_null($oPageParent)) {
                 throw new AM_Handler_Exception('Can\'t find parent page');
             }
@@ -194,8 +193,8 @@ class AM_Handler_Page extends AM_Handler_Abstract
         $aPage['has_bottom'] = $oPage->hasConnection(AM_Model_Db_Page::LINK_BOTTOM);
 
         //Restrict user to add left and right childs in pages which have bottom or top parent
-            $aPage['tpl']['has_left']   = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_left_connector;
-            $aPage['tpl']['has_right']  = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_right_connector;
+        $aPage['tpl']['has_left']   = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_left_connector;
+        $aPage['tpl']['has_right']  = ($oPage->getLinkType() != AM_Model_Db_Page::LINK_RIGHT) && !is_null($oPage->getLinkType())? 0 : $oPage->getTemplate()->has_right_connector;
 
         $aPage['tpl']['has_top']    = $oPage->getTemplate()->has_top_connector;
         $aPage['tpl']['has_bottom'] = $oPage->getTemplate()->has_bottom_connector;
