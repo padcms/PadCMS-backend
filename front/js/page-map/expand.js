@@ -6,29 +6,29 @@
  * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
  */
 var expand = {
-    invoke: function (data, pid, type) {
+    invoke: function (data, pid, type, is_new) {
         var $this = this;
 
         if (type != pageMap.HORIZONTAL) {
             $.each(data[pageMap.BOTTOM], function(currentPid, pageObj) {
-                $this._expandBottomBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.BOTTOM));
+                $this._expandBottomBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.BOTTOM, is_new));
                 return false;
             });
 
             $.each(data[pageMap.TOP], function(currentPid, pageObj) {
-                $this._expandTopBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.TOP));
+                $this._expandTopBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.TOP, is_new));
                 return false;
             });
         }
 
         if (type != pageMap.VERTICAL) {
             $.each(data[pageMap.RIGHT], function(currentPid, pageObj) {
-                $this._expandRightBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.RIGHT));
+                $this._expandRightBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.RIGHT, is_new));
                 return false;
             });
 
             $.each(data[pageMap.LEFT], function(currentPid, pageObj) {
-                $this._expandLeftBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.LEFT));
+                $this._expandLeftBranch(pageMap.getDataObj(data, pid, pageObj, pageObj.id, pageMap.LEFT, is_new));
                 return false;
             });
         }
