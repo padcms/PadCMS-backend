@@ -86,7 +86,7 @@ class AM_Model_Db_Table_Page extends AM_Model_Db_Table_Abstract
      * @param string $sLinkType
      * @return AM_Model_Db_Page
      */
-    public function findConnectedPage(AM_Model_Db_Page $oPage, $sLinkType)
+    public function findParentConnectedPage(AM_Model_Db_Page $oPage, $sLinkType)
     {
         $oQuery = $this->select()->from('page')
                       ->setIntegrityCheck(false)

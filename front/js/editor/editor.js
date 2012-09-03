@@ -30,7 +30,7 @@ var bindPageDelete = function() {
             },
             success: function(data) {
                 if (data.result != undefined && data.result == true) {
-                    $('div.page-inner', pageMap._getTd(data.linkedPid)).data('action', 'deleted');
+                    $('div.page-inner', pageMap._getTd(data.linkedPid)).data({action: 'deleted', is_new: true});
                     $('div.page-inner', pageMap._getTd(data.linkedPid)).click();
                 } else {
                     if (data.message) {

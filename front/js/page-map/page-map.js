@@ -49,6 +49,8 @@ var pageMap = {
     AVERAGE_PAGE_SIZE_WIDTH: 54,
     MARGIN: 50,
 
+    is_new: false,
+
     addPage: function (targetPid, tid, type, obj, between, $this) {
         switch (type) {
             case $this.LEFT:
@@ -87,6 +89,7 @@ var pageMap = {
 
                         $('#page-map').html('<tr><td class="page" background="' + data.page.thumbnailUri + '">' +
                                             tmp.content + '</td></tr>');
+                        $this.is_new = true;
                         $('#page-map div.page-inner').bind('click', $this, $this.selectPage);
                         $('#page-map div.page-inner').click();
                     }
@@ -341,13 +344,15 @@ var pageMap = {
         if (type == this.TOP) {
             html = this._getPageInner(count, title, data.pageObj.thumbnailUri) + this._getJumper(count, data, type);
         } else if (type == this.BOTTOM) {
-            html = this._getJumper(count, data, type) + this._getPageInner(count, title, data.pageObj.thumbnailUri);
+            html = this._getJumper(count, data, type, next) + this._getPageInner(count, title, data.pageObj.thumbnailUri);
         }
 
         return html;
     },
 
-    _getJumper: function(count, data, type) {
+    _getJumper: function(count, data, type, next) {
+
+        var type_old = type;
 
         type = !data.pageObj['jumper_' + this._getReverseType(type)] ? type : data.pageObj['jumper_' + this._getReverseType(type)];
 
@@ -362,7 +367,11 @@ var pageMap = {
 
         _class = type == this.TOP ? 'up' : 'down';
 
-        html += '<td class="jumper-' + data.pid + '-' + type + '"><label class="down-line ' + _class + '">|</label></td>';
+        var jumper_id = data.pageObj[this._getReverseType(type)];
+        if (data.is_new && type_old != type) {
+            jumper_id = data.pid;
+        }
+        html += '<td class="jumper-' + jumper_id + '-' + type + '"><label class="down-line ' + _class + '">|</label></td>';
         counter = 0;
 
         while (counter < count.after) {
@@ -428,7 +437,7 @@ var pageMap = {
         return reverseType;
     },
 
-    getDataObj: function(data, pid, pageObj, currentPid, type) {
+    getDataObj: function(data, pid, pageObj, currentPid, type, is_new) {
         var dataObj = {};
 
         dataObj.targetPid = pid;
@@ -436,6 +445,7 @@ var pageMap = {
         dataObj.pageObj = pageObj;
         dataObj.pid = currentPid;
         dataObj.initialPid = pid;
+        dataObj.is_new = is_new;
 
         return dataObj;
     },
@@ -572,6 +582,11 @@ var pageMap = {
         current.pid = $(event.currentTarget).attr('id').split('-')[1];
         current.eq = $this.getEqObject(current.pid);
         current.action = $(event.currentTarget).data('action');
+        current.is_new = $(event.currentTarget).data('is_new');
+
+        if (typeof current.is_new !== 'undefined') {
+            $this.is_new = current.is_new;
+        }
 
         window.location.hash = 'page_' + current.pid;
 
@@ -649,7 +664,7 @@ var pageMap = {
                             $this.setPageMapWrapperPosition(current.pid);
                         }
 
-                        expand.invoke(data, current.pid, type);
+                        expand.invoke(data, current.pid, type, $this.is_new);
                         $('#page-map-wrap-b').removeClass('hidden-page');
 
                         current.eq = $this.getEqObject(current.pid);
