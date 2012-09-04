@@ -44,7 +44,7 @@ class HandlerPageAddBetweenTest extends AM_Test_PHPUnit_DatabaseTestCase
     public function testAddPage()
     {
         //GIVEN
-        $oPage     = AM_Model_Db_Table_Abstract::factory('page')->findOneBy(array('id' => 2));
+        $oPage     = AM_Model_Db_Table_Abstract::factory('page')->findOneBy(array('id' => 1));
         $oTemplate = AM_Model_Db_Table_Abstract::factory('template')->findOneBy(array('id' => 1));
         $aUser     = array('id' => 1);
 
@@ -64,6 +64,4 @@ class HandlerPageAddBetweenTest extends AM_Test_PHPUnit_DatabaseTestCase
                               ->getTable('page_imposition');
         $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
-
-
 }

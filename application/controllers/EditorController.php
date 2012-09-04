@@ -320,7 +320,6 @@ class EditorController extends AM_Controller_Action
         $aMessage = array('status' => 0);
         try {
             $iPageId        = intval($this->_getParam('page'));
-            $bOnlyPermanent = (bool) $this->_getParam('onlyPermanent');
 
             if (!AM_Model_Db_Table_Abstract::factory('page')->checkAccess($iPageId, $this->_aUserInfo)) {
                 throw new AM_Controller_Exception_BadRequest('Error. Invalid params were given');
@@ -332,7 +331,7 @@ class EditorController extends AM_Controller_Action
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }
 
-            $aMessage['tree']   = AM_Model_Db_Table_Abstract::factory('term')->getTocAsTree($oPage->getRevision(), $bOnlyPermanent);
+            $aMessage['tree']   = AM_Model_Db_Table_Abstract::factory('term')->getTocAsTree($oPage->getRevision());
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
             $aMessage['message'] = $this->__('Error. Can\'t retrive TOC!') . PHP_EOL. $oException->getMessage();
@@ -350,7 +349,6 @@ class EditorController extends AM_Controller_Action
         try {
             $iPageId       = intval($this->_getParam('page'));
             $iTermParentId = intval($this->_getParam('parent_id'));
-            $bIsPermanent  = (bool) $this->_getParam('permanent');
             $sTitle        = trim($this->_getParam('title'));
 
             if(!AM_Model_Db_Table_Abstract::factory('page')->checkAccess($iPageId, $this->_aUserInfo) || empty($sTitle)) {
@@ -363,10 +361,7 @@ class EditorController extends AM_Controller_Action
                 throw new AM_Controller_Exception_Forbidden('Access denied');
             }
 
-            $oRevision = null;
-            if (!$bIsPermanent) {
-                $oRevision = $oPage->getRevision();
-            }
+            $oRevision = $oPage->getRevision();
 
             $oVocabulary = $oPage->getRevision()->getVocabularyToc();
             $oTerm       = $oVocabulary->createTocTerm($sTitle, $oRevision, $iTermParentId);

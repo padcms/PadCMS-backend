@@ -1,28 +1,5 @@
 <div id="toc-dialog" class="map-panel">
     <div id="toc-tabs">
-        <ul>
-            <li><a href="#toc-permanent">Permanent</a></li>
-            <li><a href="#toc-current">Current</a></li>
-        </ul>
-
-        <div id="toc-permanent">
-            <div>
-                <a id="toc-permanent-create" class="cbutton disabled" href="#">
-                    <span><span class="ico">{'Create'|translate}</span></span>
-                </a>
-                <a id="toc-permanent-edit" class="cbutton cbutton-green cbutton-edit disabled" href="#">
-                    <span><span class="ico">{'Edit'|translate}</span></span>
-                </a>
-                <a id="toc-permanent-delete" class="cbutton cbutton-delete disabled" href="#">
-                    <span><span class="ico">{'Delete'|translate}</span></span>
-                </a>
-            </div>
-
-            <div style="clear:both;"></div>
-
-            <div id="toc-permanent-tree"></div>
-        </div>
-
         <div id="toc-current">
             <div class="tree_box">
                 <div>

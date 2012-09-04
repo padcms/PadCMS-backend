@@ -133,11 +133,10 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
     /**
      * Prepearing tree of the terms
      * @param AM_Model_Db_Revision $oRevision
-     * @param boolean $bOnlyPermanent
      * @return array
      * @todo: refactoring! now it supports 3 levels only
      */
-    public function getTocAsTree(AM_Model_Db_Revision $oRevision, $bOnlyPermanent = false)
+    public function getTocAsTree(AM_Model_Db_Revision $oRevision)
     {
         $oVocabulary = $oRevision->getVocabularyToc();
 
@@ -146,14 +145,9 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
 
             ->where('term.vocabulary = ?', $oVocabulary->id)
             ->where('term.deleted = ?', 'no')
+            ->where('term.revision IS NULL OR term.revision = ?', $oRevision->id)
 
             ->order(array('term.id ASC', 'term.parent_term ASC'));
-
-        if ($bOnlyPermanent) {
-            $oQuery->where('term.revision IS NULL');
-        } else {
-            $oQuery->where('term.revision IS NULL OR term.revision = ?', $oRevision->id);
-        }
 
         $oTerms     = $this->fetchAll($oQuery);
         $aTree      = array();
@@ -166,10 +160,6 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
 
         foreach ($oTerms as $oTerm) {
             $aAttributes = array('id' => $oTerm->id);
-
-            if (is_null($oTerm->revision)) {
-                $aAttributes['rel'] = 'permanent';
-            }
 
             $aData = array(
                 'parent_term' => $oTerm->parent_term,
