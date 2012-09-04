@@ -167,11 +167,11 @@ class AM_Model_Db_Vocabulary extends AM_Model_Db_Abstract
     /**
      * Creates toc term for current vocabulary
      * @param string $sTocItemName
-     * @param AM_Model_Db_Revision | null $oRevision
+     * @param AM_Model_Db_Revision $oRevision
      * @param int | null $iParentId
      * @return AM_Model_Db_Term
      */
-    public function createTocTerm($sTocItemName, AM_Model_Db_Revision $oRevision = null, $iParentId = null)
+    public function createTocTerm($sTocItemName, AM_Model_Db_Revision $oRevision, $iParentId = null)
     {
         $sTocItemName = trim(AM_Tools::filter_xss($sTocItemName));
         $iParentId    = (0 == $iParentId)? null : $iParentId;
@@ -179,7 +179,7 @@ class AM_Model_Db_Vocabulary extends AM_Model_Db_Abstract
         $oTocTerm              = new AM_Model_Db_Term();
         $oTocTerm->title       = $sTocItemName;
         $oTocTerm->vocabulary  = $this->id;
-        $oTocTerm->revision    = is_null($oRevision)? null : $oRevision->id;
+        $oTocTerm->revision    = $oRevision->id;
         $oTocTerm->parent_term = $iParentId;
         $oTocTerm->updated     = new Zend_Db_Expr('NOW()');
         $oTocTerm->save();
