@@ -43,7 +43,6 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
 {
     const DATA_KEY_HTML5_POSITION            = 'html5_position';
     const DATA_KEY_HTML5_BODY                = 'html5_body';
-    const DATA_KEY_HTML5_POST_CODE           = 'post_code';
     const DATA_KEY_HTML5_RSS_LINK            = 'rss_link';
     const DATA_KEY_HTML5_RSS_LINK_NUM        = 'rss_link_number';
     const DATA_KEY_HTML5_GOOGLE_LINK_TO_MAP  = 'google_link_to_map';
@@ -53,17 +52,17 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
 
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('zip'));
 
-    public static $aBodyList = array('code'   => 'Code',
+    public static $aBodyList = array('code'  => 'Code',
                              'google_maps'   => 'Google Maps',
                              'rss_feed'      => 'RSS Feed',
                              'facebook_like' => 'Facebook like',
                              'twitter'       => 'Twitter tweets list');
 
-    public static $aFieldList = array('code'   => array(self::DATA_KEY_RESOURCE),
-                              'google_maps'   => array('google_link_to_map'),
-                              'rss_feed'      => array('rss_link', 'rss_link_number'),
-                              'facebook_like' => array('facebook_name_page'),
-                              'twitter'       => array('twitter_account', 'twitter_tweet_number'));
+    public static $aFieldList = array('code'  => array(self::DATA_KEY_RESOURCE),
+                              'google_maps'   => array(self::DATA_KEY_HTML5_GOOGLE_LINK_TO_MAP),
+                              'rss_feed'      => array(self::DATA_KEY_HTML5_RSS_LINK, self::DATA_KEY_HTML5_RSS_LINK_NUM),
+                              'facebook_like' => array(self::DATA_KEY_HTML5_FACEBOOK_NAME_PAGE),
+                              'twitter'       => array(self::DATA_KEY_HTML5_TWITTER_ACCOUNT, self::DATA_KEY_HTML5_TWITTER_TWEET_COUNT));
 
     /**
      * Remove old fields
@@ -88,8 +87,124 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
         return $sValue;
     }
 
+    /*
+     * @return string
+     */
     public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
         return 'zip';
+    }
+
+    /**
+     * Magix method to validate RSS URL
+     * @param mixed $mValue
+     * @return string
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addRssLink($mValue)
+    {
+        $mValue     = (string) $mValue;
+
+        if (!Zend_Validate::is($mValue, 'hostname')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given. It must be an valid URL.', self::DATA_KEY_HTML5_RSS_LINK));
+        }
+
+        return $mValue;
+    }
+
+    /**
+     * Magic method to validate HTML block position
+     * @param mixed $mValue
+     * @return int
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addHtml5Position($mValue)
+    {
+        if (!Zend_Validate::is($mValue, 'int')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_POSITION));
+        }
+
+        return $mValue;
+    }
+
+    /**
+     * Magic method to validate amount of RSS records on the page
+     * @param mixed $mValue
+     * @return int
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addRssLinkNumber($mValue)
+    {
+        if (!Zend_Validate::is($mValue, 'int')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_RSS_LINK_NUM));
+        }
+
+        return $mValue;
+    }
+
+    /**
+     * Magic method to validate twitter account name
+     * @param mixed $mValue
+     * @return string
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addTwitterAccount($mValue)
+    {
+        $mValue = AM_Tools::filter_xss($mValue);
+
+        if (!Zend_Validate::is($mValue, 'regex', array('pattern' => '/^[A-Za-z0-9_]+$/'))) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_TWITTER_ACCOUNT));
+        }
+
+        return $mValue;
+    }
+
+    /**
+     * Magic method to validate amount of Twitter records on the page
+     * @param mixed $mValue
+     * @return int
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addTwitterTweetNumber($mValue)
+    {
+        if (!Zend_Validate::is($mValue, 'int')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_TWITTER_TWEET_COUNT));
+        }
+
+        return $mValue;
+    }
+
+    /**
+     * Magic method to validate facebook account name
+     * @param mixed $mValue
+     * @return string
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addFacebookNamePage($mValue)
+    {
+        $mValue = AM_Tools::filter_xss($mValue);
+
+        if (!Zend_Validate::is($mValue, 'regex', array('pattern' => '/^[a-z\d.]{5,}$/i'))) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_FACEBOOK_NAME_PAGE));
+        }
+
+        return $mValue;
+    }
+
+     /**
+     * Magic method to validate google map link
+     * @param mixed $mValue
+     * @return string
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    protected function _addGoogleLinkToMap($mValue)
+    {
+        $mValue = AM_Tools::filter_xss($mValue);
+
+        if (!Zend_Validate::is($mValue, 'hostname')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given. It must be an valid URL.', self::DATA_KEY_HTML5_GOOGLE_LINK_TO_MAP));
+        }
+
+        return $mValue;
     }
 }

@@ -98,6 +98,7 @@ class FieldHtml5Controller extends AM_Controller_Action_Field
 
             $oPage->setUpdated(false);
             $aMessage['status'] = 1;
+            $aMessage['value']  = $oElement->getResources()->getDataValue($sKey);
         } catch (Exception $oException) {
             $aMessage['message'] = $this->localizer->translate("Error. Can't set value! ")
                     . $this->localizer->translate($oException->getMessage());
