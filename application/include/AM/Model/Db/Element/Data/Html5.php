@@ -41,7 +41,6 @@
  */
 class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
 {
-    const DATA_KEY_HTML5_POSITION            = 'html5_position';
     const DATA_KEY_HTML5_BODY                = 'html5_body';
     const DATA_KEY_HTML5_RSS_LINK            = 'rss_link';
     const DATA_KEY_HTML5_RSS_LINK_NUM        = 'rss_link_number';
@@ -107,21 +106,6 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
 
         if (!Zend_Validate::is($mValue, 'hostname')) {
             throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given. It must be an valid URL.', self::DATA_KEY_HTML5_RSS_LINK));
-        }
-
-        return $mValue;
-    }
-
-    /**
-     * Magic method to validate HTML block position
-     * @param mixed $mValue
-     * @return int
-     * @throws AM_Model_Db_Element_Data_Exception
-     */
-    protected function _addHtml5Position($mValue)
-    {
-        if (!Zend_Validate::is($mValue, 'int')) {
-            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_HTML5_POSITION));
         }
 
         return $mValue;
@@ -199,11 +183,7 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
      */
     protected function _addGoogleLinkToMap($mValue)
     {
-        $mValue = AM_Tools::filter_xss($mValue);
-
-        if (!Zend_Validate::is($mValue, 'hostname')) {
-            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given. It must be an valid URL.', self::DATA_KEY_HTML5_GOOGLE_LINK_TO_MAP));
-        }
+        $mValue = (string) $mValue;
 
         return $mValue;
     }

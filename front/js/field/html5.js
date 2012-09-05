@@ -127,8 +127,7 @@ var fieldHtml5 = {
         var data = {
             page_id: context.pageId,
             field_id: context.fieldId,
-            html5_body: body,
-            html5_position: $('input[name=html5_position]', context.domRoot).val()
+            html5_body: body
         };
 
         $.ajax({

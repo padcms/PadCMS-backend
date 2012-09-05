@@ -4,12 +4,6 @@
 
 <div class="cont">
     <div id="edit-top-wrapper" class="form-item">
-        <label>{'Position of HTML5 part'|translate}</label>
-        <div class="form-item-wrapper">
-            <input type="text" class="form-text" name="html5_position" value="{if isset($field.html5_position)}{$field.html5_position}{/if}" />
-        </div>
-    </div>
-    <div id="edit-top-wrapper" class="form-item">
         <label>{'Body'|translate}</label>
         <div class="game-type">
             <select name="html5_body" id="body-selector" onChange="fieldHtml5.bodySelected();">
