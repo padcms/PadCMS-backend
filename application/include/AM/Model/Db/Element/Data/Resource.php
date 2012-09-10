@@ -378,12 +378,12 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
 
         foreach ($oThumbnailer->getSources() as $oSource) {
             if ($oSource->isImage()) {
-                $oTaskPlanner = new AM_Task_Worker_Thumbnail_Create();
-                $oTaskPlanner->setOptions(array('resource'      => $sDestination,
-                                                'image_type'    => $this->getImageType($sKey),
-                                                'zooming'       => false,
-                                                'resource_type' => $this->getThumbnailPresetName()))
-                             ->create();
+                $oTask = new AM_Task_Worker_Thumbnail_Create();
+                $oTask->setOptions(array('resource'      => $sDestination,
+                            'image_type'    => $this->getImageType($sKey),
+                            'zooming'       => false,
+                            'resource_type' => $this->getThumbnailPresetName()))
+                        ->create();
             }
 
             if ($oSource->isPdf() && self::DATA_KEY_RESOURCE == $sKey) {
