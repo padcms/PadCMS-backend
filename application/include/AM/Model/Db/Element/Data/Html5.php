@@ -185,6 +185,9 @@ class AM_Model_Db_Element_Data_Html5 extends AM_Model_Db_Element_Data_Resource
     {
         $mValue = (string) $mValue;
 
+        if (!Zend_Validate::is($mValue, 'hostname')) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given. It must be an valid URL.', self::DATA_KEY_HTML5_GOOGLE_LINK_TO_MAP));
+        }
         return $mValue;
     }
 }
