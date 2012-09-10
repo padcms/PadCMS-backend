@@ -30,7 +30,7 @@
                                     <div class="cblock-clients-user">
                                         <ul>
                                             <li class="item-users">
-                                                <b>Full Name: </b>{$item.first_name} {$item.last_name}
+                                                <b>Full Name: </b><span title="{$item.creator_full_name}">{$item.creator_full_name|truncate:30:"...":true}</span>
                                             </li>
                                             <li class="item-appls">
                                                 <b>Email: </b>{$item.email}

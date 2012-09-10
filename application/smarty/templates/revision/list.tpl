@@ -30,10 +30,14 @@
                         <div class="cblock-clients-user">
                             <ul>
                                 <li class="item-created">
-                                    {'Created by'|translate}&nbsp;
-                                    {if $item.creator_role != 'admin'}<a href="/user/index/uid/{$item.creator_uid}">{/if}
-                                        {$item.creator_full_name}
-                                    {if $item.creator_role != 'admin'}</a>{/if} {'on'|translate} {$item.created}
+                                    {if $item.creator_full_name == " "}
+                                        {assign var="creator_name" value=$item.creator_login}
+                                    {else}
+                                        {assign var="creator_name" value=$item.creator_full_name}
+                                    {/if}
+                                    {'Created by'|translate}
+                                    {if $item.creator_role != 'admin'}<a href="/user/index/uid/{$item.creator_uid}">{/if}<span title="{$creator_name}">{$creator_name|truncate:20:"...":true}</span>{if $item.creator_role != 'admin'}</a>{/if}
+                                    {'on'|translate} {$item.created}
                                 </li>
                                 <li class="item-lastrev">
                                     {'last update on'|translate} {$item.updated}

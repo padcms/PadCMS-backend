@@ -51,8 +51,7 @@ class AM_View_Helper_Field_Html5 extends AM_View_Helper_Field
             /* @var $oElement AM_Model_Db_Element */
             $sBody = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Html5::DATA_KEY_HTML5_BODY);
 
-            $aElementView[AM_Model_Db_Element_Data_Html5::DATA_KEY_HTML5_POSITION] = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Html5::DATA_KEY_HTML5_POSITION);
-            $aElementView[AM_Model_Db_Element_Data_Html5::DATA_KEY_HTML5_BODY]     = $sBody;
+            $aElementView[AM_Model_Db_Element_Data_Html5::DATA_KEY_HTML5_BODY] = $sBody;
 
             if (!empty($sBody)) {
                 /** Select and fill fields, that refers to selected body */

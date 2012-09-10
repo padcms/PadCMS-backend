@@ -27,13 +27,22 @@
 
                         <div class="cblock-issue-id">
                             <div class="title">
-                                {'ID'|translate}: <b>{$item.number|escape}</b>
+                                {'ID'|translate}: <b><span title="{$item.number}">{$item.number|truncate:10:"...":true}</span></b>
                             </div>
                         </div>
 
                         <div class="cblock-issue-info">
                             <ul>
-                                <li class="item-created">{'Created on'|translate} {$item.created} {'by'|translate} {if $item.creator_role != 'admin'}<a href="/user/index/uid/{$item.creator_uid}/cid/{$item.client}">{/if}{$item.creator_full_name}{if $item.creator_role != 'admin'}</a>{/if}</li>
+                                <li class="item-created">
+                                    {if $item.creator_full_name == " "}
+                                        {assign var="creator_name" value=$item.creator_login}
+                                    {else}
+                                        {assign var="creator_name" value=$item.creator_full_name}
+                                    {/if}
+                                    {'Created by'|translate}
+                                    {if $item.creator_role != 'admin'}<a href="/user/index/uid/{$item.creator_uid}">{/if}<span title="{$creator_name}">{$creator_name|truncate:20:"...":true}</span>{if $item.creator_role != 'admin'}</a>{/if}
+                                    {'on'|translate} {$item.created}
+                                </li>
                                 <li class="item-lastupd">{'Last update'|translate} {$item.updated_date} {'at'|translate} {$item.updated_time}</li>
                                 <li class="item-lastrev">{'Last revision'|translate}
                                     #<a href="/page-map/show/rid/{$item.last_revision}">{$item.last_revision}</a>

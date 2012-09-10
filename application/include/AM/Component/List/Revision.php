@@ -63,6 +63,7 @@ class AM_Component_List_Revision extends AM_Component_Grid {
                     'created'           => 'DATE_FORMAT(revision.created, "%e/%c/%Y %Hh%i")',
                     'updated'           => 'DATE_FORMAT(revision.updated, "%e/%c/%Y %Hh%i")',
                     'creator_full_name' => 'CONCAT(user.first_name, " ", user.last_name)',
+                    'creator_login'     => 'user.login',
                     'creator_uid'       => 'user.id',
                     'creator_role'      => 'IF(user.is_admin, "admin", "user")',
                     'revision_id'       => 'revision.id'

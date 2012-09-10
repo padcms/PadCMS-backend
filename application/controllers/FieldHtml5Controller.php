@@ -83,10 +83,6 @@ class FieldHtml5Controller extends AM_Controller_Action_Field
                 $aBodyFields[$sFieldName] = $sFieldValue;
             }
 
-            if ($this->_getParam('html5_position')) {
-                $aBodyFields['html5_position'] = $this->_getParam('html5_position');
-            }
-
             $oElement = $oPage->getElementForField($oField);
             /* @var $oElement AM_Model_Db_Element */
             $oElement->getResources()->delete();
