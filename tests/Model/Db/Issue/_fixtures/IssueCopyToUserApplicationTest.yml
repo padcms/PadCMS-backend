@@ -1,0 +1,30 @@
+application:
+  -
+    id: 1
+    client: 1
+  -
+    id: 2
+    client: 2
+
+issue:
+  -
+    id: 1
+    title: test_issue
+    state: 1
+    application: 1
+    user: 1
+
+user:
+  -
+    id: 1
+    login: user_1
+    client: 1
+  -
+    id: 2
+    login: user_2
+    client: 1
+
+task_type:
+  -
+    id: 1
+    class: AM_Task_Worker_HorizontalPdf_Create

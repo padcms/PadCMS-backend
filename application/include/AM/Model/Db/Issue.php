@@ -434,10 +434,9 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
      */
     public function compileHorizontalPdfs()
     {
-        $oHorizontalPdfHandler = AM_Handler_Locator::getInstance()->getHandler('horisontal_pdf');
-        /* @var $oHorizontalPdfHandler AM_Handler_HorisontalPdf */
-        $oHorizontalPdfHandler->setIssue($this);
-        $oHorizontalPdfHandler->compile();
+        $oTask = new AM_Task_Worker_HorizontalPdf_Create();
+        $oTask->setOptions(array('issue_id' => $this->id))
+                ->create();
 
         $this->updated_static_pdf = new Zend_DB_Expr('NOW()');
         $this->updated            = new Zend_DB_Expr('NOW()');
