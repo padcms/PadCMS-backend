@@ -367,22 +367,45 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
     /**
      * Load all presets for given resource type
      *
-     * @param string|null $sResourceType
+     * @param string $sResourceType
+     * @param boolean $bUrgent Should load urgent presets or not urgent
      * @return AM_Handler_Thumbnail
      */
-    public function loadAllPresets($sResourceType = null)
+    public function loadAllPresets($sResourceType, $bUrgent = null)
     {
         $this->clearPresets();
         $oResourcesConfig = $this->getConfig()->common->resource;
+        $aPresets         = array();
 
-        $aPresets = $oResourcesConfig->default->toArray();
-        if (!is_null($sResourceType)) {
-            if (isset($oResourcesConfig->{$sResourceType})) {
-                $aPresets = array_merge($aPresets, $oResourcesConfig->{$sResourceType}->toArray());
+        if (!isset($oResourcesConfig->{$sResourceType})) {
+            throw new AM_Handler_Thumbnail_Exception(sprintf('Configuration for preset "%s" not found', $sResourceType));
+        }
+
+        $aResourcePresets = $oResourcesConfig->{$sResourceType}->toArray();
+        foreach ($aResourcePresets as $sResourcePreset) {
+            if (!isset($this->getConfig()->{$sResourcePreset})) {
+                throw new AM_Handler_Thumbnail_Exception(sprintf('Can\'t find preset "%s"', $sResourcePreset));
+            }
+
+            $aPresetProperties = $this->getConfig()->{$sResourcePreset}->toArray();
+            if (is_null($bUrgent)) {
+                $this->_aPresets[] = $sResourcePreset;
+            } elseif (true === $bUrgent) {
+                if (array_key_exists('urgent', $aPresetProperties) && 1 == $aPresetProperties['urgent']) {
+                    $this->_aPresets[] = $sResourcePreset;
+                }
+            } else {
+                if (array_key_exists('urgent', $aPresetProperties) && 0 == $aPresetProperties['urgent']) {
+                    $this->_aPresets[] = $sResourcePreset;
+                } elseif (!array_key_exists('urgent', $aPresetProperties)) {
+                    $this->_aPresets[] = $sResourcePreset;
+                }
             }
         }
 
-        $this->_aPresets = $aPresets;
+        if (is_null($bUrgent) || true === $bUrgent) {
+            $this->_aPresets = array_merge($this->_aPresets, $oResourcesConfig->default->toArray());
+        }
 
         return $this;
     }
