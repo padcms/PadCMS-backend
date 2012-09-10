@@ -373,10 +373,19 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         $oThumbnailer->clearSources()
                 ->addSourceFile($sDestination)
                 ->setImageType($this->getImageType($sKey))
-                ->loadAllPresets($this->getThumbnailPresetName())
+                ->loadAllPresets($this->getThumbnailPresetName(), true)
                 ->createThumbnails();
 
         foreach ($oThumbnailer->getSources() as $oSource) {
+            if ($oSource->isImage()) {
+                $oTaskPlanner = new AM_Task_Worker_Thumbnail_Create();
+                $oTaskPlanner->setOptions(array('resource'      => $sDestination,
+                                                'image_type'    => $this->getImageType($sKey),
+                                                'zooming'       => false,
+                                                'resource_type' => $this->getThumbnailPresetName()))
+                             ->create();
+            }
+
             if ($oSource->isPdf() && self::DATA_KEY_RESOURCE == $sKey) {
                 //Remove old pdf_info
                 $this->delete(self::PDF_INFO, false);
@@ -406,14 +415,12 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
 
         $sResourcePath = $sDataPath . DIRECTORY_SEPARATOR . self::DATA_KEY_RESOURCE . '.' . pathinfo($sResourceName, PATHINFO_EXTENSION);
 
-        $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
-        /* @var $oThumbnailer AM_Handler_Thumbnail */
-        $oThumbnailer->clearSources()
-                ->setZooming(true)
-                ->addSourceFile($sResourcePath)
-                ->setImageType($this->getImageType(self::DATA_KEY_RESOURCE))
-                ->loadAllPresets($this->getThumbnailPresetName())
-                ->createThumbnails();
+        $oTaskPlanner = new AM_Task_Worker_Thumbnail_Create();
+        $oTaskPlanner->setOptions(array('resource'      => $sResourcePath,
+                                        'image_type'    => $this->getImageType(self::DATA_KEY_RESOURCE),
+                                        'zooming'       => true,
+                                        'resource_type' => $this->getThumbnailPresetName()))
+                     ->create();
     }
 
     /**
