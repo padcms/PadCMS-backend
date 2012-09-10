@@ -50,7 +50,8 @@ class AM_Component_List_User extends AM_Component_Grid
     {
         $oQuery = $oActionController->oDb->select()
                 ->from('user')
-                ->where('deleted = ?', 'no');
+                ->where('deleted = ?', 'no')
+                ->columns(array('creator_full_name' => 'CONCAT(first_name, " ", last_name)'));
 
         if (!is_null($iClientId)) {
             $oQuery->where('client = ?', $iClientId);

@@ -89,6 +89,7 @@ class AM_Component_List_Issue extends AM_Component_Grid
                         'release_date'      => 'DATE_FORMAT(issue.release_date, "%e/%c/%Y at %Hh%i")',
                         'release_date_ts'   => 'UNIX_TIMESTAMP(issue.release_date)',
                         'creator_full_name' => 'CONCAT(user.first_name, " ", user.last_name)',
+                        'creator_login'     => 'user.login',
                         'creator_uid'       => 'user.id',
                         'creator_role'      => 'IF(user.is_admin, "admin", "user")',
                         'application_id'    => 'application.id'));

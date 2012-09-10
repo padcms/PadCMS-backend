@@ -27,7 +27,7 @@
                     <div class="block-clear cblock-application-inner">
                         <div class="cblock-application-info">
                             <ul>
-                                <li class="ico-version">{'Current version'|translate}: <b>{$item.version|escape}</b></li>
+<!--                                <li class="ico-version">{'Current version'|translate}: <b>{$item.version|escape}</b></li>-->
                                 <li class="ico-issues"><b><a href="/issue/list/aid/{$item.id}">{$item.issue_count}</a></b> {'issue(s)'|translate}</li>
                             </ul>
                         </div>

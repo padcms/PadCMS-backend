@@ -4,20 +4,20 @@
     <head>
         <title>{'PadCMS'|translate} - {$controller}</title>
 
-        <link rel="icon" type="image/png" href="{$baseUrl}/favicon.gif" />
+        <link rel="icon" type="image/png" href="/favicon.gif" />
 
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-        <link href="{$baseUrl}/css/html-elements.css" type="text/css" rel="stylesheet" />
-        <link href="{$baseUrl}/css/style.css" type="text/css" rel="stylesheet" />
-        <link href="{$baseUrl}/css/custom.css" type="text/css" rel="stylesheet" />
+        <link href="/css/html-elements.css" type="text/css" rel="stylesheet" />
+        <link href="/css/style.css" type="text/css" rel="stylesheet" />
+        <link href="/css/custom.css" type="text/css" rel="stylesheet" />
 
-        <link href="{$baseUrl}/js/lib/jquery/jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
-        <link href="{$baseUrl}/js/lib/jquery/select-box/jquery.selectBox.css" rel="stylesheet" type="text/css" />
-        <link href="{$baseUrl}/js/lib/jquery/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
-        <link href="{$baseUrl}/js/lib/jquery/jstree/themes/default/style.css" rel="stylesheet" type="text/css" />
-        <link href="{$baseUrl}/css/layout.css" rel="stylesheet" media="screen" type="text/css" />
-        <link href="{$baseUrl}/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
+        <link href="/js/lib/jquery/jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
+        <link href="/js/lib/jquery/select-box/jquery.selectBox.css" rel="stylesheet" type="text/css" />
+        <link href="/js/lib/jquery/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+        <link href="/js/lib/jquery/jstree/themes/default/style.css" rel="stylesheet" type="text/css" />
+        <link href="/css/layout.css" rel="stylesheet" media="screen" type="text/css" />
+        <link href="/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
 
         {if isset($smarty.capture.css)}{$smarty.capture.css}{/if}
 
@@ -40,7 +40,7 @@
                         <div id="header-blocks">
                             {if $userInfo.client}
                             <span class="name">
-                                <span>{$userInfo.client_title}</span>
+                                <span>{$userInfo.client_title|truncate:30:"...":true}</span>
                             </span>
                             {/if}
 
@@ -48,13 +48,13 @@
                             <div class="header-links">
                                     {if $userInfo.is_admin}
                                         <ul>
-                                            <li class="client-mike">{$userInfo.first_name} {$userInfo.last_name}</li>
+                                            <li class="client-mike">{$userInfo.first_name|truncate:30:"...":true} {$userInfo.last_name|truncate:30:"...":true}</li>
                                             <li><a href="/devices">{'Devices'|translate}</a></li>
                                             <li class="last"><a href="/auth/logout">{'Logout'|translate}</a></li>
                                         </ul>
                                     {else}
                                         <ul>
-                                            <li class="client-mike">{$userInfo.first_name} {$userInfo.last_name}</li>
+                                            <li class="client-mike">{$userInfo.first_name|truncate:30:"...":true} {$userInfo.last_name|truncate:30:"...":true}</li>
                                             <li class="last"><a href="/auth/logout">{'Logout'|translate}</a></li>
                                         </ul>
                                     {/if}
