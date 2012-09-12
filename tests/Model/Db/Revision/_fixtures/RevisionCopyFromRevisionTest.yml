@@ -1,0 +1,27 @@
+application:
+  -
+    id: 1
+    title: Test application
+    client: 1
+
+issue:
+  -
+    id: 1
+    application: 1
+    user: 1
+  -
+    id: 2
+    application: 1
+    user: 2
+
+revision:
+  -
+    id: 1
+    title: test_revision
+    issue: 1
+    user: 1
+  -
+    id: 2
+    title: test_revision2
+    issue: 2
+    user: 2

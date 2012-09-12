@@ -39,3 +39,14 @@ element_data:
     id_element: 1
     key_name: additional_key
     value: additional_file.png
+
+task_type:
+  -
+    id: 1
+    class: AM_Task_Worker_Thumbnail_Create
+
+task:
+  -
+    id: 1
+    task_type_id: 1
+    status: finish

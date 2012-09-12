@@ -34,72 +34,72 @@
 
 class ApplicationMoveTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function getDataSet()
+    /** @var AM_Model_Db_Application */
+    protected $_oApplication = null;
+    /** @var PHPUnit_Framework_MockObject_MockObject */
+    protected $_oIssueSetMock = null;
+
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('application');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'ApplicationMoveTest.yml';
     }
 
     public function setUp()
     {
         parent::setUp();
-
-        $appData = array("id" => 1, "title" => "test_app", "client" => 1);
-        $this->app = new AM_Model_Db_Application();
-        $this->app->setFromArray($appData);
-        $this->app->save();
-
-        $this->issueSetMock = $this->getMock('AM_Model_Db_Rowset_Issue', array('moveToUser'), array(array("readOnly" => true)));
-        $this->app->setIssues($this->issueSetMock);
+        $this->_oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => 1));
+        $this->_oIssueSetMock = $this->getMock('AM_Model_Db_Rowset_Issue', array('moveToUser'), array(array("readOnly" => true)));
+        $this->_oApplication->setIssues($this->_oIssueSetMock);
     }
 
     public function testShouldMoveToUser()
     {
         //GIVEN
-        $userData = array("id" => 2, "login" => "test_user", "client" => 2);
-        $user = new AM_Model_Db_User(array("data" => $userData));
+        //Get the user with defferent client id
+        $oUser = AM_Model_Db_Table_Abstract::factory('user')->findOneBy(array('id' => 2));
 
         //THEN
-        $this->issueSetMock->expects($this->once())
+        $this->_oIssueSetMock->expects($this->once())
             ->method('moveToUser')
-            ->with($this->equalTo($user));
+            ->with($this->equalTo($oUser));
 
         //WHEN
-        $this->app->moveToUser($user);
-        $this->app->refresh();
+        $this->_oApplication->moveToUser($oUser);
+        $this->_oApplication->refresh();
 
         //THEN
-        $this->assertEquals(2, $this->app->client, "Client id should change");
+        $this->assertEquals(2, $this->_oApplication->client, 'Client id should change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("application", "SELECT id, client FROM application ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/move.xml")
-                              ->getTable("application");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('application', 'SELECT id, client FROM application ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/move.xml')
+                              ->getTable('application');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 
     public function testShouldNotMoveToSameUserClient()
     {
         //GIVEN
-        $userData = array("id" => 2, "login" => "test_user", "client" => 1);
-        $user = new AM_Model_Db_User(array("data" => $userData));
+        //Get the user with the same client id
+        $oUser = AM_Model_Db_Table_Abstract::factory('user')->findOneBy(array('id' => 3));
 
         //THEN
-        $this->issueSetMock->expects($this->never())
+        $this->_oIssueSetMock->expects($this->never())
             ->method('moveToUser');
 
         //WHEN
-        $this->app->moveToUser($user);
-        $this->app->refresh();
+        $this->_oApplication->moveToUser($oUser);
+        $this->_oApplication->refresh();
 
         //THEN
-        $this->assertEquals(1, $this->app->client, "Client id should not change");
+        $this->assertEquals(1, $this->_oApplication->client, 'Client id should not change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("application", "SELECT id, client FROM application ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/not_move.xml")
-                              ->getTable("application");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('application', 'SELECT id, client FROM application ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/not_move.xml')
+                              ->getTable('application');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

@@ -34,79 +34,105 @@
 
 class ElementResourceCopyTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    /** @var PHPUnit_Framework_MockObject_MockObject $standardMock **/
-    var $standardMock = null;
-
     protected function _getDataSetYmlFile()
     {
         return dirname(__FILE__)
                 . DIRECTORY_SEPARATOR . '_fixtures'
-                . DIRECTORY_SEPARATOR . 'copy.yml';
+                . DIRECTORY_SEPARATOR . 'ElementResourceCopyTest.yml';
     }
 
     public function testShouldCopyResource()
     {
         //GIVEN
-        $thumbnailerMock = $this->getMock('AM_Handler_Thumbnail', array('addSourceFile', 'loadAllPresets', 'createThumbnails', 'getSources'));
-        AM_Handler_Locator::getInstance()->setHandler('thumbnail', $thumbnailerMock);
-        $this->standardMock = $this->getMock('AM_Tools_Standard', array('is_dir', 'mkdir', 'copy'));
+        $oThumbnailerMock = $this->getMock('AM_Handler_Thumbnail', array('addSourceFile', 'loadAllPresets', 'createThumbnails', 'getSources'));
+        AM_Handler_Locator::getInstance()->setHandler('thumbnail', $oThumbnailerMock);
+        $oStandardMock = $this->getMock('AM_Tools_Standard', array('is_dir', 'mkdir', 'copy'));
 
-        $element = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', 1);
-        $resource = new AM_Model_Db_Element_Data_MockResource($element);
-        $resource->addAdditionalResourceKey('additional_key');
-        $element->id = 2;
+        $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', 1);
+        $oResource = new AM_Model_Db_Element_Data_MockResource($oElement);
+        $oResource->addAdditionalResourceKey('additional_key');
+        //Emulating the element copying
+        $oElement->id = 2;
 
-        $oldDir = AM_Tools::getContentPath(AM_Model_Db_Element_Data_Resource::TYPE, 1);
-        $newDir = AM_Tools::getContentPath(AM_Model_Db_Element_Data_Resource::TYPE, 2);
+        //The current path of the resource
+        $sOldDir = AM_Tools::getContentPath(AM_Model_Db_Element_Data_Resource::TYPE, 1);
+        //The path of the resource after copying
+        $sNewDir = AM_Tools::getContentPath(AM_Model_Db_Element_Data_Resource::TYPE, 2);
 
         //THEN
-        $this->standardMock->expects($this->at(0))
+        //Checking all file operations
+        $oStandardMock->expects($this->at(0))
              ->method('is_dir')
-             ->with($this->equalTo($oldDir))
+             ->with($this->equalTo($sOldDir))
              ->will($this->returnValue(true));
 
-        $this->standardMock->expects($this->at(1))
+        $oStandardMock->expects($this->at(1))
              ->method('is_dir')
-             ->with($this->equalTo($newDir))
+             ->with($this->equalTo($sNewDir))
              ->will($this->returnValue(false));
 
-        $this->standardMock->expects($this->once())
+        $oStandardMock->expects($this->once())
              ->method('mkdir')
-             ->with($this->equalTo($newDir),  $this->equalTo(0777), $this->equalTo(true))
+             ->with($this->equalTo($sNewDir),  $this->equalTo(0777), $this->equalTo(true))
              ->will($this->returnValue(true));
 
-        $this->standardMock->expects($this->at(3))
+        $sNewResourcePath = $sNewDir . DIRECTORY_SEPARATOR . 'resource.png';
+        $sOldResourcePath = $sOldDir . DIRECTORY_SEPARATOR . 'resource.png';
+
+        $sNewAdditionalResourcePath = $sNewDir . DIRECTORY_SEPARATOR . 'additional_key.png';
+        $sOldAdditionalResourcePath = $sOldDir . DIRECTORY_SEPARATOR . 'additional_key.png';
+
+        $oStandardMock->expects($this->at(3))
              ->method('copy')
-             ->with($this->equalTo($oldDir . DIRECTORY_SEPARATOR . "resource.png"),
-                    $this->equalTo($newDir . DIRECTORY_SEPARATOR . "resource.png"))
+             ->with($this->equalTo($sOldResourcePath),
+                    $this->equalTo($sNewResourcePath))
              ->will($this->returnValue(true));
 
-        $this->standardMock->expects($this->at(4))
+        $oStandardMock->expects($this->at(4))
              ->method('copy')
-             ->with($this->equalTo($oldDir . DIRECTORY_SEPARATOR . "additional_key.png"),
-                    $this->equalTo($newDir . DIRECTORY_SEPARATOR . "additional_key.png"))
+             ->with($this->equalTo($sOldAdditionalResourcePath),
+                    $this->equalTo($sNewAdditionalResourcePath))
              ->will($this->returnValue(true));
 
-        $thumbnailerMock->expects($this->any())
+        //Checking the init of the resizing operation
+        $oThumbnailerMock->expects($this->any())
                 ->method('addSourceFile')
-                ->will($this->returnValue($thumbnailerMock));
+                ->will($this->returnValue($oThumbnailerMock));
 
-        $thumbnailerMock->expects($this->any())
+        $oThumbnailerMock->expects($this->any())
                 ->method('loadAllPresets')
-                ->will($this->returnValue($thumbnailerMock));
+                ->will($this->returnValue($oThumbnailerMock));
 
-        $thumbnailerMock->expects($this->any())
+        $oResourceMock = new AM_Resource_Concrete_Mock($sNewResourcePath);
+        $oThumbnailerMock->expects($this->at(3))
                 ->method('getSources')
-                ->will($this->returnValue(array()));
+                ->will($this->returnValue(array($oResourceMock)));
+
+        $oAdditionalResourceMock = new AM_Resource_Concrete_Mock($sNewAdditionalResourcePath);
+        $oThumbnailerMock->expects($this->at(7))
+                ->method('getSources')
+                ->will($this->returnValue(array($oAdditionalResourceMock)));
 
         //WHEN
-        $resource->copy();
+        $oResource->copy();
 
         //THEN
-        $queryTable    = $this->getConnection()->createQueryTable("element_data", "SELECT id_element, key_name, value FROM element_data ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/copy.xml")
-                              ->getTable("element_data");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('element_data', 'SELECT id_element, key_name, value FROM element_data ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/ElementResourceCopyTest.xml')
+                              ->getTable('element_data');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
+
+        //Checking the background tasks
+        $oTasks = AM_Model_Db_Table_Abstract::factory('task')->findAllBy(array('status' => AM_Task_Worker_Abstract::STATUS_NEW));
+        $this->assertEquals(2, $oTasks->count(), 'Precess should init 2 tasks');
+
+        $oTaskForResource = $oTasks[0];
+        $aExpectedParams = array('resource' => $sNewResourcePath, 'image_type' => 'png', 'zooming' => 0, 'resource_type' => 'element-vertical');
+        $this->assertEquals($aExpectedParams, $oTaskForResource->getOptions());
+
+        $oTaskForAdditionalResource = $oTasks[1];
+        $aExpectedParams = array('resource' => $sNewAdditionalResourcePath, 'image_type' => 'png', 'zooming' => 0, 'resource_type' => 'element-vertical');
+        $this->assertEquals($aExpectedParams, $oTaskForAdditionalResource->getOptions());
     }
 }

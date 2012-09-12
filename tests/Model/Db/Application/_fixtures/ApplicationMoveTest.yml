@@ -1,0 +1,19 @@
+application:
+  -
+    id: 1
+    title: Test application
+    client: 1
+
+user:
+  -
+    id: 1
+    login: User 1
+    client: 1
+  -
+    id: 2
+    login: User 2
+    client: 2
+  -
+    id: 3
+    login: User 3
+    client: 1

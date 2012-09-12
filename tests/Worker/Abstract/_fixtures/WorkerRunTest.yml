@@ -1,0 +1,10 @@
+task_type:
+  -
+    id: 1
+    class: AM_Task_Worker_Mock
+
+task:
+  -
+    id: 1
+    task_type_id: 1
+    status: new

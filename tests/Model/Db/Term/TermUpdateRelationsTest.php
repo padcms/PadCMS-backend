@@ -34,36 +34,27 @@
 
 class TermUpdateRelationsTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function getDataSet()
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('term');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'TermUpdateRelationsTest.yml';
     }
 
     public function testShouldUpdateTermsRelations()
     {
         //GIVEN
-        $termRootData = array("id" => 1, "vocabulary" => 1, "revision" => 1);
-        $this->termRoot = new AM_Model_Db_Term();
-        $this->termRoot->setFromArray($termRootData);
-
-        $termChildData = array("id" => 2, "vocabulary" => 1, "revision" => 1);
-        $this->termChild = new AM_Model_Db_Term();
-        $this->termChild->setFromArray($termChildData);
-        $this->termChild->save();
-
-        $this->termRoot->addChild($this->termChild);
+        $oTermRoot  = AM_Model_Db_Table_Abstract::factory('term')->findOneBy(array('id' => 1));
+        $oTermChild = AM_Model_Db_Table_Abstract::factory('term')->findOneBy(array('id' => 2));
 
         //WHEN
-        $this->termChild->updateReletations();
+        $oTermRoot->addChild($oTermChild);
+        $oTermChild->updateReletations();
 
         //THEN
-        $this->assertEquals(1, $this->termChild->parent_term, "Wrong parent term");
-
-        $queryTable    = $this->getConnection()->createQueryTable("term", "SELECT id, vocabulary, revision, parent_term FROM term ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/updateRelations.xml")
-                              ->getTable("term");
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('term', 'SELECT id, vocabulary, revision, parent_term FROM term ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/TermUpdateRelationsTest.xml')
+                              ->getTable('term');
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

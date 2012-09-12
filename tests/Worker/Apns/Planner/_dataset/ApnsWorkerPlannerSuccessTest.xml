@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <task id="1" task_type_id="1" status="finish" options='' />
+    <task id="2" task_type_id="1" status="run" options='a:3:{s:8:"issue_id";i:1;s:7:"message";s:12:"Test message";s:5:"badge";i:0;}' />
+    <task id="3" task_type_id="2" status="new" options='a:4:{s:7:"message";s:12:"Test message";s:5:"badge";i:0;s:14:"application_id";s:1:"1";s:6:"tokens";a:1:{i:0;s:3:"456";}}' />
+</dataset>

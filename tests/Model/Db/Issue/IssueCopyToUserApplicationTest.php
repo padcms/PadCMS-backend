@@ -41,43 +41,38 @@ class IssueCopyToUserApplicationTest extends AM_Test_PHPUnit_DatabaseTestCase
                 . DIRECTORY_SEPARATOR . 'IssueCopyToUserApplicationTest.yml';
     }
 
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->oIssue   = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy(array('id'      => 1));
-
-        $this->oRevisionSetMock = $this->getMock('AM_Model_Db_Rowset_Revision', array('copyToIssue'), array(array("readOnly" => true)));
-        $this->oIssue->setRevisions($this->oRevisionSetMock);
-
-        $this->oHorizontalPdfSetMock = $this->getMock('AM_Model_Db_Rowset_StaticPdf', array('copyToIssue'), array(array("readOnly" => true)));
-        $this->oIssue->setHorizontalPdfs($this->oHorizontalPdfSetMock);
-    }
-
     public function testShouldCopyToUserApplication()
     {
         //GIVEN
-        $oUserNew = AM_Model_Db_Table_Abstract::factory('user')->findOneBy(array('id'     => 2));
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy(array('id' => 1));
+
+        $oRevisionSetMock = $this->getMock('AM_Model_Db_Rowset_Revision', array('copyToIssue'), array(array("readOnly" => true)));
+        $oIssue->setRevisions($oRevisionSetMock);
+
+        $oHorizontalPdfSetMock = $this->getMock('AM_Model_Db_Rowset_StaticPdf', array('copyToIssue'), array(array("readOnly" => true)));
+        $oIssue->setHorizontalPdfs($oHorizontalPdfSetMock);
+
+        $oUserNew = AM_Model_Db_Table_Abstract::factory('user')->findOneBy(array('id' => 2));
         $oAppNew  = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => 2));
 
         //THEN
-        $this->oRevisionSetMock->expects($this->once())
+        $oRevisionSetMock->expects($this->once())
             ->method('copyToIssue');
-        $this->oHorizontalPdfSetMock->expects($this->once())
+        $oHorizontalPdfSetMock->expects($this->once())
             ->method('copyToIssue');
 
         //WHEN
-        $this->oIssue->copyToUserApplication($oUserNew, $oAppNew);
-        $this->oIssue->refresh();
+        $oIssue->copyToUserApplication($oUserNew, $oAppNew);
+        $oIssue->refresh();
 
         //THEN
-        $this->assertEquals(2, $this->oIssue->user, "User id should change");
-        $this->assertEquals(2, $this->oIssue->application, "Application id should change");
+        $this->assertEquals(2, $oIssue->user, 'User id should change');
+        $this->assertEquals(2, $oIssue->application, 'Application id should change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("issue", "SELECT id, user, application FROM issue ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/copy2userapp.xml")
-                              ->getTable("issue");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('issue', 'SELECT id, user, application FROM issue ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/copy2userapp.xml')
+                              ->getTable('issue');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

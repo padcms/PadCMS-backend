@@ -1,0 +1,23 @@
+page_background:
+  -
+    id: 1
+    type: element
+    page: 1
+
+page:
+  -
+    id: 1
+    title: Page 1
+  -
+    id: 2
+    title: Page 2
+
+element:
+  -
+    id: 1
+    page: 1
+    field: 1
+  -
+    id: 2
+    page: 1
+    field: 2

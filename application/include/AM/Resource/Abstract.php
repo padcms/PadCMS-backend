@@ -80,10 +80,10 @@ abstract class AM_Resource_Abstract implements AM_Resource_Interface
 
         $this->_sSourceFile = $sSourceFilePath;
 
-        $info = pathinfo($this->_sSourceFile);
-        $this->_sSourceFileExtension = strtolower($info['extension']);
-        $this->_sSourceFileName      = $info['filename'];
-        $this->_sSourceFileDir       = $info['dirname'];
+        $aInfo = pathinfo($this->_sSourceFile);
+        $this->_sSourceFileExtension = strtolower($aInfo['extension']);
+        $this->_sSourceFileName      = $aInfo['filename'];
+        $this->_sSourceFileDir       = $aInfo['dirname'];
 
         return $this;
     }

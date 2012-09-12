@@ -34,52 +34,50 @@
 
 class RevisionCopyFromRevisionTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function getDataSet()
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('revision', 'page');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $revisionData = array("id" => 1, "title" => "test_revision", "state" => 1, "issue" => 1, "user" => 1);
-        $this->revision = new AM_Model_Db_Revision();
-        $this->revision->setFromArray($revisionData);
-
-        $this->vocabularyTOCMock = $this->getMock('AM_Model_Db_Vocabulary', array('copyToRevision'), array(array("readOnly" => true, "table" => new AM_Model_Db_Table_Vocabulary())));
-        $this->vocabularyTagMock = $this->getMock('AM_Model_Db_Vocabulary', array('copyToRevision'), array(array("readOnly" => true, "table" => new AM_Model_Db_Table_Vocabulary())));
-
-        $appData = array("id" => 1, "title" => "test_app1", "client" => 1);
-        $app     = new AM_Model_Db_Application(array("data" => $appData));
-        $app->setVocabularyToc($this->vocabularyTOCMock);
-        $app->setVocabularyTag($this->vocabularyTagMock);
-
-        $issueData = array("id" => 1, "title" => "test_issue1", "user" => 1);
-        $issue     = new AM_Model_Db_Issue(array("data" => $issueData));
-        $this->revision->setApplication($app);
-        $this->revision->setIssue($issue);
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'RevisionCopyFromRevisionTest.yml';
     }
 
     public function testShouldCopyFromRevision()
     {
         //GIVEN
-        $revisionData = array("id" => 2, "title" => "test_revision2", "state" => 1, "issue" => 2, "user" => 2);
-        $revisionNew = new AM_Model_Db_Revision();
-        $revisionNew->setFromArray($revisionData);
+        $oApplication =  AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => 1));
+        /* @var $oApplication AM_Model_Db_Application */
+        $oVocabularyTOCMock = $this->getMock('AM_Model_Db_Vocabulary', array('copyToRevision'), array(array('readOnly' => true, 'table' => new AM_Model_Db_Table_Vocabulary())));
+        $oVocabularyTagMock = $this->getMock('AM_Model_Db_Vocabulary', array('copyToRevision'), array(array('readOnly' => true, 'table' => new AM_Model_Db_Table_Vocabulary())));
+        $oApplication->setVocabularyToc($oVocabularyTOCMock);
+        $oApplication->setVocabularyTag($oVocabularyTagMock);
+
+
+        $oRevisionFrom = AM_Model_Db_Table_Abstract::factory('revision')->findOneBy(array('id' => 1));
+        /* @var $oRevisionFrom AM_Model_Db_Revision */
+        $oRevisionFrom->setApplication($oApplication);
+        $oPageMock = $this->getMock('AM_Model_Db_Page', array('copyToRevision', 'savePageImposition'), array(array('readOnly' => true, 'table' => new AM_Model_Db_Table_Page())));
+        $oRevisionFrom->setPages(array($oPageMock));
+        $oRevision     = AM_Model_Db_Table_Abstract::factory('revision')->findOneBy(array('id' => 2));
+        /* @var $oRevision AM_Model_Db_Revision */
 
         //THEN
-        $this->vocabularyTOCMock->expects($this->once())
+        $oVocabularyTOCMock->expects($this->once())
                         ->method('copyToRevision')
-                        ->with($this->equalTo($revisionNew));
+                        ->with($this->equalTo($oRevision), $this->equalTo($oRevisionFrom));
 
-        $this->vocabularyTagMock->expects($this->once())
+        $oVocabularyTagMock->expects($this->once())
                         ->method('copyToRevision')
-                        ->with($this->equalTo($revisionNew));
+                        ->with($this->equalTo($oRevision), $this->equalTo($oRevisionFrom));
+
+        $oPageMock->expects($this->once())
+                        ->method('copyToRevision')
+                        ->with($this->equalTo($oRevision));
+
+        $oPageMock->expects($this->once())
+                        ->method('savePageImposition')
+                        ->with();
 
         //WHEN
-        $revisionNew->copyFromRevision($this->revision);
+        $oRevision->copyFromRevision($oRevisionFrom);
     }
 }

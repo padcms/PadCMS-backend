@@ -1,0 +1,30 @@
+task_type:
+  -
+    id: 1
+    class: AM_Task_Worker_AppleNotification_Planner
+  -
+    id: 2
+    class: AM_Task_Worker_AppleNotification_Sender
+
+device_token:
+  -
+    udid: 123
+    token: 456
+    application_id: 1
+
+application:
+  -
+    id: 1
+    client: 1
+
+issue:
+  -
+    id: 1
+    application: 1
+    user: 1
+
+task:
+  -
+    id: 1
+    task_type_id: 1
+    status: finish

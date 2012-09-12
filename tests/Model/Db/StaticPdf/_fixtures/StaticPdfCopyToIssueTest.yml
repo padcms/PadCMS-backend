@@ -1,0 +1,15 @@
+static_pdf:
+  -
+    id: 1
+    issue: 1
+    name: static.pdf
+
+issue:
+  -
+    id: 1
+    application: 1
+    user: 1
+  -
+    id: 2
+    application: 1
+    user: 2

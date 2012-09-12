@@ -34,8 +34,6 @@
 
 class PageMapperSqliteTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    /** @var AM_Model_Db_Page */
-    private $_page = null;
     /** @var Zend_Db_Adapter_Abstract **/
     protected $_oAdapter = null;
     /** @var Zend_Test_PHPUnit_Db_Connection **/
