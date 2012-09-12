@@ -34,60 +34,62 @@
 
 class FactoryTest extends PHPUnit_Framework_TestCase
 {
+    protected $_oStandardMock = null;
+
     public function setUp()
     {
-        $this->_standardMock = $this->getMock('AM_Tools_Standard', array('is_file'));
+        $this->_oStandardMock = $this->getMock('AM_Tools_Standard', array('is_file'));
     }
 
     public function testShouldCreateSourceInstance()
     {
         //GIVEN
-        $sourceFile = 'source_file.mock';
+        $sSourceFile = 'source_file.mock';
 
         //WHEN
-        $this->_standardMock->expects($this->any())
+        $this->_oStandardMock->expects($this->any())
              ->method('is_file')
-             ->with($this->equalTo($sourceFile))
+             ->with($this->equalTo($sSourceFile))
              ->will($this->returnValue(true));
 
-        $source = AM_Resource_Factory::create($sourceFile);
+        $oSource = AM_Resource_Factory::create($sSourceFile);
 
-        $this->assertTrue($source instanceof AM_Resource_Concrete_Mock);
+        $this->assertTrue($oSource instanceof AM_Resource_Concrete_Mock);
     }
 
     public function testShouldThrowExceptionWhenFileNotFound()
     {
         //GIVEN
-        $sourceFile = "source_file.mock";
+        $sSourceFile = 'source_file.mock';
 
         //WHEN
-        $this->_standardMock->expects($this->any())
+        $this->_oStandardMock->expects($this->any())
              ->method('is_file')
-             ->with($this->equalTo($sourceFile))
+             ->with($this->equalTo($sSourceFile))
              ->will($this->returnValue(false));
 
         //THEN
         $this->setExpectedException('AM_Resource_Factory_Exception', '', 501);
 
         //WHEN
-        $source = AM_Resource_Factory::create($sourceFile);
+        $oSource = AM_Resource_Factory::create($sSourceFile);
     }
 
     public function testShouldThrowExceptionWhenSourceClassNotFound()
     {
         //GIVEN
-        $sourceFile = "source_file.fail";
+        $sSourceFile = 'source_file.fail';
 
         //WHEN
-        $this->_standardMock->expects($this->any())
+        $this->_oStandardMock->expects($this->any())
              ->method('is_file')
-             ->with($this->equalTo($sourceFile))
+             ->with($this->equalTo($sSourceFile))
              ->will($this->returnValue(true));
 
         //THEN
         $this->setExpectedException('AM_Resource_Factory_Exception', '', 502);
 
         //WHEN
-        $source = AM_Resource_Factory::create($sourceFile);
+        $oSource = AM_Resource_Factory::create($sSourceFile);
     }
 }

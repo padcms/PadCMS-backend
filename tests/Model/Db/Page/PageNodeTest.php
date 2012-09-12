@@ -37,29 +37,29 @@ class PageNodeTest extends PHPUnit_Framework_TestCase
     public function testShouldAddChild()
     {
         //GIVEN
-        $root  = new AM_Model_Db_Page(array("data" => array("id" => 1)));
-        $child = new AM_Model_Db_Page(array("data" => array("id" => 2)));
+        $oPageRoot  = new AM_Model_Db_Page(array('data' => array('id' => 1)));
+        $oPageChild = new AM_Model_Db_Page(array('data' => array('id' => 2)));
 
         //WHEN
-        $root->addChild($child);
+        $oPageRoot->addChild($oPageChild);
 
-        $expectedChilds = array($child);
+        $expectedChilds = array($oPageChild);
 
         //THEN
-        $this->assertEquals($expectedChilds, $root->getChilds(), "Root node has wrong childs");
+        $this->assertEquals($expectedChilds, $oPageRoot->getChilds(), 'Root node has wrong childs');
     }
 
     public function testShouldThrowExceptionWhenSetWrongLinkType()
     {
         //GIVEN
-        $root  = new AM_Model_Db_Page(array("data" => array("id" => 1)));
+        $oPageRoot  = new AM_Model_Db_Page(array('data' => array('id' => 1)));
 
         //WHEN
         try {
-            $root->setLinkType("WRONG TYPE");
+            $oPageRoot->setLinkType('WRONG TYPE');
         //GIVEN
-        } catch (AM_Exception $e) {
-            $this->assertEquals('Wrong link type given "WRONG TYPE"', $e->getMessage());
+        } catch (AM_Exception $oException) {
+            $this->assertEquals('Wrong link type given "WRONG TYPE"', $oException->getMessage());
             return;
         }
 
@@ -69,23 +69,21 @@ class PageNodeTest extends PHPUnit_Framework_TestCase
     public function testShouldWalkOnTreeUsingIterator()
     {
         //GIVEN
-        $root  = new AM_Model_Db_Page(array("data" => array("id" => 1)));
-        $child = new AM_Model_Db_Page(array("data" => array("id" => 2)));
+        $oPageRoot  = new AM_Model_Db_Page(array('data' => array('id' => 1)));
+        $oPageChild = new AM_Model_Db_Page(array('data' => array('id' => 2)));
 
-        $root->addChild($child);
+        $oPageRoot->addChild($oPageChild);
 
-        $expected_nodes = array( "1" => $root, "2" => $child);
+        $aExpectedNodes = array( '1' => $oPageRoot, '2' => $oPageChild);
 
-        $nodes = array();
+        $eGivenNodes = array();
 
         //WHEN
-        foreach ($root as $key => $node) {
-            $nodes[$key] = $node;
+        foreach ($oPageRoot as $iKey => $oNode) {
+            $eGivenNodes[$iKey] = $oNode;
         }
 
         //THEN
-        $this->assertEquals($expected_nodes, $nodes, "Wrong nodes given while walk on tree");
-
+        $this->assertEquals($aExpectedNodes, $eGivenNodes, 'Wrong nodes given while walk on tree');
     }
-
 }

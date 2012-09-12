@@ -6,7 +6,7 @@
  * abiding by the rules of distribution of free software.  You can  use,
  * modify and/ or redistribute the software under the terms of the CeCILL-C
  * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
+ * 'http://www.cecill.info'.
  *
  * As a counterpart to the access to the source code and  rights to copy,
  * modify and redistribute granted by the license, users are provided only
@@ -34,78 +34,78 @@
 
 class IssueMoveToUserApplicationTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
+    protected $_oIssue           = null;
+    protected $_oRevisionSetMock = null;
+
+    protected function _getDataSetYmlFile()
+    {
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'IssueMoveToUserApplicationTest.yml';
+    }
+
     public function setUp(){
         parent::setUp();
 
-        $issueData = array("id" => 1, "title" => "test_issue", "state" => 1, "application" => 1, "user" => 1);
-        $this->issue = new AM_Model_Db_Issue();
-        $this->issue->setFromArray($issueData);
-        $this->issue->save();
+        $this->_oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy(array('id' => 1));
 
-        $this->revisionSetMock = $this->getMock('AM_Model_Db_Rowset_Revision', array('moveToIssue'), array(array("readOnly" => true)));
-        $this->issue->setRevisions($this->revisionSetMock);
-    }
-
-    public function getDataSet()
-    {
-        $tableNames = array('issue');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
+        $this->_oRevisionSetMock = $this->getMock('AM_Model_Db_Rowset_Revision', array('moveToIssue'), array(array('readOnly' => true)));
+        $this->_oIssue->setRevisions($this->_oRevisionSetMock);
     }
 
     public function testShouldMoveToUserApplication()
     {
         //GIVEN
-        $userData = array("id" => 2, "login" => "test_user", "client" => 2);
-        $user     = new AM_Model_Db_User(array("data" => $userData));
+        $aUserData = array('id' => 2, 'login' => 'test_user', 'client' => 2);
+        $oUser     = new AM_Model_Db_User(array('data' => $aUserData));
 
-        $appData = array("id" => 2, "title" => "test_app", "client" => 2);
-        $app     = new AM_Model_Db_Application(array("data" => $appData));
+        $aAppData = array('id' => 2, 'title' => 'test_app', 'client' => 2);
+        $oApp     = new AM_Model_Db_Application(array('data' => $aAppData));
 
         //THEN
-        $this->revisionSetMock->expects($this->once())
+        $this->_oRevisionSetMock->expects($this->once())
             ->method('moveToIssue');
 
         //WHEN
-        $this->issue->moveToUserApplication($user, $app);
-        $this->issue->refresh();
+        $this->_oIssue->moveToUserApplication($oUser, $oApp);
+        $this->_oIssue->refresh();
 
         //THEN
-        $this->assertEquals(2, $this->issue->user, "User id should change");
-        $this->assertEquals(2, $this->issue->application, "Application id should change");
+        $this->assertEquals(2, $this->_oIssue->user, 'User id should change');
+        $this->assertEquals(2, $this->_oIssue->application, 'Application id should change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("issue", "SELECT id, user, application FROM issue ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/move2userapp.xml")
-                              ->getTable("issue");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('issue', 'SELECT id, user, application FROM issue ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/move2userapp.xml')
+                              ->getTable('issue');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 
     public function testShouldNotMoveToSameUserAndSameApplication()
     {
         //GIVEN
-        $userData = array("id" => 1, "login" => "test_user", "client" => 1);
-        $user     = new AM_Model_Db_User(array("data" => $userData));
+        $aUserData = array('id' => 1, 'login' => 'test_user', 'client' => 1);
+        $oUser     = new AM_Model_Db_User(array('data' => $aUserData));
 
-        $appData = array("id" => 1, "title" => "test_app", "client" => 1);
-        $app     = new AM_Model_Db_Application(array("data" => $appData));
+        $aAppData = array('id' => 1, 'title' => 'test_app', 'client' => 1);
+        $oApp     = new AM_Model_Db_Application(array('data' => $aAppData));
 
         //THEN
-        $this->revisionSetMock->expects($this->never())
+        $this->_oRevisionSetMock->expects($this->never())
             ->method('moveToIssue');
 
         //WHEN
-        $this->issue->moveToUserApplication($user, $app);
-        $this->issue->refresh();
+        $this->_oIssue->moveToUserApplication($oUser, $oApp);
+        $this->_oIssue->refresh();
 
         //THEN
-        $this->assertEquals(1, $this->issue->user, "User id should not change");
-        $this->assertEquals(1, $this->issue->application, "Application id should not change");
+        $this->assertEquals(1, $this->_oIssue->user, 'User id should not change');
+        $this->assertEquals(1, $this->_oIssue->application, 'Application id should not change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("issue", "SELECT id, user, application FROM issue ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/not_move2userapp.xml")
-                              ->getTable("issue");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('issue', 'SELECT id, user, application FROM issue ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/not_move2userapp.xml')
+                              ->getTable('issue');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

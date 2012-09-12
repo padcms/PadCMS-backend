@@ -36,86 +36,80 @@ class StaticPdfResourceUploadTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
 
     /** @var PHPUnit_Framework_MockObject_MockObject **/
-    protected $_standardMock = null;
-    /** @var PHPUnit_Framework_MockObject_MockObject **/
-    protected $_uploaderMock = null;
+    protected $_oStandardMock    = null;
+    /** @var PHPUnit_Framework_MockObject_MockObject * */
+    protected $_oUploaderMock    = null;
+    protected $_oThumbnailerMock = null;
+    protected $_oStaticPdf       = null;
 
-    public function getDataSet()
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('static_pdf');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'StaticPdfUploadResourceTest.yml';
     }
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->pdf = new AM_Model_Db_StaticPdf();
-
-        $this->pdf->setFromArray(array('id'     => 1,
-                                       'issue'  => 1,
-                                       'name'   => ''
-                                     ));
-        $this->pdf->save();
-
-        $this->_standardMock = $this->getMock('AM_Tools_Standard', array('is_dir', 'mkdir'));
-        $this->_uploaderMock = $this->getMock('AM_Handler_Upload', array('isValid', 'isUploaded', 'getFileInfo', 'receive'));
+        $this->_oStaticPdf       = AM_Model_Db_Table_Abstract::factory('static_pdf')->findOneBy(array('id' => 1));
+        $this->_oStandardMock    = $this->getMock('AM_Tools_Standard', array('is_dir', 'mkdir'));
+        $this->_oUploaderMock    = $this->getMock('AM_Handler_Upload', array('isValid', 'isUploaded', 'getFileInfo', 'receive'));
+        $this->_oThumbnailerMock = $this->getMock('AM_Handler_Thumbnail', array('addSourceFile', 'loadAllPresets', 'createThumbnails', 'getSources'));
+        AM_Handler_Locator::getInstance()->setHandler('thumbnail', $this->_oThumbnailerMock);
     }
 
     public function testShouldUploadResource()
     {
         //GIVEN
-        $thumbnailerMock = $this->getMock('AM_Handler_Thumbnail', array('addSourceFile', 'loadAllPresets', 'createThumbnails', 'getSources'));
-        AM_Handler_Locator::getInstance()->setHandler('thumbnail', $thumbnailerMock);
-
-        $resource    = new AM_Model_Db_StaticPdf_Data_Resource($this->pdf);
-        $resource->setUploader($this->_uploaderMock);
-        $resourceDir = $resource->getResourceDir();
+        $oResource = new AM_Model_Db_StaticPdf_Data_Resource($this->_oStaticPdf);
+        $oResource->setUploader($this->_oUploaderMock);
+        $sResourceDir = $oResource->getResourceDir();
 
         //THEN
-        $this->_standardMock->expects($this->once())
+        $this->_oStandardMock->expects($this->once())
              ->method('is_dir')
-             ->with($this->equalTo($resourceDir))
+             ->with($this->equalTo($sResourceDir))
              ->will($this->returnValue(false));
 
-        $this->_standardMock->expects($this->once())
+        $this->_oStandardMock->expects($this->once())
              ->method('mkdir')
-             ->with($this->equalTo($resourceDir),  $this->equalTo(0777), $this->equalTo(true))
+             ->with($this->equalTo($sResourceDir),  $this->equalTo(0777), $this->equalTo(true))
              ->will($this->returnValue(true));
 
-        $this->_uploaderMock->expects($this->once())
+        $this->_oUploaderMock->expects($this->once())
              ->method('isUploaded')
              ->will($this->returnValue(true));
 
-        $this->_uploaderMock->expects($this->once())
+        $this->_oUploaderMock->expects($this->once())
              ->method('isValid')
              ->will($this->returnValue(true));
 
-        $this->_uploaderMock->expects($this->once())
+        $this->_oUploaderMock->expects($this->once())
              ->method('getFileInfo')
              ->will($this->returnValue(array('pdf-file'=>array('name'=>'test.pdf'))));
 
-        $this->_uploaderMock->expects($this->once())
+        $this->_oUploaderMock->expects($this->once())
              ->method('receive')
              ->will($this->returnValue(true));
 
-        $thumbnailerMock->expects($this->any())
+        $this->_oThumbnailerMock->expects($this->any())
                 ->method('addSourceFile')
-                ->will($this->returnValue($thumbnailerMock));
+                ->will($this->returnValue($this->_oThumbnailerMock));
 
-        $thumbnailerMock->expects($this->any())
+        $this->_oThumbnailerMock->expects($this->any())
                 ->method('loadAllPresets')
-                ->will($this->returnValue($thumbnailerMock));
+                ->will($this->returnValue($this->_oThumbnailerMock));
 
-        $thumbnailerMock->expects($this->any())
+        $this->_oThumbnailerMock->expects($this->any())
                 ->method('getSources')
                 ->will($this->returnValue(array()));
 
         //WHEN
-        $resource->upload();
+        $oResource->upload();
 
         //THEN
-        $this->assertEquals('test.pdf', $resource->getResourceDbBaseName());
+        $this->assertEquals('test.pdf', $oResource->getResourceDbBaseName());
     }
 }

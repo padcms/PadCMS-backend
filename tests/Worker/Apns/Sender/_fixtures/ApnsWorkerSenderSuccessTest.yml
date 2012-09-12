@@ -1,0 +1,4 @@
+task_type:
+  -
+    id: 1
+    class: AM_Task_Worker_AppleNotification_Sender

@@ -34,14 +34,6 @@
 
 class ApnsWorkerFeedbackTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        $taskType = new AM_Model_Db_TaskType();
-        $taskType->setFromArray(array('id' => 1, 'class' => 'AM_Task_Worker_AppleNotification_Feedback'))->save();
-    }
-
     public function testShouldGetFeedback()
     {
         //GIVEN

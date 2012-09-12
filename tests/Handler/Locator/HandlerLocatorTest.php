@@ -34,67 +34,69 @@
 
 class HandlerLocatorTest extends PHPUnit_Framework_TestCase
 {
+    protected $oLocator = null;
+
     public function setUp()
     {
         //GIVEN
-        $this->locator = AM_Handler_Locator::getInstance();
+        $this->oLocator = AM_Handler_Locator::getInstance();
     }
 
     public function testShouldSetHandlerClassName()
     {
         //WHEN
-        $this->locator->setHandler('mock', 'Mock_Handler');
+        $this->oLocator->setHandler('mock', 'Mock_Handler');
 
         //THEN
-        $this->assertTrue($this->locator->getHandler('mock') instanceof Mock_Handler);
+        $this->assertTrue($this->oLocator->getHandler('mock') instanceof Mock_Handler);
     }
 
     public function testShouldSetHandlerObject()
     {
         //GIVEN
         $handler = new Mock_Handler();
-        $handler->property = "value";
+        $handler->sProperty = 'value';
 
         //WHEN
-        $this->locator->setHandler('mock', $handler);
+        $this->oLocator->setHandler('mock', $handler);
 
         //THEN
-        $this->assertTrue($this->locator->getHandler('mock') instanceof Mock_Handler);
-        $this->assertEquals("value", $this->locator->getHandler('mock')->property);
+        $this->assertTrue($this->oLocator->getHandler('mock') instanceof Mock_Handler);
+        $this->assertEquals('value', $this->oLocator->getHandler('mock')->sProperty);
     }
 
     public function testShouldThrowExceptionWhenSetIncorrectHandlerClass()
     {
         //GIVEN
-        $this->setExpectedException("AM_Handler_Locator_Exception", "", 502);
+        $this->setExpectedException('AM_Handler_Locator_Exception', '', 502);
 
         //WHEN
-        $this->locator->setHandler('mock', 'Mock_Wrong_Handler');
+        $this->oLocator->setHandler('mock', 'Mock_Wrong_Handler');
     }
 
     public function testShouldThrowExceptionWhenSetIncorrectHandlerObject()
     {
         //GIVEN
-        $handler = new Mock_Wrong_Handler();
-        $this->setExpectedException("AM_Handler_Locator_Exception", "", 502);
+        $oHandler = new Mock_Wrong_Handler();
+        $this->setExpectedException('AM_Handler_Locator_Exception', '', 502);
 
         //WHEN
-        $this->locator->setHandler('mock', 'Mock_Wrong_Handler');
+        $this->oLocator->setHandler('mock', 'Mock_Wrong_Handler');
     }
 
     public function testShouldThrowExceptionWhenTryingToGetUnsetedHandler()
     {
         //GIVEN
-        $this->setExpectedException("AM_Handler_Locator_Exception", "", 501);
+        $this->setExpectedException('AM_Handler_Locator_Exception', '', 501);
 
         //WHEN
-        $this->locator->getHandler('false');
+        $this->oLocator->getHandler('false');
     }
 }
 
 class Mock_Handler extends AM_Handler_Abstract
 {
-    public $property = null;
+    public $sProperty = null;
 }
 
 class Mock_Wrong_Handler

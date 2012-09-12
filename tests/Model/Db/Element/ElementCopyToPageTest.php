@@ -38,35 +38,35 @@ class ElementCopyToPageTest extends AM_Test_PHPUnit_DatabaseTestCase
     {
         return dirname(__FILE__)
                 . DIRECTORY_SEPARATOR . '_fixtures'
-                . DIRECTORY_SEPARATOR . 'copy_to_page.yml';
+                . DIRECTORY_SEPARATOR . 'ElementCopyToPageTest.yml';
     }
 
     public function testShouldCopyToPage()
     {
         //GIVEN
-        $this->element = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', 1);
-        $this->resourceMock = $this->getMock('AM_Model_Db_Element_Data_Resource', array('copy'), array($this->element));
-        $this->element->setResources($this->resourceMock);
+        $oElement      = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', 1);
+        $oResourceMock = $this->getMock('AM_Model_Db_Element_Data_Resource', array('copy'), array($oElement));
+        $oElement->setResources($oResourceMock);
 
-        $pageData = array("id" => 2, "title" => "test_page");
-        $page = new AM_Model_Db_Page();
-        $page->setFromArray($pageData);
+        $aPageData = array('id' => 2, 'title' => 'test_page');
+        $oPage = new AM_Model_Db_Page();
+        $oPage->setFromArray($aPageData);
 
         //THEN
-        $this->resourceMock->expects($this->once())
+        $oResourceMock->expects($this->once())
             ->method('copy');
 
         //WHEN
-        $this->element->copyToPage($page);
-        $this->element->refresh();
+        $oElement->copyToPage($oPage);
+        $oElement->refresh();
 
         //THEN
-        $this->assertEquals(2, $this->element->page, "Page id should change");
+        $this->assertEquals(2, $oElement->page, 'Page id should change');
 
-        $queryTable    = $this->getConnection()->createQueryTable("element", "SELECT id, page FROM element ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/copy.xml")
-                              ->getTable("element");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('element', 'SELECT id, page FROM element ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/ElementCopyToPageTest.xml')
+                              ->getTable('element');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

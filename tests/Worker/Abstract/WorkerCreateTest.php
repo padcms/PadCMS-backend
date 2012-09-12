@@ -34,26 +34,16 @@
 
 class WorkerCreateTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function getDataSet()
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('task', 'task_type');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-        return $dataSet;
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $mockType = new AM_Model_Db_TaskType();
-        $mockType->class = 'AM_Task_Worker_Mock';
-        $mockType->save();
-
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'WorkerCreateTest.yml';
     }
 
     public function testShouldCreateWorkerTask()
     {
-       //GIVEN
+        //GIVEN
         $worker = new AM_Task_Worker_Mock();
         $worker->addOption('key', 'value');
 
@@ -61,10 +51,10 @@ class WorkerCreateTest extends AM_Test_PHPUnit_DatabaseTestCase
         $worker->create();
 
         //THEN
-        $queryTable    = $this->getConnection()->createQueryTable("task", "SELECT id, task_type_id, status, options FROM task ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/create.xml")
-                              ->getTable("task");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('task', 'SELECT id, task_type_id, status, options FROM task ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/WorkerCreateTest.xml')
+                              ->getTable('task');
 
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

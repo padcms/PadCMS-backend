@@ -34,49 +34,35 @@
 
 class StaticPdfCopyToIssueTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    public function getDataSet()
+    protected function _getDataSetYmlFile()
     {
-        $tableNames = array('static_pdf');
-        $dataSet = $this->getConnection()->createDataSet($tableNames);
-
-        return $dataSet;
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $staticPdfData = array("id" => 1, "issue" => 1, "name" => "static.pdf");
-        $this->staticPdf = new AM_Model_Db_StaticPdf();
-        $this->staticPdf->setFromArray($staticPdfData);
-        $this->staticPdf->save();
-
-        $this->resourceMock = $this->getMock('AM_Model_Db_StaticPdf_Data_Resource', array('copy'), array($this->staticPdf));
-        $this->staticPdf->setResources($this->resourceMock);
+        return dirname(__FILE__)
+                . DIRECTORY_SEPARATOR . '_fixtures'
+                . DIRECTORY_SEPARATOR . 'StaticPdfCopyToIssueTest.yml';
     }
 
     public function testShouldCopyToIssue()
     {
         //GIVEN
-        $issueData = array("id" => 2, "title" => "test_page");
-        $issue = new AM_Model_Db_Issue();
-        $issue->setFromArray($issueData);
+        $oStaticPdf    = AM_Model_Db_Table_Abstract::factory('static_pdf')->findOneBy(array('id' => 1));
+        $oResourceMock = $this->getMock('AM_Model_Db_StaticPdf_Data_Resource', array('copy'), array($oStaticPdf));
+        $oStaticPdf->setResources($oResourceMock);
+
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy(array('id' => 2));
 
         //THEN
-        $this->resourceMock->expects($this->once())
+        $oResourceMock->expects($this->once())
             ->method('copy');
 
         //WHEN
-        $this->staticPdf->copyToIssue($issue);
-        $this->staticPdf->refresh();
+        $oStaticPdf->copyToIssue($oIssue);
+        $oStaticPdf->refresh();
 
         //THEN
-        $this->assertEquals(2, $this->staticPdf->issue, "Issue id should change");
+        $oGivenDataSet    = $this->getConnection()->createQueryTable('static_pdf', 'SELECT id, issue FROM static_pdf ORDER BY id');
+        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/StaticPdfCopyToIssueTest.xml')
+                              ->getTable('static_pdf');
 
-        $queryTable    = $this->getConnection()->createQueryTable("static_pdf", "SELECT id, issue FROM static_pdf ORDER BY id");
-        $expectedTable = $this->createFlatXMLDataSet(dirname(__FILE__) . "/_dataset/copy.xml")
-                              ->getTable("static_pdf");
-
-        $this->assertTablesEqual($expectedTable, $queryTable);
+        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
     }
 }

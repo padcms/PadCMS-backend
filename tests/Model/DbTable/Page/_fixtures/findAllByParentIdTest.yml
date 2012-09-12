@@ -1,0 +1,26 @@
+page:
+  -
+    id: 1
+    revision: 1
+    user: 1
+    title: Left page
+  -
+    id: 2
+    revision: 1
+    user: 1
+    title: Root page
+  -
+    id: 3
+    revision: 1
+    user: 1
+    title: Right page
+
+page_imposition:
+  -
+    page: 1
+    is_linked_to: 2
+    link_type: right
+  -
+    page: 2
+    is_linked_to: 3
+    link_type: right

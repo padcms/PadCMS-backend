@@ -37,12 +37,12 @@ class HandlerExportSqliteConnectionTest extends PHPUnit_Framework_TestCase
     public function testShouldEstablishConnection()
     {
         //GIVEN
-        $handler = new AM_Handler_Export_Sqlite();
+        $oHandler = new AM_Handler_Export_Sqlite();
 
         //WHEN
-        $connection = $handler->getAdapter();
+        $oConnection = $oHandler->getAdapter();
 
         //THEN
-        $this->assertTrue($connection instanceof Zend_Db_Adapter_Pdo_Sqlite);
+        $this->assertTrue($oConnection instanceof Zend_Db_Adapter_Pdo_Sqlite);
     }
 }

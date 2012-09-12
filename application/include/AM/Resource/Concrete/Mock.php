@@ -39,4 +39,13 @@
  * @ingroup AM_Resource
  */
 class AM_Resource_Concrete_Mock extends AM_Resource_Abstract
-{ }
+{
+    protected function _setSourceFile($sSourceFilePath)
+    {
+        $this->_sSourceFile = $sSourceFilePath;
+        $aInfo = pathinfo($this->_sSourceFile);
+        $this->_sSourceFileExtension = strtolower($aInfo['extension']);
+        $this->_sSourceFileName      = $aInfo['filename'];
+        $this->_sSourceFileDir       = $aInfo['dirname'];
+    }
+}
