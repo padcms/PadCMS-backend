@@ -315,4 +315,17 @@ class AM_Model_Db_Term extends AM_Model_Db_Base_NestedSet
 
         return $sValue;
     }
+
+    /**
+     * Move the term to the given parent term, set position and change position of the terms on the same nesting level
+     * @param int $iTocTermParentId
+     * @param int $iPosition
+     * @return AM_Model_Db_Term
+     */
+    public function moveToTerm($iTocTermParentId, $iPosition)
+    {
+        AM_Model_Db_Table_Abstract::factory('term')->moveTerm($this, $iTocTermParentId, $iPosition);
+
+        return $this;
+    }
 }

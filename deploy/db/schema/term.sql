@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS `term`;
 
 CREATE TABLE IF NOT EXISTS `term` (
   `id` int(12) NOT NULL AUTO_INCREMENT,
+  `position` int(4) NOT NULL DEFAULT 0,
   `title` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `color` char(6) DEFAULT NULL,

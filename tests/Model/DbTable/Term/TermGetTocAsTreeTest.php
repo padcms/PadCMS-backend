@@ -49,6 +49,25 @@ class TermGetTocAsTreeTest extends AM_Test_PHPUnit_DatabaseTestCase
         $aExpectedResult = array(
             array(
                     'parent_term' => null,
+                    'attr'        => array('id' => 2),
+                    'data'        => '2',
+                    'children'    => array(
+                        array(
+                            'parent_term' => 2,
+                            'attr'        => array('id' => 6),
+                            'data'        => '2_2',
+                            'children'    => array()
+                        ),
+                        array(
+                            'parent_term' => 2,
+                            'attr'        => array('id' => 5),
+                            'data'        => '2_1',
+                            'children'    => array()
+                        )
+                    )
+            ),
+            array(
+                    'parent_term' => null,
                     'attr'        => array('id' => 1),
                     'data'        => '1',
                     'children'    => array(
@@ -69,25 +88,6 @@ class TermGetTocAsTreeTest extends AM_Test_PHPUnit_DatabaseTestCase
                             'parent_term' => 1,
                             'attr'        => array('id' => 4),
                             'data'        => '1_2',
-                            'children'    => array()
-                        )
-                    )
-            ),
-            array(
-                    'parent_term' => null,
-                    'attr'        => array('id' => 2),
-                    'data'        => '2',
-                    'children'    => array(
-                        array(
-                            'parent_term' => 2,
-                            'attr'        => array('id' => 5),
-                            'data'        => '2_1',
-                            'children'    => array()
-                        ),
-                        array(
-                            'parent_term' => 2,
-                            'attr'        => array('id' => 6),
-                            'data'        => '2_2',
                             'children'    => array()
                         )
                     )

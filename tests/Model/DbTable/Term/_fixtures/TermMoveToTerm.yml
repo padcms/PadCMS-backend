@@ -23,49 +23,35 @@ term:
   -
     id: 1
     title: 1
-    position: 2
     parent_term: null
     vocabulary: 1
     revision: 1
+    position: 1
   -
     id: 2
     title: 2
-    position: 1
     parent_term: null
     vocabulary: 1
     revision: 1
+    position: 2
   -
     id: 3
-    title: 1_1
-    position: 1
-    parent_term: 1
+    title: 3
+    parent_term: null
     vocabulary: 1
     revision: 1
+    position: 3
   -
     id: 4
-    title: 1_2
-    position: 2
-    parent_term: 1
+    title: 2_1
+    parent_term: 2
     vocabulary: 1
     revision: 1
+    position: 1
   -
     id: 5
-    title: 2_1
-    position: 2
-    parent_term: 2
-    vocabulary: 1
-    revision: 1
-  -
-    id: 6
     title: 2_2
-    position: 1
     parent_term: 2
     vocabulary: 1
     revision: 1
-  -
-    id: 7
-    title: 1_1_1
-    position: 1
-    parent_term: 3
-    vocabulary: 1
-    revision: 1
+    position: 2

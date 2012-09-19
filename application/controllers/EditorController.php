@@ -349,6 +349,7 @@ class EditorController extends AM_Controller_Action
         try {
             $iPageId       = intval($this->_getParam('page'));
             $iTermParentId = intval($this->_getParam('parent_id'));
+            $iPosition     = intval($this->_getParam('position'));
             $sTitle        = trim($this->_getParam('title'));
 
             if(!AM_Model_Db_Table_Abstract::factory('page')->checkAccess($iPageId, $this->_aUserInfo) || empty($sTitle)) {
@@ -364,7 +365,7 @@ class EditorController extends AM_Controller_Action
             $oRevision = $oPage->getRevision();
 
             $oVocabulary = $oPage->getRevision()->getVocabularyToc();
-            $oTerm       = $oVocabulary->createTocTerm($sTitle, $oRevision, $iTermParentId);
+            $oTerm       = $oVocabulary->createTocTerm($sTitle, $oRevision, $iTermParentId, $iPosition);
 
             $aMessage['id'] = $oTerm->id;
 
@@ -606,6 +607,53 @@ class EditorController extends AM_Controller_Action
             $aMessage['value']  = $oTerm->$sKey;
         } catch (Exception $oException) {
             $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t get term data'), $oException->getMessage());
+        }
+
+        return $this->getHelper('Json')->sendJson($aMessage);
+    }
+
+    public function tocMoveAction()
+    {
+        try {
+            $iPageId          = intval($this->_getParam('page'));
+            $iTocTermId       = intval($this->_getParam('id'));
+            $iTocTermParentId = intval($this->_getParam('parent_id'));
+            $iPosition        = intval($this->_getParam('position'));
+
+            if (0 === $iPosition) {
+                $iPosition++;
+            }
+
+            if (!AM_Model_Db_Table_Abstract::factory('term')->checkAccess($iTocTermId, $this->_aUserInfo)) {
+                throw new AM_Controller_Exception_BadRequest('Error. Invalid params were given');
+            }
+
+            $oTerm = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $iTocTermId);
+            /* @var $oTerm AM_Model_Db_Term */
+            if (is_null($oTerm)) {
+                throw new AM_Controller_Exception_Forbidden('Access denied');
+            }
+            if (0 !== $iTocTermParentId) {
+                $oTermParent = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $iTocTermParentId);
+                /* @var $oTerm AM_Model_Db_Term */
+                if (is_null($oTermParent)) {
+                    throw new AM_Controller_Exception_Forbidden('Access denied');
+                }
+            }
+
+            $oPage = AM_Model_Db_Table_Abstract::factory('page')->findOneBy('id', $iPageId);
+            /* @var $oPage AM_Model_Db_Page */
+            if (is_null($oPage)) {
+                throw new AM_Controller_Exception_Forbidden('Access denied');
+            }
+
+            $oTerm->moveToTerm($iTocTermParentId, $iPosition);
+
+            $oPage->getRevision()->exportRevision();
+
+            $aMessage['status'] = 1;
+        } catch (Exception $oException) {
+            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t move term'), $oException->getMessage());
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
