@@ -298,7 +298,7 @@ class AM_Model_Db_Term_Data_Resource extends AM_Model_Db_Term_Data_Abstract
      */
     public function getImageType()
     {
-        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+        return AM_Handler_Thumbnail::IMAGE_TYPE_PNG;
     }
 
     /**

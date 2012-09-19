@@ -368,8 +368,9 @@ tocEditor.currentTree = {
                     "children" : jsonData
                 }]
             },
-            "plugins" : [ "themes", "json_data", "dnd", "ui", "types", /*"contextmenu",*/ "crrm"/*, 'themeroller'*/],
+            "plugins" : [ "themes", "json_data", "dnd", "ui", "types", /*"contextmenu",*/ "crrm"],
             "types" : {
+                "max_depth": 4,
                 "valid_children" : [ "root" ],
                 "types" : {
                     "root" : {
@@ -383,27 +384,27 @@ tocEditor.currentTree = {
                         "delete_node" : false,
                         "remove" : false,
                         "rename" : false
-                        //"select_node" : function () {return false;}
                     },
                     "default" : {
                         "valid_children" : [ "default" ],
                         "icon" : {
                            "image" : "/images/icons/term_folder.png"
-                        },
-                        "start_drag" : false,
-                        "move_node" : false
+                        }
                     }
                 }
             }
         })
 
         .bind("select_node.jstree", function (e, data) {
-            if (data.inst._get_type() == 'root' ) {
+            var current_object = data.inst;
+            var obj_type = current_object._get_type();
+            var obj_index = current_object.get_index();
+            if (obj_type == 'root' ) {
                 $('#toc-current-edit').addClass('disabled');
                 $('#toc-current-delete').addClass('disabled');
                 $('#toc-current-create').removeClass('disabled');
                 $('#toc-current-edit-item').hide();
-            } else if (data.inst._get_type() == 'default') {
+            } else if (obj_type == 'default') {
                 $('#toc-current-create').removeClass('disabled');
                 $('#toc-current-edit').removeClass('disabled');
                 $('#toc-current-delete').removeClass('disabled');
@@ -421,6 +422,10 @@ tocEditor.currentTree = {
 
         .bind("rename.jstree", function (e, obj) {
             $this.onRenameItem(e, obj);
+        })
+
+        .bind("move_node.jstree", function (e, obj) {
+            $this.onMoveItem(e, obj);
         });
     },
 
@@ -500,12 +505,39 @@ tocEditor.currentTree = {
         $('#toc-current-edit-item').show();
     },
 
+    onMoveItem: function(e, obj) {
+        obj.rslt.o.each(function (i) {
+            $.ajax({
+                async : false,
+                type: 'POST',
+                url: "/editor/toc-move/",
+                data: {
+                    page: $('#toc-dialog').dialog('option', 'page'),
+                    id: $(this).attr("id").replace("node_",""),
+                    parent_id: obj.rslt.cr === -1 ? 1 : obj.rslt.np.attr("id").replace("node_",""),
+                    position: obj.rslt.cp + i
+                },
+                success: function(data) {
+                    if(!data.status) {
+                        $.jstree.rollback(obj.rlbk);
+                    } else {
+                        $(obj.rslt.oc).attr("id", "node_" + data.id);
+                        if(obj.rslt.cy && $(obj.rslt.oc).children("UL").length) {
+                            obj.inst.refresh(obj.inst._get_parent(obj.rslt.oc));
+                        }
+                    }
+                }
+            });
+        });
+    },
+
     onCreateItem: function(e, obj) {
         $.post("/editor/toc-add/",
             {
                 page: $('#toc-dialog').dialog('option', 'page'),
+                position : obj.rslt.position + 1,
                 parent_id : obj.rslt.parent.attr('id') ? obj.rslt.parent.attr('id') : null,
-                title : obj.rslt.name,
+                title : obj.rslt.name
             },
             function (data) {
                 try {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * AM_Model_Db_Table_Term class definition.
@@ -56,18 +57,16 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
         $iClientId = intval($aUserInfo['client']);
 
         $oQuery = $this->getAdapter()->select()
-                              ->from('term', array('term_id' => 'term.id'))
-                              ->join('vocabulary', 'vocabulary.id = term.vocabulary', null)
-                              ->join('application', 'application.id = vocabulary.application', null)
-                              ->join('user', 'user.client = application.client', null)
-
-                              ->where('term.deleted = ?', 'no')
-                              ->where('application.deleted = ?', 'no')
-                              ->where('user.deleted = ?', 'no')
-
-                              ->where('term.id = ?', $iTermId)
-                              ->where('user.client = application.client')
-                              ->where('application.client = ?', $iClientId);
+                ->from('term', array('term_id' => 'term.id'))
+                ->join('vocabulary', 'vocabulary.id = term.vocabulary', null)
+                ->join('application', 'application.id = vocabulary.application', null)
+                ->join('user', 'user.client = application.client', null)
+                ->where('term.deleted = ?', 'no')
+                ->where('application.deleted = ?', 'no')
+                ->where('user.deleted = ?', 'no')
+                ->where('term.id = ?', $iTermId)
+                ->where('user.client = application.client')
+                ->where('application.client = ?', $iClientId);
 
         $oTerm   = $this->getAdapter()->fetchOne($oQuery);
         $bResult = $oTerm ? true : false;
@@ -83,47 +82,17 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
      */
     public function getTocAsList(AM_Model_Db_Revision $oRevision)
     {
-        $oVocabulary = $oRevision->getVocabularyToc();
-        $oQuery = $this->getAdapter()
-                ->select()
-                ->from(array('t1' => 'term'), null)
-                ->joinLeft(array('t2' => 'term'), 't2.parent_term = t1.id AND t2.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t2.revision = ? OR t2.revision IS NULL)', $oRevision->id), null)
-                ->joinLeft(array('t3' => 'term'), 't3.parent_term = t2.id AND t3.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t3.revision = ? OR t3.revision IS NULL)', $oRevision->id), null)
-                ->joinLeft(array('t4' => 'term'), 't4.parent_term = t3.id AND t4.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t4.revision = ? OR t4.revision IS NULL)', $oRevision->id), null)
-                ->joinLeft(array('t5' => 'term'), 't5.parent_term = t4.id AND t5.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t5.revision = ? OR t5.revision IS NULL)', $oRevision->id), null)
-                ->where('t1.vocabulary = ?', $oVocabulary->id)
-                ->where('t1.revision = ? OR t1.revision IS NULL', $oRevision->id)
-                ->where('t1.parent_term is null')
-                ->where('t1.deleted = ?', 'no')
-                ->order(array('t1.id', 't2.id', 't3.id', 't4.id', 't5.id',))
-                ->columns(array(
-                    'id1' => 't1.id',
-                    'id2' => 't2.id',
-                    'id3' => 't3.id',
-                    'id4' => 't4.id',
-                    'id5' => 't5.id',
-                    'title1' => 't1.title',
-                    'title2' => 't2.title',
-                    'title3' => 't3.title',
-                    'title4' => 't4.title',
-                    'title5' => 't5.title'
-                ));
-
-        $aResult = $this->getAdapter()->fetchAll($oQuery);
+        $aResult = $this->_getTree($oRevision);
 
         $aToc = array();
         $sGlue = ' / ';
-        foreach ($aResult as $row) {
-            if ($row['id5']) {
-                $aToc[$row['id5']] = implode($sGlue, array($row['title1'], $row['title2'], $row['title3'], $row['title4'], $row['title5']));
-            } else if ($row['id4']) {
-                $aToc[$row['id4']] = implode($sGlue, array($row['title1'], $row['title2'], $row['title3'], $row['title4']));
-            } else if ($row['id3']) {
-                $aToc[$row['id3']] = implode($sGlue, array($row['title1'], $row['title2'], $row['title3']));
-            } else if ($row['id2']) {
-                $aToc[$row['id2']] = implode($sGlue, array($row['title1'], $row['title2']));
-            } else if ($row['id1']) {
-                $aToc[$row['id1']] = implode($sGlue, array($row['title1']));
+        foreach ($aResult as $aRow) {
+            if ($aRow['id3']) {
+                $aToc[$aRow['id3']] = implode($sGlue, array($aRow['title1'], $aRow['title2'], $aRow['title3']));
+            } else if ($aRow['id2']) {
+                $aToc[$aRow['id2']] = implode($sGlue, array($aRow['title1'], $aRow['title2']));
+            } else if ($aRow['id1']) {
+                $aToc[$aRow['id1']] = implode($sGlue, array($aRow['title1']));
             }
         }
 
@@ -138,67 +107,101 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
      */
     public function getTocAsTree(AM_Model_Db_Revision $oRevision)
     {
-        $oVocabulary = $oRevision->getVocabularyToc();
+        $aResult = $this->_getTree($oRevision);
 
-        $oQuery = $this->select()
-            ->from('term')
+        $aTree = array();
 
-            ->where('term.vocabulary = ?', $oVocabulary->id)
-            ->where('term.deleted = ?', 'no')
-            ->where('term.revision IS NULL OR term.revision = ?', $oRevision->id)
+        foreach ($aResult as $aValue) {
+            if ($aValue['id1']) {
+                //Using type conversion to string to save correct ordering
+                if (!array_key_exists((string) $aValue['id1'], $aTree)) {
+                    $aTree[(string) $aValue['id1']] = array(
+                        'parent_term' => null,
+                        'attr'        => array('id' => $aValue['id1']),
+                        'data'        => $aValue['title1'],
+                        'children'    => array()
+                    );
+                }
 
-            ->order(array('term.id ASC', 'term.parent_term ASC'));
+                $aDataRoot = &$aTree[(string) $aValue['id1']];
 
-        $oTerms     = $this->fetchAll($oQuery);
-        $aTree      = array();
-        $aTermsById = array();
+                if ($aValue['id2']) {
+                    if (!array_key_exists((string) $aValue['id2'], $aDataRoot['children'])) {
+                        $aDataRoot['children'][(string) $aValue['id2']] = array(
+                            'parent_term' => $aValue['id1'],
+                            'attr'        => array('id' => $aValue['id2']),
+                            'data'        => $aValue['title2'],
+                            'children'    => array()
+                        );
+                    }
 
-        //Prepearing array with ids of terms, need to check correction of the parent term
-        foreach ($oTerms as $oTerm) {
-            $aTermsById[$oTerm->id] = $oTerm;
-        }
+                    $aChild1 = &$aDataRoot['children'][(string) $aValue['id2']];
 
-        foreach ($oTerms as $oTerm) {
-            $aAttributes = array('id' => $oTerm->id);
-
-            $aData = array(
-                'parent_term' => $oTerm->parent_term,
-                'attr'        => $aAttributes,
-                'data'        => $oTerm->title,
-                'children'    => array()
-            );
-
-            if (is_null($oTerm->parent_term)) {
-                $aTree[$oTerm->id] = $aData;
-            } else {
-                //Checking if parent term id exists
-                if (array_key_exists($oTerm->parent_term, $aTermsById)) {
-                    $oParentTerm = $aTermsById[$oTerm->parent_term];
-                    if (!is_null($oParentTerm->parent_term) && array_key_exists($oParentTerm->parent_term, $aTermsById)){
-                        $aTree[$oParentTerm->parent_term]['children'][$oTerm->parent_term]['children'][$oTerm->id] = $aData;
-                    } else {
-                        $aTree[$oTerm->parent_term]['children'][$oTerm->id] = $aData;
+                    if ($aValue['id3']) {
+                        if (!array_key_exists((string) $aValue['id3'], $aChild1['children'])) {
+                            $aChild1['children'][(string) $aValue['id3']] = array(
+                                'parent_term' => $aValue['id2'],
+                                'attr'        => array('id' => $aValue['id3']),
+                                'data'        => $aValue['title3'],
+                                'children'    => array()
+                            );
+                        }
                     }
                 }
             }
         }
 
-        $aResult = array();
-
         //Truncating keys of the tree array (jsTree requirements)
+        $aResult = array();
         $clCallback = function(array $aElements, array $aResult) use(&$clCallback) {
-            foreach ($aElements as &$aElement) {
-                $aElement['children'] = $clCallback($aElement['children'], array());
+                    foreach ($aElements as &$aElement) {
+                        $aElement['children'] = $clCallback($aElement['children'], array());
 
-                $aResult[] = $aElement;
-            }
+                        $aResult[] = $aElement;
+                    }
 
-            return $aResult;
-        };
+                    return $aResult;
+                };
 
         $aTree = $clCallback($aTree, $aResult);
 
         return $aTree;
+    }
+
+    /**
+     * Returns tree structure as array - each root element contains 2 childs
+     * [
+     *  [id1, id2, id3, title1, title2, title3]
+     * ]
+     *
+     * @param AM_Model_Db_Revision $oRevision
+     * @return array
+     */
+    protected function _getTree(AM_Model_Db_Revision $oRevision)
+    {
+        $oVocabulary = $oRevision->getVocabularyToc();
+        $oQuery      = $this->getAdapter()
+                ->select()
+                ->from(array('t1' => 'term'), null)
+                ->joinLeft(array('t2' => 'term'), 't2.parent_term = t1.id AND t2.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t2.revision = ? OR t2.revision IS NULL)', $oRevision->id), null)
+                ->joinLeft(array('t3' => 'term'), 't3.parent_term = t2.id AND t3.deleted = "no"' . $this->getAdapter()->quoteInto(' AND (t3.revision = ? OR t3.revision IS NULL)', $oRevision->id), null)
+                ->where('t1.vocabulary = ?', $oVocabulary->id)
+                ->where('t1.revision = ? OR t1.revision IS NULL', $oRevision->id)
+                ->where('t1.parent_term is null')
+                ->where('t1.deleted = ?', 'no')
+                ->order(array('t1.position', 't2.position', 't3.position', 't1.id', 't2.id', 't3.id'))
+                ->columns(array(
+            'id1'    => 't1.id',
+            'id2'    => 't2.id',
+            'id3'    => 't3.id',
+            'title1' => 't1.title',
+            'title2' => 't2.title',
+            'title3' => 't3.title',
+                ));
+
+        $aResult = $this->getAdapter()->fetchAll($oQuery);
+
+        return $aResult;
     }
 
     /**
@@ -211,11 +214,11 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
         $oVocabulary = $oPage->getRevision()->getVocabularyToc();
 
         $oQuery = $this->select()
-            ->setIntegrityCheck(false)
-            ->from('term')
-            ->join('term_page', 'term_page.term = term.id', null)
-            ->where('term.vocabulary = ?', $oVocabulary->id)
-            ->where('term_page.page = ?', $oPage->id);
+                ->setIntegrityCheck(false)
+                ->from('term')
+                ->join('term_page', 'term_page.term = term.id', null)
+                ->where('term.vocabulary = ?', $oVocabulary->id)
+                ->where('term_page.page = ?', $oPage->id);
 
         $oTerm = $this->fetchRow($oQuery);
 
@@ -233,11 +236,11 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
         $oVocabulary = $oPage->getIssue()->getApplication()->getVocabularyToc();
 
         $sQuery = 'DELETE term_page FROM term_page'
-                 . ' JOIN term on term.id = term_page.term'
-                 . ' WHERE '
-                 . $this->getAdapter()->quoteInto('term.vocabulary = ?', $oVocabulary->id)
-                 . ' AND '
-                 . $this->getAdapter()->quoteInto('term_page.page = ?', $oPage->id);
+                . ' JOIN term on term.id = term_page.term'
+                . ' WHERE '
+                . $this->getAdapter()->quoteInto('term.vocabulary = ?', $oVocabulary->id)
+                . ' AND '
+                . $this->getAdapter()->quoteInto('term_page.page = ?', $oPage->id);
 
         $iResult = $this->getAdapter()->query($sQuery);
 
@@ -254,11 +257,11 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
         $oVocabulary = $oPage->getRevision()->getVocabularyTag();
 
         $oQuery = $this->select()
-            ->setIntegrityCheck(false)
-            ->from('term')
-            ->join('term_page', 'term_page.term = term.id', null)
-            ->where('term.vocabulary = ?', $oVocabulary->id)
-            ->where('term_page.page = ?', $oPage->id);
+                ->setIntegrityCheck(false)
+                ->from('term')
+                ->join('term_page', 'term_page.term = term.id', null)
+                ->where('term.vocabulary = ?', $oVocabulary->id)
+                ->where('term_page.page = ?', $oPage->id);
 
         $oTerms = $this->fetchAll($oQuery);
 
@@ -289,4 +292,77 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
 
         return $oTerms;
     }
+
+    /**
+     * Move the term to the given parent term, set position and change position of the terms on the same nesting level
+     * @param AM_Model_Db_Term $oTerm
+     * @param int $iTocTermParentId
+     * @param type $iPosition
+     */
+    public function moveTerm(AM_Model_Db_Term $oTerm, $iTocTermParentId, $iPosition)
+    {
+        $iTocTermParentId = (0 === $iTocTermParentId) ? null : $iTocTermParentId;
+
+        if ($oTerm->parent_term == $iTocTermParentId) {
+            //We are moving term without the changing of parent term
+            $aWhere = array('revision = ?' => $oTerm->revision);
+            if ($oTerm->position < $iPosition) {
+                //We are moving term down
+                //Decrease the position of the term below the moving term
+                $aWhere['position <= ?'] = $iPosition;
+                $aWhere['position > ?']  = $oTerm->position;
+                $sExpresion              = 'position - 1';
+            } elseif ($oTerm->position > $iPosition) {
+                //We are moving term up
+                //Increase the position of the term below the new position of the moving term
+                $aWhere['position >= ?'] = $iPosition;
+                $aWhere['position < ?']  = $oTerm->position;
+                $sExpresion              = 'position + 1';
+            } else {
+                return;
+            }
+
+            if (is_null($oTerm->parent_term)) {
+                $aWhere['parent_term IS NULL'] = '';
+            } else {
+                $aWhere['parent_term = ?'] = $oTerm->parent_term;
+            }
+            $this->update(array('position' => new Zend_Db_Expr($sExpresion)), $aWhere);
+        } else {
+            //Moving term to the other parent term
+
+            //Decreasing the position of the term below the moving term
+            $aWhere = array('revision = ?' => $oTerm->revision);
+
+            $aWhere['position > ?']  = $oTerm->position;
+            $sExpresion              = 'position - 1';
+
+            if (is_null($oTerm->parent_term)) {
+                $aWhere['parent_term IS NULL'] = '';
+            } else {
+                $aWhere['parent_term = ?'] = $oTerm->parent_term;
+            }
+
+            $this->update(array('position' => new Zend_Db_Expr($sExpresion)), $aWhere);
+
+            //Increase the position below the moved term in new parent term branch
+            $aWhere = array('revision = ?' => $oTerm->revision);
+
+            $aWhere['position >= ?'] = $iPosition;
+            $sExpresion              = 'position + 1';
+
+            if (is_null($iTocTermParentId)) {
+                $aWhere['parent_term IS NULL'] = '';
+            } else {
+                $aWhere['parent_term = ?'] = $iTocTermParentId;
+            }
+
+            $this->update(array('position' => new Zend_Db_Expr($sExpresion)), $aWhere);
+        }
+
+        $oTerm->parent_term = $iTocTermParentId;
+        $oTerm->position    = $iPosition;
+        $oTerm->save();
+    }
+
 }

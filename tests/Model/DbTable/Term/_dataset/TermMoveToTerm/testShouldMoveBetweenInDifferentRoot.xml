@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <term id="1" position="2" parent_term="2" />
+    <term id="2" position="1" parent_term="" />
+    <term id="3" position="2" parent_term="" />
+    <term id="4" position="1" parent_term="2" />
+    <term id="5" position="3" parent_term="2" />
+</dataset>
