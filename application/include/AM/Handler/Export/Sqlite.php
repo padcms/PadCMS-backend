@@ -55,12 +55,11 @@ class AM_Handler_Export_Sqlite extends AM_Handler_Export_Abstract
      */
     protected function _doExport(AM_Model_Db_Revision $oRevision)
     {
+        $this->_reset();
         //Export horisontal pages
         $this->_exportPagesHorisontal($oRevision);
-
         //Export Pages
         $this->_exportPages($oRevision);
-
         //Export Menu
         $this->_exportMenu($oRevision);
 
@@ -161,6 +160,18 @@ class AM_Handler_Export_Sqlite extends AM_Handler_Export_Abstract
         }
 
         return $this->_sDbFile;
+    }
+
+    /**
+     * Reset the coonection adapter
+     * Need for massexporting
+     * @return AM_Handler_Export_Sqlite
+     */
+    protected function _reset()
+    {
+        $this->_sDbFile  = null;
+        $this->_oAdapter = null;
+        return $this;
     }
 
     /**
