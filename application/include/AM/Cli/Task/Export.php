@@ -45,25 +45,56 @@ class AM_Cli_Task_Export extends AM_Cli_Task_Abstract
     {
         $this->addOption('revision', 'r', '=i', 'Revision ID to export');
         $this->addOption('from', 'f', '=i', 'Export revisions with ID > FROM');
+        $this->addOption('issue', 'is', '=i', 'Export revisions with selected issue ID');
+        $this->addOption('application', 'app', '=i', 'Export revisions with selected application ID');
     }
 
     public function execute()
     {
-        $iIdRevision = intval($this->_getOption('revision'));
-        $iIdFrom     = intval($this->_getOption('from')); //If this option is set, we are building packaged for issues with id > $iIdFrom
-        $aRevisions  = array();
+        $iIdRevision    = intval($this->_getOption('revision'));
+        $iIdFrom        = intval($this->_getOption('from')); //If this option is set, we are building packaged for issues with id > $iIdFrom
+        $iIssueId       = intval($this->_getOption('issue'));
+        $iApplicationId = intval($this->_getOption('application'));
 
-        if (!empty  ($iIdRevision)) {
-            $aRevisions[] = AM_Model_Db_Table_Abstract::factory("revision")->findOneBy('id', intval($iIdRevision));
-        } elseif(!empty($iIdFrom)) {
-            $aRevisions = AM_Model_Db_Table_Abstract::factory("revision")->fetchAll(array('deleted = ?'=>'no', 'id > ?' => intval($iIdFrom)));
-        } else {
-            $aRevisions = AM_Model_Db_Table_Abstract::factory("revision")->fetchAll(array('deleted = ?'=>'no'));
+        $oQuery = AM_Model_Db_Table_Abstract::factory('term')
+                ->select()
+                ->setIntegrityCheck(false)
+                ->from('revision')
+
+                ->joinInner('issue', 'issue.id = revision.issue')
+                ->joinInner('application', 'application.id = issue.application')
+                ->joinInner('client', 'client.id = application.client')
+
+                ->where('revision.deleted = ?', 'no')
+                ->where('issue.deleted = ?', 'no')
+                ->where('application.deleted = ?', 'no')
+                ->where('client.deleted = ?', 'no')
+
+                ->columns(array('id' => 'revision.id'))
+
+                ->order('revision.id ASC');
+
+        if ($iIdFrom > 0) {
+            $oQuery->where('revision.id > ?', $iIdFrom);
         }
+
+        if ($iIdRevision > 0) {
+            $oQuery->where('revision.id = ?', $iIdRevision);
+        }
+
+        if ($iIssueId > 0) {
+            $oQuery->where('issue.id = ?', $iIssueId);
+        }
+
+        if ($iApplicationId > 0) {
+            $oQuery->where('application.id = ?', $iApplicationId);
+        }
+
+        $oRevisions = AM_Model_Db_Table_Abstract::factory('revision')->fetchAll($oQuery);
 
         $oExportHandler   = AM_Handler_Locator::getInstance()->getHandler('export');
         /* @var $oExportHandler AM_Handler_Export */
-        foreach ($aRevisions as $oRevision) {
+        foreach ($oRevisions as $oRevision) {
             $oExportHandler->exportRevision($oRevision);
         }
     }
