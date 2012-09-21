@@ -1,7 +1,5 @@
 <?php
 /**
- * @file
- * AM_Task_Manager_Interface class definition.
  *
  * LICENSE
  *
@@ -36,16 +34,15 @@
  */
 
 /**
- * @defgroup AM_Task
+ * @ingroup AM_Application
  */
-
-/**
- * Background tasks manager
- * @ingroup AM_Task
- */
-interface AM_Task_Manager_Interface
+class AM_Application_Daemon_Bootstrap extends AM_Application_Bootstrap
 {
-    public function run();
-    public function demonize();
-    public function stop();
+    /**
+     * Run the cli application
+     *
+     * @return void
+     */
+    public function run()
+    { }
 }
