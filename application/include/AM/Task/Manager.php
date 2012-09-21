@@ -41,6 +41,9 @@
  */
 class AM_Task_Manager implements AM_Task_Manager_Interface
 {
+    const DAEMON_SLEEP_TIME = 15; //Time in seconds between task checking operations
+    const DAEMON_MEMORY_LIMIT = 536870912; //512MB
+
     /** @var Zend_Log **/
     protected $_oLogger = null; /**< @type Zend_Log */
     /** @var Zend_Config **/
@@ -139,7 +142,7 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
         $sPidFilePath = $this->_getPidFilePath();
 
         if (AM_Tools_Standard::getInstance()->is_file($sPidFilePath)) {
-            $iPid = file_get_contents($sPidFilePath);
+            $iPid = intval(file_get_contents($sPidFilePath));
             //checking for the presence of the process
             if (posix_kill($iPid, 0)) {
                 //the daemon already run
@@ -174,7 +177,7 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
     /**
      * Demonize the process
      */
-    protected function _demonize()
+    public function demonize()
     {
         if ($this->_isDemonized()) {
             $this->getLogger()->debug('Process already demonized');
@@ -185,7 +188,7 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
 
         if (-1 == $this->_iProcessPid) {
             throw new AM_Task_Manager_Exception('Can\'t demonize');
-        } else if ($this->_iProcessPid) {
+        } else if ($this->_iProcessPid > 0) {
             //Killing the root process
             exit;
         }
@@ -194,10 +197,15 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
         //Make the current process a session leader
         posix_setsid();
 
+        $this->_bootstrap();
+
         $this->getLogger()->debug('Process demonized');
     }
 
-    public function _bootstrap()
+    /**
+     * @return AM_Task_Manager
+     */
+    protected function _bootstrap()
     {
         $oApplication = new Zend_Application(
                         'daemon_' . APPLICATION_ENV,
@@ -206,6 +214,21 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
 
         $oApplication->bootstrap()
                 ->run();
+
+        return $this;
+    }
+
+    /**
+     * Checks the memory usage
+     * @return boolean
+     */
+    protected function _checkMemoryLimit()
+    {
+        if (memory_get_usage() > self::DAEMON_MEMORY_LIMIT) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -215,8 +238,7 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
     public function run()
     {
         try {
-            $this->_demonize();
-            $this->_bootstrap();
+            $this->demonize();
         } catch (Exception $oException) {
             $this->getLogger()->crit($oException->getMessage());
         }
@@ -225,8 +247,11 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
         pcntl_signal(SIGTERM, array($this, 'signalHandler'));
         pcntl_signal(SIGQUIT, array($this, 'signalHandler'));
 
-        while (!$this->_bStopDaemon) {
-            sleep(5);
+        while (!$this->_bStopDaemon && $this->_checkMemoryLimit()) {
+            sleep(self::DAEMON_SLEEP_TIME);
+
+            $this->getLogger()->debug(sprintf("Memory: %s", memory_get_usage(true)));
+            $this->getLogger()->debug(sprintf("Peak Memory: %s", memory_get_peak_usage(true)));
 
             $oTask = AM_Model_Db_Table_Abstract::factory('task')
                     ->findOneBy(array('status' => AM_Task_Worker_Abstract::STATUS_NEW));
@@ -261,10 +286,12 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
             }
         }
 
+        $this->stop();
+    }
+
+    public function stop()
+    {
         $this->_removePidFile();
         $this->getLogger()->debug('Daemon stopped!');
     }
-
-    public function error()
-    {}
 }

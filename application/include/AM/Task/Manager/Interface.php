@@ -46,4 +46,6 @@
 interface AM_Task_Manager_Interface
 {
     public function run();
+    public function demonize();
+    public function stop();
 }
