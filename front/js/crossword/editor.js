@@ -24,15 +24,7 @@
     **/
     var sDirection = '';
 
-    var oResultData = {
-        words: {},
-        gridWidth: 0,
-        gridHeight: 0,
-        page_id: 0,
-        field_id: 0
-    };
-
-    var iWordsCounter = 0;
+    var iWordId = 0;
 
     var CrosswordGame = {
         init: function () {
@@ -40,8 +32,47 @@
         }
     };
 
+    String.prototype.format = function() {
+        var formatted = this;
+        for (arg in arguments) {
+            formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+        }
+        return formatted;
+    };
+
     var GridContainer = {
         init: function () {
+            $.ajax({
+                url: '/field-games-crossword/get-data',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: {
+                    page_id: window.pid,
+                    field_id: window.field_id
+                },
+                success: function(responseJSON) {
+                    if (!responseJSON.status) {
+                        if (responseJSON.message) {
+                            alert(responseJSON.message);
+                        } else {
+                            alert(translate('Error. Can\'t get data for game'));
+                        }
+                    } else {
+                        if (responseJSON.data) {
+                            iGridHeight = parseInt(responseJSON.data.grid_width);
+                            iGridWidth  = parseInt(responseJSON.data.grid_width);
+                            if (responseJSON.data.words) {
+                                words = responseJSON.data.words;
+                            }
+                        }
+                    }
+                },
+                error: function() {
+                    console.log('Error');
+                }
+            });
+
             GridContainer.fillGrid();
             GridContainer.showGridSize();
 
@@ -49,14 +80,49 @@
         },
 
         fillGrid: function() {
-            iGridHeight = parseInt($('#selectable').css('height'));
-            iGridWidth  = parseInt($('#selectable').css('width'));
-            var iPieces = parseInt((iGridHeight * iGridWidth) / 900);
+            $('#gridContainer').css({'height' : iGridHeight * 30, 'width' : iGridWidth * 30});
+            $('.ui-dialog').css({'height' : iGridHeight * 30 + 200, 'width' : iGridWidth * 30 + 150});
+            $('#dialog').css({'height' : iGridHeight * 30 + 200, 'width' : iGridWidth * 30 + 150});
 
-            $('#selectable li').detach();
+            var iPieces = parseInt(iGridHeight * iGridWidth);
+
+            var context = $('#gridContainer');
+
+            $('#selectable li', context).detach();
             for (var i = 0; i < iPieces; i++) {
-                $('#selectable').append('<li class="ui-state-default" id="o' + (i % GridContainer.getGridSize()[0] + 1) + 'x' + (Math.floor(i /  GridContainer.getGridSize()[1]) + 1) +  '"></li>');
+                $('#selectable', context).append('<li class="ui-state-default" id="o' + (i % GridContainer.getGridSize()[0] + 1) + 'x' + (Math.floor(i /  GridContainer.getGridSize()[1]) + 1) +  '"></li>');
             }
+
+            for (var wordIndex in words){
+                var word = words[wordIndex];
+                var iStartX = parseInt(word.startX);
+                var iStartY = parseInt(word.startY);
+
+                if (word.direction == 'horizontal') {
+                    var finishCoordinate = iStartX + parseInt(word.length);
+                    var coordinateCounter = iStartX;
+                    var classTpl = '#o{0}x' + iStartY;
+                } else if (word.direction == 'vertical') {
+                    var finishCoordinate = iStartY + parseInt(word.length);
+                    var coordinateCounter = iStartY;
+                    var classTpl = '#o' + iStartX + 'x{0}';
+                }
+
+                $('#' + word.direction + 'Questions')
+                        .append('<li id="' + word.id + '">[' + iStartX + ':' + iStartY + '] ' + word.question + '<a href="/field-games-crossword/delete-word/' + word.id + '"></a></li>');
+
+                for (var charCounter = 0; coordinateCounter < finishCoordinate; charCounter++, coordinateCounter++) {
+                    var className = classTpl.format(coordinateCounter);
+                    var char = $('li' + className, context);
+                    char.addClass('ge-confirmed-word');
+                    char.text(word.answer[charCounter]);
+                }
+                console.log(word);
+            }
+
+
+
+            GridContainer.bindDeleteWord();
         },
 
         showGridSize: function() {
@@ -72,20 +138,13 @@
         },
 
         getGridSize: function() {
-            return [iGridWidth / 30, iGridHeight / 30];
-        },
-
-        prepareData: function() {
-            oResultData.gridWidth  = GridContainer.getGridSize()[0];
-            oResultData.gridHeight = GridContainer.getGridSize()[1];
-            oResultData.page_id    = window.pid;
-            oResultData.field_id   = window.field_id;
+            return [iGridWidth, iGridHeight];
         },
 
         isValidForm: function () {
             var bIsValid = true;
 
-            if ($('#question').val().length < 10) {
+            if ($('#question').val().length < 5) {
                 $( '#question' ).css({
                     'border': '1px solid red'
                 });
@@ -97,11 +156,50 @@
             }
 
             return bIsValid;
+        },
+
+        bindDeleteWord: function() {
+            var context = this;
+            $('a', '#questionsList').bind('click', context, function(event) {
+                event.data.onDeleteWord(event.originalEvent);
+                return false;
+            });
+        },
+
+        onDeleteWord: function(event) {
+            var context = this;
+            var wordId = $(event.currentTarget).parent().attr('id');
+            if (!wordId) return;
+
+            $.ajax({
+                url: '/field-games-crossword/delete-word',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    page_id: window.pid,
+                    field_id: window.field_id,
+                    word_id: wordId
+                },
+                success: function(data) {
+                    try {
+                        if (data.status == 1) {
+                            $('li#' + wordId, '#questionsList').remove();
+                        } else {
+                            console.log(data);
+                        }
+                    } catch (e) {
+                        window.ui.log(e);
+                    }
+                }
+            });
         }
     };
 
     var ResizableContainer = {
         init: function () {
+            $( "#selectable" ).selectable(SelectableGrid);
+            $( "#dialog-form" ).dialog(FormDialog);
+
             $('#gridContainer').resizable({
                 grid: [30, 30],
                 minHeight: 330,
@@ -125,34 +223,17 @@
                     $('#selectable').css({
                         'background-color': 'white'
                     });
+
+                    Saver.saveSize();
                 }
             });
 
             // This button dsables resizable functionality and starts selectable for resized area.
-            $('#disableResising').button({
-                icons: {
-                    primary: "ui-icon-locked"
-                }
-            }).click(ResizableContainer.disableResizing);
-        },
-
-        disableResizing: function () {
-            $('#gridContainer').resizable('disable');
-            $('#gridContainer').removeClass('ui-state-disabled');
-            $(this).remove();
-
-            // Initialization of selectable grid
-            $( "#selectable" ).selectable(SelectableGrid);
-
-            $( "#dialog-form" ).dialog(FormDialog);
-
-            $('#saveAndExit').button({
-                icons: {
-                    primary: "ui-icon-disk"
-                }
-            }).click(Saver.save);
-
-            $('#saveAndExit').show();
+//            $('#disableResising').button({
+//                icons: {
+//                    primary: "ui-icon-locked"
+//                }
+//            }).click(ResizableContainer.disableResizing);
         }
     };
 
@@ -199,10 +280,10 @@
                     });
 
                     $('#wordBlock').css({
-                        'width': iDialogWidth + 'px'
+                        'width': iDialogWidth + 100 + 'px'
                     });
 
-                    $( "#dialog-form" ).dialog({width: iDialogWidth + 100});
+                    $( "#dialog-form" ).dialog({width: iDialogWidth + 200 + 'px'});
 
                     $( '.letter' ).change().keyup(function ()
                     {
@@ -240,25 +321,30 @@
                     });
 
                     var iWordStartPosition = 0;
+                    var iStartX = 0;
+                    var iStartY = 0;
                     var sQuestion = $('#question').val();
 
-                    if (sDirection == 'vertical') {
-                        iWordStartPosition = lstLetters.first().attr('id').replace('o', '').split('x')[0];
-                        $('#verticalQuestions').append('<li id="q' + iWordStartPosition +'">' + iWordStartPosition + '. ' + sQuestion + '</li>');
-                    } else {
-                        iWordStartPosition = lstLetters.first().attr('id').replace('o', '').split('x')[1];
-                        $('#horizontalQuestions').append('<li id="q' + iWordStartPosition +'">' + iWordStartPosition + '. ' + sQuestion + '</li>');
-                    }
+                    var firstSymbolCoords = lstLetters.first().attr('id').replace('o', '').split('x');
+                    var iStartX = firstSymbolCoords[0];
+                    var iStartY = firstSymbolCoords[1];
 
-                    oResultData.words[iWordsCounter] = {
-                        startFrom: iWordStartPosition,
+                    word = {
+                        page_id: window.pid,
+                        field_id: window.field_id,
+                        startX: iStartX,
+                        startY: iStartY,
                         question: sQuestion,
                         answer: sAnswer,
-                        lenght: lstLetters.length,
+                        length: lstLetters.length,
                         direction: sDirection
                     }
 
-                    iWordsCounter++;
+                    Saver.saveWord(word);
+
+                    $('#' + sDirection + 'Questions').append('<li id="' + iWordId +'">[' + iStartX + ':' + iStartY +  '] ' + sQuestion + '<a href="/field-games-crossword/delete-word/' + word.id + '"></a></li>');
+
+                    GridContainer.bindDeleteWord();
 
                     $( this ).dialog( "close" );
                 } else {
@@ -287,24 +373,50 @@
     };
 
     var Saver = {
-        save: function () {
-            GridContainer.prepareData();
+        saveSize: function() {
+            var oResultData = {
+                gridWidth: GridContainer.getGridSize()[0],
+                gridHeight: GridContainer.getGridSize()[1],
+                page_id: window.pid,
+                field_id: window.field_id
+            };
 
             $.ajax({
-                url: '/field-games-crossword/save',
+                url: '/field-games-crossword/save-size',
                 type: 'POST',
                 dataType: 'json',
                 data: oResultData,
+                async: false,
                 sucess: function (data)
                 {
-                    $('#dialog').dialog('destroy');
-                    console.log('Saving data');
+                    if(!data.status || data.status == 0) {
+                        console.log(data.message);
+                    }
+                }
+            });
+        },
+        saveWord: function (word) {
+            var oResultData = {
+                page_id: window.pid,
+                field_id: window.field_id,
+                word: word
+            };
+            $.ajax({
+                url: '/field-games-crossword/save-word',
+                type: 'POST',
+                dataType: 'json',
+                data: oResultData,
+                async: false,
+                success: function (data)
+                {
                     if(!data.status || data.status == 0) {
                         console.log(data.message);
                     } else {
-                        console.log('Saving data');
-                        $('#dialog').dialog('close');
+                        iWordId = data.word_id;
                     }
+                },
+                errror: function () {
+                    console.log('Error!');
                 }
             });
         }

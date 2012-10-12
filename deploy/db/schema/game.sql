@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `game`;
 
 CREATE TABLE IF NOT EXISTS `game` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `revision` int(12) NOT NULL,
+  `page` int(12) NOT NULL,
   `type` int(11) NOT NULL,
   `title` varchar(255) NOT NULL DEFAULT '',
   `created` datetime DEFAULT NULL,
