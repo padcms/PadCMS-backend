@@ -26,6 +26,13 @@
 
     var iWordId = 0;
 
+    //The minimum width of the grid - it is maximum X coordinate of the hosrizontal words
+    var iMinWidth  = 11;
+    //The minimum height of the grid - it is maximum Y coordinate of the vertical words
+    var iMinHeight = 11;
+
+    var iCellSize = 30;
+
     var CrosswordGame = {
         init: function () {
             GridContainer.init();
@@ -38,6 +45,54 @@
             formatted = formatted.replace("{" + arg + "}", arguments[arg]);
         }
         return formatted;
+    };
+
+    var WordsContainer = {
+        words: {},
+        addWord: function (word) {
+            this.words[word.id] = word;
+        },
+        deleteWord: function (id) {
+            delete this.words[id];
+        },
+        getWords: function () {
+            return this.words;
+        },
+        getWord: function (id) {
+            return this.words[id];
+        },
+        getMaxWidth: function() {
+            var maxWidth = 0;
+
+            $.each(this.words, function (wordId, word) {
+                var length = 0;
+                if ('vertical' == word.direction) {
+                    length = parseInt(word.startX);
+                } else if ('horizontal' == word.direction) {
+                    length = parseInt(word.startX) + parseInt(word.length) - 1;
+                }
+
+                maxWidth = (length > maxWidth)? length : maxWidth;
+            });
+
+            return maxWidth;
+        },
+        getMaxHeight: function() {
+            var maxHeight = 0;
+
+            $.each(this.words, function (wordId, word) {
+                var length = 0;
+                if ('vertical' == word.direction) {
+                    length = parseInt(word.startY) + parseInt(word.length) - 1;
+                } else if ('horizontal' == word.direction) {
+                    length = parseInt(word.startY);
+                }
+
+                maxHeight = (length > maxHeight)? length : maxHeight;
+            });
+
+            return maxHeight;
+        }
     };
 
     var GridContainer = {
@@ -60,10 +115,12 @@
                         }
                     } else {
                         if (responseJSON.data) {
-                            iGridHeight = parseInt(responseJSON.data.grid_width);
+                            iGridHeight = parseInt(responseJSON.data.grid_height);
                             iGridWidth  = parseInt(responseJSON.data.grid_width);
                             if (responseJSON.data.words) {
-                                words = responseJSON.data.words;
+                                $.each(responseJSON.data.words, function(key, word) {
+                                    WordsContainer.addWord(word);
+                                });
                             }
                         }
                     }
@@ -75,26 +132,26 @@
 
             GridContainer.fillGrid();
             GridContainer.showGridSize();
+            GridContainer.fillAnswers();
 
             ResizableContainer.init();
         },
 
         fillGrid: function() {
-            $('#gridContainer').css({'height' : iGridHeight * 30, 'width' : iGridWidth * 30});
-            $('.ui-dialog').css({'height' : iGridHeight * 30 + 200, 'width' : iGridWidth * 30 + 150});
-            $('#dialog').css({'height' : iGridHeight * 30 + 200, 'width' : iGridWidth * 30 + 150});
-
-            var iPieces = parseInt(iGridHeight * iGridWidth);
+            $('#gridContainer').css({'height' : iGridHeight * iCellSize, 'width' : iGridWidth * iCellSize});
+            $('.ui-dialog').css({'height' : iGridHeight * iCellSize + 200, 'width' : iGridWidth * iCellSize + 150});
+            $('#dialog').css({'height' : iGridHeight * iCellSize + 200, 'width' : iGridWidth * iCellSize + 150});
 
             var context = $('#gridContainer');
 
             $('#selectable li', context).detach();
-            for (var i = 0; i < iPieces; i++) {
-                $('#selectable', context).append('<li class="ui-state-default" id="o' + (i % GridContainer.getGridSize()[0] + 1) + 'x' + (Math.floor(i /  GridContainer.getGridSize()[1]) + 1) +  '"></li>');
+            for (var y = 1; y <= iGridHeight; y++) {
+                for (var x = 1; x <= iGridWidth; x++) {
+                    $('#selectable', context).append('<li class="ui-state-default" id="o' + x + 'x' + y +  '"></li>');
+                }
             }
 
-            for (var wordIndex in words){
-                var word = words[wordIndex];
+            $.each(WordsContainer.getWords(), function (wordId, word){
                 var iStartX = parseInt(word.startX);
                 var iStartY = parseInt(word.startY);
 
@@ -108,20 +165,25 @@
                     var classTpl = '#o' + iStartX + 'x{0}';
                 }
 
-                $('#' + word.direction + 'Questions')
-                        .append('<li id="' + word.id + '">[' + iStartX + ':' + iStartY + '] ' + word.question + '<a href="/field-games-crossword/delete-word/' + word.id + '"></a></li>');
-
                 for (var charCounter = 0; coordinateCounter < finishCoordinate; charCounter++, coordinateCounter++) {
                     var className = classTpl.format(coordinateCounter);
                     var char = $('li' + className, context);
                     char.addClass('ge-confirmed-word');
+                    char.addClass('word-id-' + word.id);
                     char.text(word.answer[charCounter]);
                 }
-                console.log(word);
-            }
+            });
+        },
 
+        fillAnswers: function() {
+            $.each(WordsContainer.getWords(), function (wordId, word){
+                var iStartX = parseInt(word.startX);
+                var iStartY = parseInt(word.startY);
 
+                $('#' + word.direction + 'Questions')
+                        .append('<li id="' + word.id + '">[' + iStartX + ':' + iStartY + '] ' + word.question + '<a href="/field-games-crossword/delete-word/' + word.id + '"></a></li>');
 
+            });
             GridContainer.bindDeleteWord();
         },
 
@@ -142,20 +204,37 @@
         },
 
         isValidForm: function () {
-            var bIsValid = true;
+            var question = $('#question').val();
 
-            if ($('#question').val().length < 5) {
+            var makeError = function () {
                 $( '#question' ).css({
                     'border': '1px solid red'
                 });
-                bIsValid = false;
-            } else {
-                $('#question').css({
-                    'border': '1px solid #AAAAAA'
-                });
+            };
+
+            if (question.length < 5 || question.match(/^[a-zA-Z \!\.\,]+$/) == null) {
+                makeError();
+                return false;
+            }
+            var hasErrors = false;
+            var lstLetters = $('input.letter', '#wordBlock');
+            lstLetters.each(function ()
+            {
+                if ($(this).val() == '') {
+                    hasErrors = true;
+                }
+            });
+
+            if (hasErrors) {
+                makeError();
+                return false;
             }
 
-            return bIsValid;
+            $('#question').css({
+                'border': '1px solid #AAAAAA'
+            });
+
+            return true;
         },
 
         bindDeleteWord: function() {
@@ -183,7 +262,20 @@
                 success: function(data) {
                     try {
                         if (data.status == 1) {
+                            $('li.word-id-' + wordId, '#selectable').each(function(){
+                                $(this).removeClass('word-id-' + wordId);
+                                var liClass = $(this).attr('class');
+                                var result = liClass.search(/word\-id\-\d/i);
+                                if (-1 == result) {
+                                    $(this).removeClass('ge-confirmed-word');
+                                    $(this).removeClass('ui-selected');
+                                    $(this).text('');
+                                }
+                            });
+
                             $('li#' + wordId, '#questionsList').remove();
+                            WordsContainer.deleteWord(wordId);
+                            ResizableContainer.resetSize();
                         } else {
                             console.log(data);
                         }
@@ -200,23 +292,24 @@
             $( "#selectable" ).selectable(SelectableGrid);
             $( "#dialog-form" ).dialog(FormDialog);
 
+            var minHeight = WordsContainer.getMaxHeight() * iCellSize;
+            var minWidth = WordsContainer.getMaxWidth() * iCellSize;
+
             $('#gridContainer').resizable({
-                grid: [30, 30],
-                minHeight: 330,
-                minWidth: 330,
+                grid: [iCellSize, iCellSize],
+                minHeight: minHeight,
+                minWidth: minWidth,
 
                 start: function (event, ui)
                 {
                 },
                 resize: function (event, ui)
                 {
+                    iGridHeight = parseInt($('#selectable').css('height'))/iCellSize;
+                    iGridWidth = parseInt($('#selectable').css('width'))/iCellSize;
+
                     GridContainer.fillGrid();
                     GridContainer.showGridSize();
-
-                    $('#selectable').css({
-                        'background-color': 'lightblue'
-                    });
-
                 },
                 stop: function (event, ui)
                 {
@@ -224,22 +317,27 @@
                         'background-color': 'white'
                     });
 
+                    GridContainer.fillGrid();
+                    GridContainer.showGridSize();
                     Saver.saveSize();
                 }
             });
-
-            // This button dsables resizable functionality and starts selectable for resized area.
-//            $('#disableResising').button({
-//                icons: {
-//                    primary: "ui-icon-locked"
-//                }
-//            }).click(ResizableContainer.disableResizing);
+        },
+        resetSize: function() {
+            var minHeight = WordsContainer.getMaxHeight() * iCellSize;
+            var minWidth = WordsContainer.getMaxWidth() * iCellSize;
+            $('#gridContainer').resizable({minHeight: minHeight, minWidth: minWidth});
         }
     };
 
     var SelectableGrid = {
         stop: function (event, ui) {
-            var lstSelectedCells = $('.ui-selected', $(this)).not('.ge-wait-for-confirm').not('ge-confirmed-word');
+            var lstSelectedCells = $('.ui-selected', $(this)).not('.ge-wait-for-confirm');
+
+            //Disables adding word to the cells whichalready filled
+            //var lstFilledCells = lstSelectedCells.filter('.ge-confirmed-word');
+            //if (lstSelectedCells.length > 2 && lstFilledCells.length != lstSelectedCells.length) {
+
             if (lstSelectedCells.length > 2) {
                 iSelectedCellsCount = lstSelectedCells.length;
 
@@ -342,9 +440,19 @@
 
                     Saver.saveWord(word);
 
+                    word.id = iWordId;
+                    WordsContainer.addWord(word);
+
+                    lstLetters.each(function ()
+                    {
+                        $(this).addClass('word-id-' + iWordId);
+                    });
+
                     $('#' + sDirection + 'Questions').append('<li id="' + iWordId +'">[' + iStartX + ':' + iStartY +  '] ' + sQuestion + '<a href="/field-games-crossword/delete-word/' + word.id + '"></a></li>');
 
                     GridContainer.bindDeleteWord();
+
+                    ResizableContainer.resetSize();
 
                     $( this ).dialog( "close" );
                 } else {
@@ -359,7 +467,7 @@
         {
             $('.ge-wait-for-confirm').each(function ()
                 {
-                    $(this).removeClass('ge-wait-for-confirm');
+                    $(this).removeClass('ge-wait-for-confirm ui-selected');
                 });
         },
         open: function ()
