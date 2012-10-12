@@ -26,15 +26,11 @@
 
     var iWordId = 0;
 
-    //The minimum width of the grid - it is maximum X coordinate of the hosrizontal words
-    var iMinWidth  = 11;
-    //The minimum height of the grid - it is maximum Y coordinate of the vertical words
-    var iMinHeight = 11;
-
     var iCellSize = 30;
 
     var CrosswordGame = {
         init: function () {
+            WordsContainer.reset();
             GridContainer.init();
         }
     };
@@ -49,6 +45,9 @@
 
     var WordsContainer = {
         words: {},
+        reset: function() {
+            this.words = {};
+        },
         addWord: function (word) {
             this.words[word.id] = word;
         },
@@ -62,7 +61,7 @@
             return this.words[id];
         },
         getMaxWidth: function() {
-            var maxWidth = 0;
+            var maxWidth = 11;
 
             $.each(this.words, function (wordId, word) {
                 var length = 0;
@@ -78,7 +77,7 @@
             return maxWidth;
         },
         getMaxHeight: function() {
-            var maxHeight = 0;
+            var maxHeight = 11;
 
             $.each(this.words, function (wordId, word) {
                 var length = 0;
@@ -334,7 +333,7 @@
         stop: function (event, ui) {
             var lstSelectedCells = $('.ui-selected', $(this)).not('.ge-wait-for-confirm');
 
-            //Disables adding word to the cells whichalready filled
+            //Disables adding word to the cells which already filled
             //var lstFilledCells = lstSelectedCells.filter('.ge-confirmed-word');
             //if (lstSelectedCells.length > 2 && lstFilledCells.length != lstSelectedCells.length) {
 
