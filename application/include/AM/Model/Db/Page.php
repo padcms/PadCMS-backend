@@ -879,7 +879,7 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
     {
         $sValue = AM_Tools::filter_xss($sValue);
 
-        if (!preg_match('/^[0-9A-Za-z\-\.\_]*$/', $sValue)) {
+        if (!preg_match('/^[0-9A-Za-z\-\_]*$/', $sValue)) {
             throw new AM_Model_Db_Exception('Error. Invalid macine name');
         }
 
