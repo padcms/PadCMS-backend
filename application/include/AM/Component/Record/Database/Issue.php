@@ -224,14 +224,14 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
                         $oVerticalHelpPage->getThumbnailPresetType(),
                         $oVerticalHelpPage->getThumbnailPresetType(),
                         $oVerticalHelpPage->id_issue,
-                        $oVerticalHelpPage->type . '.png') . '?' . strtotime($oVerticalHelpPage->updated);
+                        $oVerticalHelpPage->type . '.' . $oVerticalHelpPage->getResource()->getImageType()) . '?' . strtotime($oVerticalHelpPage->updated);
                 $aVerticalHelpPage['name']      = $oVerticalHelpPage->name;
                 $aVerticalHelpPage['nameShort'] = $this->actionController->getHelper('String')->cut($oVerticalHelpPage->name, 12);
                 $aVerticalHelpPage['bigUri']    = AM_Tools::getImageUrl(
                         $oVerticalHelpPage->getResolutionForPreview(),
                         $oVerticalHelpPage->getThumbnailPresetType(),
                         $oVerticalHelpPage->id_issue,
-                        $oVerticalHelpPage->type . '.png') . '?' . strtotime($oVerticalHelpPage->updated);
+                        $oVerticalHelpPage->type . '.' . $oVerticalHelpPage->getResource()->getImageType()) . '?' . strtotime($oVerticalHelpPage->updated);
             }
 
             $oHorizontalHelpPage = AM_Model_Db_Table_Abstract::factory('issue_help_page')
@@ -241,14 +241,14 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
                         $oHorizontalHelpPage->getThumbnailPresetType(),
                         $oHorizontalHelpPage->getThumbnailPresetType(),
                         $oHorizontalHelpPage->id_issue,
-                        $oHorizontalHelpPage->type . '.png') . '?' . strtotime($oHorizontalHelpPage->updated);
+                        $oHorizontalHelpPage->type . '.' . $oHorizontalHelpPage->getResource()->getImageType()) . '?' . strtotime($oHorizontalHelpPage->updated);
                 $aHorizontalHelpPage['name']      = $oHorizontalHelpPage->name;
                 $aHorizontalHelpPage['nameShort'] = $this->actionController->getHelper('String')->cut($oHorizontalHelpPage->name, 12);
                 $aHorizontalHelpPage['bigUri']    = AM_Tools::getImageUrl(
                         $oHorizontalHelpPage->getResolutionForPreview(),
                         $oHorizontalHelpPage->getThumbnailPresetType(),
                         $oHorizontalHelpPage->id_issue,
-                        $oHorizontalHelpPage->type . '.png') . '?' . strtotime($oHorizontalHelpPage->updated);
+                        $oHorizontalHelpPage->type . '.' . $oHorizontalHelpPage->getResource()->getImageType()) . '?' . strtotime($oHorizontalHelpPage->updated);
             }
         }
 

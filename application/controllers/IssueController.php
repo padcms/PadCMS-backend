@@ -212,7 +212,7 @@ class IssueController extends AM_Controller_Action
                             $iIssueId,
                             $oHorisontalPdf->getResource()->getResourceBaseName()) . '?' . strtotime($oHorisontalPdf->updated);
             $aFile['bigUri']    = AM_Tools::getImageUrl(
-                            '1024-768',
+                            'none',
                             'static-pdf',
                             $iIssueId,
                             $oHorisontalPdf->getResource()->getResourceBaseName()) . '?' . strtotime($oHorisontalPdf->updated);
@@ -229,7 +229,7 @@ class IssueController extends AM_Controller_Action
             $aMessage['errorMessage'] = $e->getMessage();
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**
@@ -285,7 +285,7 @@ class IssueController extends AM_Controller_Action
             $aMessage["errorMessage"] = $e->getMessage();
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**
@@ -528,7 +528,7 @@ class IssueController extends AM_Controller_Action
             $aMessage['errorMessage'] = $e->getMessage();
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**
