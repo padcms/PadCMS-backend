@@ -27,17 +27,21 @@ Installation
         sudo apt-get install unzip git apache2 mysql-server php5 sqlite3 php5-mysql php5-sqlite php5-imagick php-apc php-pear php5-dev imagemagick optipng
 * Install PadCMSdraw util
     * Compile from sources
-        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+
+mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
         git clone git://github.com/padcms/padcms-draw.git .
         wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
         unzip mupdf-thirdparty-2012-04-23.zip
         make && sudo make install
     * Install from package
+
         mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
         *i386
+
         wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
         dpkg -i padcmsdraw_1.0-1_i386.deb
         *x64
+
         wget http://dev.padcms.net/attachments/103/padcmsdraw_1.0-1_amd64.deb
         dpkg -i padcmsdraw_1.0-1_amd64.deb
 * Install needed packages from PEAR
@@ -78,6 +82,7 @@ add to the end of file
 
         ./padcms manager
 * Add the PadCMS background tasks manager as cron job - we recommend to run task manager every 15 minutes to check whether the background process is not dead.
+
         crontab -e
 
         */15 * * * * /var/www/padcms/htdocs/padcms manager > /dev/null 2>&1
