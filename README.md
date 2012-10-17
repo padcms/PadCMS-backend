@@ -36,12 +36,12 @@ mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
     * Install from package
 
         mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
-        *i386
 
+        # i386
         wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
         dpkg -i padcmsdraw_1.0-1_i386.deb
-        *x64
 
+        #x64
         wget http://dev.padcms.net/attachments/103/padcmsdraw_1.0-1_amd64.deb
         dpkg -i padcmsdraw_1.0-1_amd64.deb
 * Install needed packages from PEAR
@@ -82,8 +82,6 @@ add to the end of file
 
         ./padcms manager
 * Add the PadCMS background tasks manager as cron job - we recommend to run task manager every 15 minutes to check whether the background process is not dead.
-
-        crontab -e
 
         */15 * * * * /var/www/padcms/htdocs/padcms manager > /dev/null 2>&1
 * Run tests (optional)
