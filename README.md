@@ -33,8 +33,6 @@ Installation
         unzip mupdf-thirdparty-2012-04-23.zip
         make && sudo make install
     * Install from package
-        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
-
         *i386
                 wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
                 dpkg -i padcmsdraw_1.0-1_i386.deb
