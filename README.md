@@ -33,12 +33,12 @@ Installation
         unzip mupdf-thirdparty-2012-04-23.zip
         make && sudo make install
     * Install from package
-        *i386
-                wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
-                dpkg -i padcmsdraw_1.0-1_i386.deb
-        * x64
-                wget http://dev.padcms.net/attachments/103/padcmsdraw_1.0-1_amd64.deb
-                dpkg -i padcmsdraw_1.0-1_amd64.deb
+i386
+        wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
+        dpkg -i padcmsdraw_1.0-1_i386.deb
+x64
+        wget http://dev.padcms.net/attachments/103/padcmsdraw_1.0-1_amd64.deb
+        dpkg -i padcmsdraw_1.0-1_amd64.deb
 * Install needed packages from PEAR
 
         sudo pear config-set auto_discover 1
