@@ -28,7 +28,7 @@ Installation
 * Install PadCMSdraw util
     * Compile from sources
 
-mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
         git clone git://github.com/padcms/padcms-draw.git .
         wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
         unzip mupdf-thirdparty-2012-04-23.zip
