@@ -141,4 +141,20 @@ class AM_Controller_Action extends Zend_Controller_Action
     {
         return $this->localizer->translate($text);
     }
+
+    /**
+     * Sends the JSON response as text/plain
+     * @param array $aData
+     */
+    public function sendJsonAsPlainText($aData)
+    {
+        $aData = $this->getHelper('Json')->direct($aData, false);
+
+        $oResponse = $this->getResponse();
+        $oResponse->setHeader('Content-Type', 'text/plain', true);
+        $oResponse->setBody($aData);
+
+        $oResponse->sendResponse();
+        exit;
+    }
 }

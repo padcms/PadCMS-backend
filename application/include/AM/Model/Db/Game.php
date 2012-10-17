@@ -51,7 +51,7 @@ class AM_Model_Db_Game extends AM_Model_Db_Abstract
      */
     public function getDataValue($sKey, $mDefault = null)
     {
-        $oData = AM_Model_Db_Table_Abstract::factory('game_data')->findOneBy(array('key_name' => (string) $sKey));
+        $oData = AM_Model_Db_Table_Abstract::factory('game_data')->findOneBy(array('key_name' => (string) $sKey, 'game' => $this->id));
 
         if (is_null($oData)) {
             return $mDefault;
@@ -70,7 +70,7 @@ class AM_Model_Db_Game extends AM_Model_Db_Abstract
     {
         $sKey = (string) $sKey;
 
-        $oData = AM_Model_Db_Table_Abstract::factory('game_data')->findOneBy(array('key_name' => (string) $sKey));
+        $oData = AM_Model_Db_Table_Abstract::factory('game_data')->findOneBy(array('key_name' => (string) $sKey, 'game' => $this->id));
 
         if (is_null($oData)) {
             $oData           = new AM_Model_Db_GameData();

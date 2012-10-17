@@ -11,9 +11,11 @@ Requirements
     * [GD](http://php.net/manual/en/book.image.php) library of image functions
     * [ZIP](http://www.php.net/manual/en/book.zip.php) extension
     * [ImageMagick](http://php.net/manual/en/book.imagick.php) is a native php extension to create and modify images using the ImageMagick API
+    * [POSIX] (http://php.net/posix) This module contains an interface to those functions defined in the IEEE 1003.1 (POSIX.1) standards document which are not accessible through other means.
+    * [PCNTL] (http://php.net/pcntl) Process Control support in PHP implements the Unix style of process creation, program execution, signal handling and process termination.
 * [MySQL](http://mysql.com/) 5.x with the MyISAM storage engine
 * [SQLite](http://www.sqlite.org/) 3.x
-* [Poppler](http://poppler.freedesktop.org/) and [MuPDF](http://mupdf.com/) tools for PDF manipulations
+* [ImageMagick] (http://www.imagemagick.org/script/index.php) 6.7.x software suite to create, edit, compose, or convert bitmap images
 * [PHING](http://www.phing.info/trac/) 2.4 - for configuration wizard and database deployment
 * [PHPUnit](http://www.phpunit.de/) 3.5 (or 3.6 with DbUnit 1.0.0) - optional
 
@@ -22,19 +24,27 @@ Installation
 
 * Install all required packages
 
-        sudo apt-get install git apache2 mysql-server php5 sqlite3 poppler-utils xorg-dev php5-mysql php5-sqlite php5-imagick php5-gd php-apc php-pear php5-dev optipng
+        sudo apt-get install unzip git apache2 mysql-server php5 sqlite3 php5-mysql php5-sqlite php5-imagick php-apc php-pear php5-dev imagemagick optipng
 * Install PadCMSdraw util
     * Compile from sources
-        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
-        git clone git://github.com/padcms/padcms-draw.git .
-        wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
-        unzip mupdf-thirdparty-2012-04-23.zip
-        make && sudo make install
-    * Install from package
-        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
-        wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
-        dpkg -i padcmsdraw_1.0-1_i386.deb
 
+                mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+                git clone git://github.com/padcms/padcms-draw.git .
+                wget http://mupdf.googlecode.com/files/mupdf-thirdparty-2012-04-23.zip
+                unzip mupdf-thirdparty-2012-04-23.zip
+                make && sudo make install
+    * Install from package
+        * i386
+
+                        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+                        wget http://dev.padcms.net/attachments/102/padcmsdraw_1.0-1_i386.deb
+                        dpkg -i padcmsdraw_1.0-1_i386.deb
+
+        * x64
+
+                        mkdir /tmp/padcmsdraw && cd /tmp/padcmsdraw
+                        wget http://dev.padcms.net/attachments/103/padcmsdraw_1.0-1_amd64.deb
+                        dpkg -i padcmsdraw_1.0-1_amd64.deb
 * Install needed packages from PEAR
 
         sudo pear config-set auto_discover 1
@@ -69,6 +79,12 @@ add to the end of file
 
         ./padcms build
         APPLICATION_ENV=test ./padcms build
+* Run the task manager daemon, it will run in the background after first run
+
+        ./padcms manager
+* Add the PadCMS background tasks manager as cron job - we recommend to run task manager every 15 minutes to check whether the background process is not dead.
+
+        */15 * * * * /var/www/padcms/htdocs/padcms manager > /dev/null 2>&1
 * Run tests (optional)
 
         ./padcms phpunitall

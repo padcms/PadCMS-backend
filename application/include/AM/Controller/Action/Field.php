@@ -250,7 +250,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage["message"]      = $this->__('Error. Can\'t upload file. ') . $this->__($e->getMessage());
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**
@@ -318,7 +318,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage["errorMessage"] = $e->getMessage();
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**

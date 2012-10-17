@@ -7,7 +7,7 @@
         <label>{'Body'|translate}</label>
         <div class="game-type">
             <select name="html5_body" id="body-selector" onChange="fieldHtml5.bodySelected();">
-                <option value=0>HTML5 ?</option>
+                <option value=0>Nothing selected</option>
                 {foreach from=$field.select_body key=key item=body}
                     <option value="{$key}" {if isset($field.html5_body)}{if $key eq $field.html5_body} selected {/if}{/if}>{$body}</option>
                 {/foreach}

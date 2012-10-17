@@ -114,7 +114,7 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
     {
         $sExtension = strtolower(pathinfo($this->getResourceDbBaseName(), PATHINFO_EXTENSION));
 
-        return $this->_getIssueHelpPage()->type . '.' . $sExtension;
+        return $this->_getIssueHelpPage()->type . '.' . $this->getImageType();
     }
 
     /**
@@ -177,8 +177,16 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
             /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
             $oThumbnailerHandler->clearSources()
                     ->addSourceFile($sDestination)
-                    ->loadAllPresets($this->_getIssueHelpPage()->getThumbnailPresetType())
+                    ->setImageType($this->getImageType())
+                    ->loadAllPresets($this->_getIssueHelpPage()->getThumbnailPresetType(), true)
                     ->createThumbnails();
+
+            $oTask = new AM_Task_Worker_Thumbnail_Create();
+            $oTask->setOptions(array('resource'      => $sDestination,
+                        'image_type'    => $this->getImageType(),
+                        'zooming'       => false,
+                        'resource_type' => $this->_getIssueHelpPage()->getThumbnailPresetType()))
+                    ->create();
         }
 
         return $this;
@@ -246,5 +254,15 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
     {
         AM_Tools::clearContent($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
         AM_Tools::clearResizerCache($this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->getThumbnailPresetType(), $this->_getIssueHelpPage()->id_issue);
+    }
+
+    /**
+     * Returns the image format of the help page
+     *
+     * @return string
+     */
+    public function getImageType()
+    {
+        return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
     }
 }

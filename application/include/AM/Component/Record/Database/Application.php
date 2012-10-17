@@ -57,7 +57,7 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'preview', 'Preview', array(array('numeric')), 'preview');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'description', 'Description', array(array('require')), 'description');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
 
         $aControls[] = new Volcano_Component_Control_Database($oActionController,
                 'nm_twitter_ios',

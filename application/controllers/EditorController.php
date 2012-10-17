@@ -719,7 +719,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t upload file'), $oException->getMessage());
         }
 
-        return $this->getHelper('Json')->sendJson($aMessage);
+        return $this->sendJsonAsPlainText($aMessage);
     }
 
     /**
