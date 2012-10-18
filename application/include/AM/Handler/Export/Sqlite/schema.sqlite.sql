@@ -87,7 +87,8 @@ CREATE TABLE `game_crossword_word`
        question TEXT NOT NULL,
        length INTEGER DEFAULT NULL,
        direction  TEXT NOT NULL,
-       start_from INTEGER NOT NULL,
+       start_x INTEGER NOT NULL,
+       start_y INTEGER NOT NULL,
        PRIMARY KEY(id)
 );
 

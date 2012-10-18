@@ -4,5 +4,5 @@
     <element_data element_id="1" type="game"  value="1" />
     <element_data element_id="1" type="game_type"  value="crossword" />
     <game_crossword id="1" grid_width="11" grid_height="11" />
-    <game_crossword_word game="1" answer="answer" question="test question" length="6" direction="horizontal" start_from="1" />
+    <game_crossword_word game="1" answer="answer" question="test question" length="6" direction="horizontal" start_x="1" start_y="1" />
 </dataset>

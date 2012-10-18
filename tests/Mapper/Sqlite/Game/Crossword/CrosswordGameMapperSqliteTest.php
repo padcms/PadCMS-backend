@@ -96,7 +96,8 @@ CREATE TABLE `game_crossword_word`
        question TEXT NOT NULL,
        length INTEGER DEFAULT NULL,
        direction  TEXT NOT NULL,
-       start_from INTEGER NOT NULL,
+       start_x INTEGER NOT NULL,
+       start_y INTEGER NOT NULL,
        PRIMARY KEY(id)
 );
 SQL;
@@ -141,7 +142,7 @@ SQL;
         $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
 
         //Crossword word
-        $oGivenDataSet    = $this->_oConnectionMock->createQueryTable('game_crossword_word', 'SELECT game, answer, question, length, direction, start_from FROM game_crossword_word ORDER BY id');
+        $oGivenDataSet    = $this->_oConnectionMock->createQueryTable('game_crossword_word', 'SELECT game, answer, question, length, direction, start_x, start_y FROM game_crossword_word ORDER BY id');
         $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/CrosswordGameMapperSqliteTest.xml')
                               ->getTable('game_crossword_word');
 
