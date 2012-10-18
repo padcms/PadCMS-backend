@@ -62,7 +62,8 @@ class AM_Mapper_Sqlite_Game_Crossword extends AM_Mapper_Sqlite_Abstract
                 'question'   => $oWord->question,
                 'length'     => $oWord->length,
                 'direction'  => $oWord->direction,
-                'start_from' => $oWord->start_from
+                'start_x'    => $oWord->start_x,
+                'start_y'    => $oWord->start_y
             );
             $this->_getSqliteGateway('game_crossword_word')->insert($aCrosswordGameWordData);
         }

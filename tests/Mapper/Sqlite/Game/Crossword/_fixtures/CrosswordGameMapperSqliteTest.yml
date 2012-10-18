@@ -1,7 +1,7 @@
 game:
   -
     id: 1
-    revision: 1
+    page: 1
     type: 1
 
 game_data:
@@ -24,7 +24,8 @@ game_crossword_word:
     question: test question
     length: 6
     direction: horizontal
-    start_from: 1
+    start_x: 1
+    start_y: 1
 
 element:
   -
