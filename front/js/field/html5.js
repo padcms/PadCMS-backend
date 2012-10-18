@@ -24,6 +24,11 @@ var fieldHtml5 = {
 
         // Process BODY select and show field, that refers to it
         var selectedItem = $('select[name=html5_body]', context.domRoot).val();
+
+        if (selectedItem == 0) {
+            $('#page-additional-data-btn', context.domRoot).hide();
+        }
+
         $('#options #' + selectedItem, context.domRoot).show();
         $('.cont', context.domRoot).hide();
 
@@ -43,12 +48,6 @@ var fieldHtml5 = {
             title:  'Preview',
             modal: true,
             autoOpen: false
-        });
-
-        $("#html5-post-code-preview", context.domRoot).click(function() {
-            var html = $("textarea[name=post_code]", context.domRoot).val();
-            $("#html5-dialog-post-code-preview").html(html);
-            $("#html5-dialog-post-code-preview").dialog('open');
         });
 
         $('a.close', context.domRoot).bind('click', context, function(event){
@@ -107,9 +106,12 @@ var fieldHtml5 = {
         var context = this;
 
         $('#options li', context.domRoot).slideUp();
-        if (body == 0)
+        if (body == 0) {
+            $('#page-additional-data-btn', context.domRoot).hide();
             return;
-
+        } else {
+            $('#page-additional-data-btn', context.domRoot).show();
+        }
         $('#options #'+body, context.domRoot).slideDown();
     },
     onSave: function() {

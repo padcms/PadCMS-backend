@@ -93,7 +93,7 @@
             </li>
         </ul>
     </div>
-    <div id="edit-top-wrapper" class="form-item">
+    <div id="edit-top-wrapper save-button" class="form-item">
         <a id="page-additional-data-btn" class="cbutton" href="#">
             <span>{'Save'|translate}</span>
         </a>
