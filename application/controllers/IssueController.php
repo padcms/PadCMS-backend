@@ -170,8 +170,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage["message"]      = sprintf('%s %s', 'Error. Can\'t publish issue.', $e->getMessage());
-            $aMessage["errorMessage"] = $e->getMessage();
+            $aMessage['message']      = 'Error. Can\'t publish issue.' . PHP_EOL . $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -225,8 +224,7 @@ class IssueController extends AM_Controller_Action
             if (isset($oHorisontalPdf)) {
                 $oHorisontalPdf->delete();
             }
-            $aMessage['message']      = 'Error. Can\'t upload file. ' . $e->getMessage();
-            $aMessage['errorMessage'] = $e->getMessage();
+            $aMessage['message']      = 'Error. Can\'t upload file. ' . PHP_EOL . $e->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);
@@ -281,8 +279,7 @@ class IssueController extends AM_Controller_Action
             if (isset($oSimplePdf)) {
                 $oSimplePdf->delete();
             }
-            $aMessage["message"]      = 'Error. Can\'t upload file. ' . $e->getMessage();
-            $aMessage["errorMessage"] = $e->getMessage();
+            $aMessage["message"] = 'Error. Can\'t upload file. ' . PHP_EOL . $e->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);
@@ -309,8 +306,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage["message"]      = 'Error. Can\'t delete simple pdf. ' . $e->getMessage();
-            $aMessage["errorMessage"] = $e->getMessage();
+            $aMessage["message"]      = 'Error. Can\'t delete simple pdf.' . PHP_EOL . $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -346,8 +342,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage["message"]      = 'Error. Can\'t change weight. ' . $e->getMessage();
-            $aMessage["errorMessage"] = $e->getMessage();
+            $aMessage["message"] = 'Error. Can\'t change weight.' . PHP_EOL . $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -390,8 +385,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage['message']      = 'Error. Can\'t delete static pdf. ' . $e->getMessage();
-            $aMessage['errorMessage'] = $e->getMessage();
+            $aMessage['message']      = 'Error. Can\'t delete static pdf.' . PHP_EOL . $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -473,7 +467,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage['message'] = 'Error. ' . $e->getMessage();
+            $aMessage['message'] = $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -524,8 +518,7 @@ class IssueController extends AM_Controller_Action
             if (isset($oHelpPage)) {
                 $oHelpPage->delete();
             }
-            $aMessage['message']      = 'Error. Can\'t upload file. ' . $e->getMessage();
-            $aMessage['errorMessage'] = $e->getMessage();
+            $aMessage['message'] = 'Error. Can\'t upload file.' . PHP_EOL . $e->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);
@@ -562,8 +555,7 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage['message']      = 'Error. Can\'t delete help page. ' . $e->getMessage();
-            $aMessage['errorMessage'] = $e->getMessage();
+            $aMessage['message'] = 'Error. Can\'t delete help page. ' . PHP_EOL . $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);

@@ -34,7 +34,7 @@ $(document).ready(function() {
                 if (data.message) {
                   alert(data.message);
                 } else {
-                  alert(translate('unexpected_error'));
+                  alert(translate('unexpected_ajax_error'));
                 }
             } else {
                 $('#issue-list-actions').dialog('option', 'context')

@@ -118,7 +118,7 @@ class PageMapController extends AM_Controller_Action
             $aMessage['success'] = true;
 
         } catch (Exception $oException) {
-            $aMessage['message'] = 'Error. ' . $oException->getMessage();
+            $aMessage['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, true);
@@ -161,7 +161,7 @@ class PageMapController extends AM_Controller_Action
             $aResult['page']   = AM_Handler_Page::parsePage($oPage);
             $aResult['result'] = true;
         } catch (Exception $oException) {
-            $aResult['message'] = 'Error. ' . $oException->getMessage();
+            $aResult['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aResult, true);
@@ -238,7 +238,7 @@ class PageMapController extends AM_Controller_Action
             $aMessage['pid']     = $oPageNew->id;
             $aMessage['success'] = true;
         } catch (Exception $oException) {
-            $aMessage['message'] = 'Error. ' . $oException->getMessage();
+            $aMessage['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -273,8 +273,8 @@ class PageMapController extends AM_Controller_Action
 
             $oPage->setUpdated(false);
             $aMessage['success'] = true;
-        } catch (Exception $e) {
-            $aMessage['message'] = $e->getMessage();
+        } catch (Exception $oException) {
+            $aMessage['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, true);

@@ -24,7 +24,7 @@ var bindIframeDialog = function() {
                 }
             },
             error: function() {
-                alert('unexpected_error');
+                alert('unexpected_ajax_error');
             }
         });
 

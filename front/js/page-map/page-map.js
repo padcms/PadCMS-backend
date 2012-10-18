@@ -95,7 +95,7 @@ var pageMap = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    return alert(translate('unexpected_error'));
+                    return alert(translate('unexpected_ajax_error'));
                 }
             }
         }, $('#dialog'));
@@ -121,7 +121,7 @@ var pageMap = {
                     $('#dialog').dialog('close');
                 } catch (e) {
                     window.ui.log(e);
-                    return alert(translate('unexpected_error'));
+                    return alert(translate('unexpected_ajax_error'));
                 }
             }
         }, $('#dialog'));
@@ -221,7 +221,7 @@ var pageMap = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    return alert(translate('unexpected_error'));
+                    return alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -768,12 +768,12 @@ var pageMap = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    return alert(translate('unexpected_error'));
+                    return alert(translate('unexpected_ajax_error'));
                 }
             },
             error: function() {
                 window.ui.log(e);
-                alert(translate('unexpected_error'));
+                alert(translate('unexpected_ajax_error'));
             }
         });
     },

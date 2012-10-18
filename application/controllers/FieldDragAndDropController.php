@@ -85,8 +85,7 @@ class FieldDragAndDropController extends AM_Controller_Action_Field
             $aMessage['status']          = 1;
             $aMessage['value']           = $oElement->getResources()->getDataValue($sKey);
         } catch (Exception $oException) {
-            $aMessage["message"] = $this->localizer->translate("Error. Can't set value! ")
-                    . $this->localizer->translate($oException->getMessage());
+            $aMessage["message"] = $this->__("Error. Can't set value! ") . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);

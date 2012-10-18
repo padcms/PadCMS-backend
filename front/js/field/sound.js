@@ -98,7 +98,7 @@ var fieldSound = {
                         alert(data.message);
                     }
                 } catch (e) {
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -126,7 +126,7 @@ var fieldSound = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });

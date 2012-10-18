@@ -190,7 +190,7 @@ class ApplicationController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $e) {
-            $aMessage['message'] = 'Error. ' . $e->getMessage();
+            $aMessage['message'] = $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
