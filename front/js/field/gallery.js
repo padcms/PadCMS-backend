@@ -147,7 +147,7 @@ var fieldGallery = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -175,7 +175,7 @@ var fieldGallery = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -229,7 +229,7 @@ var fieldGallery = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });

@@ -96,7 +96,7 @@ window.pageInfo = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
                 $('#page-tag-input').val('');
             }
@@ -135,7 +135,7 @@ window.pageInfo = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -162,7 +162,7 @@ window.pageInfo = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });

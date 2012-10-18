@@ -128,7 +128,7 @@ var fieldPopup = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -156,7 +156,7 @@ var fieldPopup = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });

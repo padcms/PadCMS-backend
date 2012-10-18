@@ -135,7 +135,7 @@ var staticPdf = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -168,7 +168,7 @@ var staticPdf = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -281,7 +281,7 @@ var simplePdf =  {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -393,7 +393,7 @@ var verticalHelpPage =  {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -505,7 +505,7 @@ var horizontalHelpPage =  {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });

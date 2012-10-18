@@ -41,7 +41,7 @@ var bindPageDelete = function() {
                 }
             },
             error: function(e) {
-                alert(translate('unexpected_error'));
+                alert(translate('unexpected_ajax_error'));
             }
         });
     });
@@ -238,7 +238,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -267,7 +267,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -308,7 +308,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -341,7 +341,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -448,7 +448,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         );
@@ -549,7 +549,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                     $.jstree.rollback(obj.rlbk);
                 }
             }
@@ -574,7 +574,7 @@ tocEditor.currentTree = {
                         }
                     } catch (e) {
                         window.ui.log(e);
-                        alert(translate('unexpected_error'));
+                        alert(translate('unexpected_ajax_error'));
                         $.jstree.rollback(obj.rlbk);
                     }
                 }
@@ -600,7 +600,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                     $.jstree.rollback(obj.rlbk);
                 }
             }
@@ -643,7 +643,7 @@ tocEditor.currentTree = {
                     }
                 } catch (e) {
                     window.ui.log(e);
-                    alert(translate('unexpected_error'));
+                    alert(translate('unexpected_ajax_error'));
                 }
             }
         });
@@ -797,7 +797,7 @@ var addFileToElement = {
                     if (data.message)
                         $('.status', context.domRoot).html(data.message).show();
                     else
-                        $('.status', context.domRoot).html(translate('unexpected_error')).show();
+                        $('.status', context.domRoot).html(translate('unexpected_ajax_error')).show();
                 }
             }
         });
@@ -842,7 +842,7 @@ var pdfPageEditor = {
                   $('#select-pdf-page-dialog').dialog('option', 'page', window.pid).dialog('open');
               },
               error: function(e) {
-                  alert(translate('unexpected_error'));
+                  alert(translate('unexpected_ajax_error'));
               }
           });
     },

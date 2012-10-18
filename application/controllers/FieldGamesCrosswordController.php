@@ -100,7 +100,7 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
 
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = $this->__('Error. Can\'t get data for game. ') . $oException->getMessage();
+            $aMessage['message'] = $this->__('Error. Can\'t get data for game. ') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);
@@ -145,7 +145,7 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
             $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Games::DATA_KEY_GAME_ID, $oGame->id);
             $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Games::DATA_KEY_GAME_TYPE, $oGame->getType()->title);
         } catch (Exception $oException) {
-            $aMessage['message'] = $this->__('Error. Can\'t set value! ') . $oException->getMessage();
+            $aMessage['message'] = $this->__('Error. Can\'t set value! ') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);
@@ -196,7 +196,7 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
             $aMessage['word_id'] = $oWordModel->id;
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = $this->__('Error. Can\'t set value! ') . $oException->getMessage();
+            $aMessage['message'] = $this->__('Error. Can\'t set value! ') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);

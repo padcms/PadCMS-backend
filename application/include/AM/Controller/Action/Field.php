@@ -127,7 +127,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage['status']          = 1;
             $aMessage['value']           = $oElement->getResources()->getDataValue($sKey);
         } catch (Exception $oException) {
-            $aMessage["message"] = $this->__('Error. Can\'t set value! ') . $oException->getMessage();
+            $aMessage["message"] = $this->__('Error. Can\'t set value! ') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);
@@ -160,8 +160,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage['background'] = $oPage->getPageBackgroundUri();
             $aMessage['status']     = 1;
         } catch (Exception $oException) {
-            $aMessage["message"] = $this->localizer->translate('Error. Can\'t change weight');
-            $aMessage["errorMessage"] = $oException->getMessage();
+            $aMessage["message"] = $this->localizer->translate('Error. Can\'t change weight') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -197,8 +196,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage['background']      = $oPage->getPageBackgroundUri();
             $aMessage['status']          = 1;
         } catch (Exception $oException) {
-            $aMessage['message']      = $this->__('Error. Can\'t delete this item!');
-            $aMessage['errorMessage'] = $oException->getMessage();
+            $aMessage['message']      = $this->__('Error. Can\'t delete this item!') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, false);
@@ -247,7 +245,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
 
             $aMessage['status'] = 1;
           } catch (Exception $e) {
-            $aMessage["message"]      = $this->__('Error. Can\'t upload file. ') . $this->__($e->getMessage());
+            $aMessage["message"]      = $this->__('Error. Can\'t upload file.') . PHP_EOL . $e->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);
@@ -314,8 +312,7 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $aMessage['file']           = $aResourceFileViewInfo;
             $aMessage['status']         = 1;
         } catch (Exception $e) {
-            $aMessage["message"]      = $this->__('Error. Can\'t upload file');
-            $aMessage["errorMessage"] = $e->getMessage();
+            $aMessage["message"]      = $this->__('Error. Can\'t upload file') . PHP_EOL . $e->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);

@@ -86,7 +86,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['linkedPid'] = $iPageParnetId;
             $aMessage['result']    = true;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error'), $oException->getMessage());
+            $aMessage['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage, true);
@@ -122,7 +122,7 @@ class EditorController extends AM_Controller_Action
                     $this->view->panel_place = 'left';
             }
         } catch (Exception $oException) {
-            $aMessage = array('code' => 1, 'message' => sprintf('%s %s', $this->__('Error'), $oException->getMessage()));
+            $aMessage = array('code' => 1, 'message' => $oException->getMessage());
             return $this->getHelper('Json')->sendJson($aMessage, false);
         }
     }
@@ -159,7 +159,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['status'] = 1;
             $aMessage['value']  = $oPage->$sKey;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error'), $oException->getMessage());
+            $aMessage['message'] = $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -274,9 +274,7 @@ class EditorController extends AM_Controller_Action
                     'value' => $oTag->title
                 );
             }
-        } catch (Exception $oException) {
-            $oTags[] = $oException->getMessage();
-        }
+        } catch (Exception $oException) { }
 
         return $this->getHelper('Json')->sendJson($aTags);
     }
@@ -306,7 +304,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['current'] = $oPage->toc;
             $aMessage['status']  = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = $this->__('Error. Can\'t get list pf terms!') . PHP_EOL . $oException->getMessage();
+            $aMessage['message'] = $this->__('Error. Can\'t get list of terms!') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -374,7 +372,7 @@ class EditorController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Can\'t add term'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Can\'t add term') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -413,7 +411,7 @@ class EditorController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Can\'t delete term'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Can\'t delete term') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -460,7 +458,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['issue']  = $oIssue->id;
             $aMessage['list']   = $aFilesList;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t load pdfs list'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t load pdfs list') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -502,7 +500,7 @@ class EditorController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t rename TOC term'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t rename TOC term') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -562,7 +560,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['tocItem'] = $aItem;
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t get term data'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t get term data')  . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -606,7 +604,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['status'] = 1;
             $aMessage['value']  = $oTerm->$sKey;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t get term data'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t get term data') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -653,7 +651,7 @@ class EditorController extends AM_Controller_Action
 
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t move term'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t move term') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -716,7 +714,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['file']   = $aResourceFileViewInfo;
             $aMessage['status'] = 1;
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t upload file'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t upload file') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->sendJsonAsPlainText($aMessage);
@@ -765,7 +763,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['status'] = 1;
 
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t delete file'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t delete file') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
@@ -814,7 +812,7 @@ class EditorController extends AM_Controller_Action
             $aMessage['status'] = 1;
 
         } catch (Exception $oException) {
-            $aMessage['message'] = sprintf('%s %s', $this->__('Error. Can\'t delete file'), $oException->getMessage());
+            $aMessage['message'] = $this->__('Error. Can\'t delete file') . PHP_EOL . $oException->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);

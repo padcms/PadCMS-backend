@@ -33,7 +33,7 @@ window.ui = {
 
     ajaxError: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
         var context = this;
-        alert(translate('unexpected_ajax_error'));
+        //alert(translate('unexpected_ajax_error'));
         context.log(event, XMLHttpRequest, ajaxOptions, thrownError);
     },
 
