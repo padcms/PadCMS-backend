@@ -126,7 +126,7 @@ class AM_Handler_Issue extends AM_Handler_Abstract
 
         //Create childs
         $oFieldBody = AM_Model_Db_Table_Abstract::factory('field')
-                ->findOneBy(array('field_type' => 1, 'template' => AM_Model_Db_Template::TPL_BASIC_ARTICLE));
+                ->findOneBy(array('field_type' => 1, 'template' => AM_Model_Db_Template::TPL_SIMPLE_PAGE));
 
         if (is_null($oFieldBody)) {
             throw new AM_Handler_Issue_Exception('Field "Body" not found');
@@ -136,7 +136,7 @@ class AM_Handler_Issue extends AM_Handler_Abstract
         foreach ($aImages as $sImage) {
             $oPage           = new AM_Model_Db_Page();
             $oPage->title    = 'Right connected to page ' . $oPageRoot->id;
-            $oPage->template = AM_Model_Db_Template::TPL_BASIC_ARTICLE;
+            $oPage->template = AM_Model_Db_Template::TPL_SIMPLE_PAGE;
             $oPage->revision = $oRevision->id;
             $oPage->user     = $this->getIssue()->user;
             $oPage->setConnectionBit(AM_Model_Db_page::LINK_LEFT);
