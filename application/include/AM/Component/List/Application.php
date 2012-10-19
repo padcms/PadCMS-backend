@@ -46,14 +46,18 @@ class AM_Component_List_Application extends AM_Component_Grid
     {
         $iClientId = intval($iClientId);
 
+        $aUser = $oActionController->getUser();
+
         $oQuery = $oActionController->oDb->select()
                 ->from('application')
 
                 ->joinLeft('issue', 'issue.application = application.id AND issue.deleted = "no"', null)
 
+                ->joinLeft(array('issue_user' => 'user'), 'issue.user = issue_user.id', null)
+
                 ->joinLeft(array('issue1' => 'issue'),
                         'application.id = issue1.application AND issue1.deleted = "no" '
-                            . $oActionController->oDb->quoteInto('AND issue1.state = ?', AM_Model_Db_State::STATE_PUBLISHED), null)
+                        . $oActionController->oDb->quoteInto('AND issue1.state = ?', AM_Model_Db_State::STATE_PUBLISHED), null)
 
                 ->joinLeft('revision',
                         'revision.issue = issue1.id AND revision.deleted = "no" '
@@ -62,12 +66,17 @@ class AM_Component_List_Application extends AM_Component_Grid
                 ->where('application.deleted = ?', 'no')
                 ->where('application.client = ?', $iClientId)
 
+
                 ->group('application.id')
 
                 ->columns(array(
                     'published_revision' => 'revision.id',
                     'issue_count' => new Zend_Db_Expr('COUNT(DISTINCT(issue.id))')
                 ));
+
+        if ('admin' != $aUser['role']) {
+            $oQuery->where('issue_user.client = ?', $aUser['client']);
+        }
 
         parent::__construct($oActionController, 'grid', $oActionController->oDb, $oQuery, 'application.title', array(), 4, 'subselect');
     }
