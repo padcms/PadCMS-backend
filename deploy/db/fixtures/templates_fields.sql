@@ -115,7 +115,7 @@ INSERT INTO `field` (`name`, `description`, `field_type`, `min`, `max`, `max_wid
 
 -- HTML5 (A012)
 ('html5', NULL, 14, 0, 0, 0, 0, 2, 18, 1),
-('body', NULL, 1, 0, 0, 0, 0, 1, 18, 1),
+('background', NULL, 4, 0, 0, 0, 0, 1, 18, 1),
 
 -- Games template
 ('background', NULL, 4, 0, 0, 0, 0, 1, 19, 1),
