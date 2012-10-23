@@ -54,7 +54,7 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
 
     public function getDataAction()
     {
-        $aMessage = array('status' => 0, 'data' => false);
+        $aMessage = array('status' => 0, 'data' => array('grid_width' => 11, 'grid_height' => 11));
 
         try {
             $oField = AM_Model_Db_Table_Abstract::factory('field')->findOneBy('id', $this->_iFieldId);
