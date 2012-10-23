@@ -74,8 +74,10 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
             /* @var $oGame AM_Model_Db_Game */
 
             if (is_null($oGame)) {
-                $aMessage['status'] = 1;
-                return $this->getHelper('Json')->sendJson($aMessage, false);
+                $oGame = new AM_Model_Db_Game();
+                $oGame->page = $oPage->id;
+                $oGame->type = AM_Model_Db_GameType::GAME_TYPE_CROSSWORD;
+                $oGame->save();
             }
 
             $aMessage['data']['grid_width'] = $oGame->getDataValue('grid_width', 11);
