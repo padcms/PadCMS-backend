@@ -5,7 +5,7 @@ ALTER TABLE `game_crossword_word` ADD `start_x` smallint(5) NOT NULL;
 ALTER TABLE `game_crossword_word` ADD `start_y` smallint(5) NOT NULL;
 
 INSERT INTO `field` (`name`, `description`, `field_type`, `min`, `max`, `max_width`, `max_height`, `weight`, `template`, `engine_version`) VALUES
-('body', NULL, 1, 0, 0, 0, 0, 1, 18, 1);
+('background', NULL, 4, 0, 0, 0, 0, 1, 18, 1);
 
 --//@UNDO
 
