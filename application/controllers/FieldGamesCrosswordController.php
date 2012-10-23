@@ -78,6 +78,14 @@ class FieldGamesCrosswordController extends AM_Controller_Action_Field
                 $oGame->page = $oPage->id;
                 $oGame->type = AM_Model_Db_GameType::GAME_TYPE_CROSSWORD;
                 $oGame->save();
+
+                $oGame->setDataValue('grid_width', 11);
+                $oGame->setDataValue('grid_height', 11);
+
+                $oElement = $oPage->getElementForField($oField);
+                /* @var $oElement AM_Model_Db_Element */
+                $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Games::DATA_KEY_GAME_ID, $oGame->id);
+                $oElement->getResources()->addKeyValue(AM_Model_Db_Element_Data_Games::DATA_KEY_GAME_TYPE, $oGame->getType()->title);
             }
 
             $aMessage['data']['grid_width'] = $oGame->getDataValue('grid_width', 11);
