@@ -211,7 +211,7 @@
                 });
             };
 
-            if (question.length < 5 || question.match(/^[a-zA-Z \!\.\,]+$/) == null) {
+            if (question.length < 5 || question.match(/^[a-zA-Z\-_ ’'‘ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ\?\!\.\,]+$/) == null) {
                 makeError();
                 return false;
             }
@@ -337,7 +337,7 @@
             //var lstFilledCells = lstSelectedCells.filter('.ge-confirmed-word');
             //if (lstSelectedCells.length > 2 && lstFilledCells.length != lstSelectedCells.length) {
 
-            if (lstSelectedCells.length > 2) {
+            if (lstSelectedCells.length > 1) {
                 iSelectedCellsCount = lstSelectedCells.length;
 
                 var iY1 = lstSelectedCells.first().attr('id').replace('o', '').split('x')[0];
@@ -358,7 +358,7 @@
                     var sCellValue = '';
                     var sReadOnlyAttribute = '';
                     var sReadOnlyBackgroundClass = '';
-                    var xForbiddenCharacters = /_|\d|\W/;
+                    var xForbiddenCharacters = /_|\d/;
                     var iDialogWidth = 50 * iSelectedCellsCount;
 
                     $('#wordBlock input').detach();
@@ -384,7 +384,8 @@
 
                     $( '.letter' ).change().keyup(function ()
                     {
-                        if( $(this).val().match(/\w/) != null && $(this).val().match(xForbiddenCharacters) == null ) {
+                        var forbidden = $(this).val().match(xForbiddenCharacters);
+                        if( $(this).val().match(/[a-zA-ZÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ]/) != null && $(this).val().match(xForbiddenCharacters) == null ) {
                             $(this).next().not('[readonly="true"]').focus();
                         }
                         $(this).val($(this).val().replace(xForbiddenCharacters, ''));
