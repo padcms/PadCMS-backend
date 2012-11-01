@@ -282,6 +282,14 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
         $this->databaseControls[] = new Volcano_Component_Control_Database_Static($this->actionController, 'created', new Zend_Db_Expr('NOW()'));
 
+        $oHorizontalModeControl = $this->controls['pdf_type'];
+        /* @var $oHorizontalModeControl Volcano_Component_Control_Database */
+
+        $sHorizontalMode = $oHorizontalModeControl->getValue();
+        if (empty($sHorizontalMode)) {
+            $oHorizontalModeControl->setValue(AM_Model_Db_Issue::HORISONTAL_MODE_NONE);
+        }
+
         if (!parent::insert()) {
             return false;
         }
