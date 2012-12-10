@@ -55,7 +55,7 @@ class AM_Mapper_Sqlite_Term extends AM_Mapper_Sqlite_Abstract
         }
 
         $aData = array(
-                'id'            => $oTerm->id,
+                'id'            => null,
                 'title'         => $oTerm->title,
                 'description'   => $oTerm->description,
                 'thumb_stripe'  => $oTerm->getResources()->getValueForExport(AM_Model_Db_Term_Data_Resource::RESOURCE_KEY_STRIPE),
