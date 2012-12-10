@@ -85,7 +85,7 @@ class AM_Cli_Task_ResizeHelp extends AM_Cli_Task_Resize_Abstract
 
                 ->where('name IS NOT NULL')
 
-                ->columns(array('id' => 'issue_help_page.id', 'type' => 'issue_help_page.type'))
+                ->columns(array('id' => 'issue.id', 'type' => 'issue_help_page.type'))
 
                 ->order('issue_help_page.id_issue ASC');
 
