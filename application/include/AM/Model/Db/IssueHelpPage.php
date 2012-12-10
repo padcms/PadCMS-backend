@@ -119,6 +119,15 @@ class AM_Model_Db_IssueHelpPage extends AM_Model_Db_Abstract
 
         return $this->_oResource;
     }
+    
+    /**
+     * Method for compatibility with Element and Term ifaces
+     * @return AM_Model_Db_PageHorisontal
+     */
+    public function getResources()
+    {
+        return $this->getResource();
+    }
 
     /**
      * Fetch resource

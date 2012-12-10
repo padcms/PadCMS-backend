@@ -220,17 +220,9 @@ class AM_Model_Db_IssueHelpPage_Data_Resource extends AM_Model_Db_IssueHelpPage_
      */
     public function getResourcePathForExport()
     {
-        $sFileExtension = pathinfo($this->_getIssueHelpPage()->name, PATHINFO_EXTENSION);
-        $sFileExtension = Zend_Filter::filterStatic($sFileExtension, 'StringToLower', array('encoding' => 'UTF-8'));
-        $sFileExtension = ('pdf' == $sFileExtension) ? 'png' : $sFileExtension;
-
-        if (empty($sFileExtension)) {
-            return null;
-        }
-
         $sValue =   '/' . $this->_getIssueHelpPage()->getThumbnailPresetType()
                  . '/' . AM_Tools_String::generatePathFromId($this->_getIssueHelpPage()->id_issue)
-                 . '/' . $this->_getIssueHelpPage()->type . '.' . $sFileExtension;
+                 . '/' . $this->_getIssueHelpPage()->type . '.' . $this->getImageType();
 
         return $sValue;
     }

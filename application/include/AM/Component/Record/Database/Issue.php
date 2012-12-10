@@ -67,7 +67,7 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.\_]+$/')));
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'state', 'State', array(array('require')), 'state');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation');
