@@ -43,7 +43,7 @@
                         <div class="toc">
                             <div class="form-item-wrapper page-color-picker">
                                 <input id="toc-current-color-input" value="" type="text" class="form-text cpicker_fld"/>
-                                <div id="colorSelector">
+                                <div id="colorSelector" class="color-selector">
                                     <div id="colorSelectorBg"></div>
                                 </div>
                             </div>

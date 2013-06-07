@@ -7,7 +7,7 @@
     <script type="text/javascript">
         window.issueId = '{if isset($issue)}{$issue.primaryKeyValue}{/if}';
         window.appId = '{if isset($issue)}{$issue.appId}{/if}';
-        colorPickerHandler.init($('.with-color-picker'));
+        colorPickerHandler.init($('div.with-color-picker'));
     </script>
 {/capture}
 
@@ -81,14 +81,28 @@
                         </div>
                         {/if}
 
-                        <div class="form-item{if isset($number) && $number.errors} error{/if}">
+                        <div class="form-item{if isset($issue_color) && $issue_color.errors} error{/if}">
                             <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>
                             <div class="form-item-wrapper with-color-picker" >
                                 {if isset($issue_color)}
-                                    {include file="Volcano/input.tpl" control=$issue_color id="cpicker_fld" _class="form-text cpicker_fld" _additional='style="width:292px;"'}
+                                    {include file="Volcano/input.tpl" control=$issue_color id="color" _class="form-text cpicker_fld" _additional='style="width:292px;"'}
                                 {/if}
-                                <div id="colorSelector">
+                                <div class="color-selector">
                                     <div style="background-color: #{if isset($issue_color)}{$issue_color.value}{/if};"/></div>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+                            <div class="description"></div>
+                        </div>
+
+                        <div class="form-item{if isset($summary_color) && $summary_color.errors} error{/if}">
+                            <label>{if isset($summary_color)}{$summary_color.title|escape}{/if}</label>
+                            <div class="form-item-wrapper with-color-picker" >
+                                {if isset($summary_color)}
+                                    {include file="Volcano/input.tpl" control=$summary_color id="summary_color" _class="form-text cpicker_fld" _additional='style="width:292px;"'}
+                                {/if}
+                                <div class="color-selector">
+                                    <div style="background-color: #{if isset($summary_color)}{$summary_color.value}{/if};"/></div>
                                 </div>
                             </div>
                             <div class="clr"></div>

@@ -38,8 +38,8 @@
         <div class="toc">
             <div class="form-item-wrapper page-color-picker">
                 <input id="page-color-input" value="{$page.color}" type="text" class="form-text cpicker_fld"/>
-                <div id="colorSelector">
-                    <div id="colorSelectorBg" style="background-color: #{if isset($page.color)}{$page.color}{/if};"></div>
+                <div id="colorSelector" class="color-selector">
+                    <div id="colorSelectorBg" class="color-selector" style="background-color: #{if isset($page.color)}{$page.color}{/if};"></div>
                 </div>
             </div>
             <a id="page-color-btn" class="cbutton" href="#"><span><span class="ico">{'Save'|translate}</span></span></a>

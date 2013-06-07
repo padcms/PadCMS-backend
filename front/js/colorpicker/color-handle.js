@@ -6,9 +6,14 @@
  * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
  */
 var colorPickerHandler = {
-    init: function (colorPickerBlock) {
-            var colorPickerInput = colorPickerBlock.children('input');
-            var colorSelector    = $('#colorSelector', colorPickerBlock);
+    init: function (collection) {
+      $(collection).each(function(){
+        colorPickerHandler.initItem(this);
+      });
+    },
+    initItem: function (colorPickerBlock) {
+            var colorPickerInput = $('input', colorPickerBlock);
+            var colorSelector    = $('div.color-selector', colorPickerBlock);
 
             colorPickerInput.ColorPicker({
                 color: '#d9411a',
@@ -20,14 +25,14 @@ var colorPickerHandler = {
                         $(this).ColorPickerSetColor(this.value);
                 },
                 onChange: function (hsb, hex, rgb) {
-                        $('#colorSelector div', colorPickerBlock).css('backgroundColor', '#' + hex);
+                  $('div', colorSelector).css('backgroundColor', '#' + hex);
                 }
             })
             .bind('keyup', function(){
-		$(this).ColorPickerSetColor(this.value);
+		                $(this).ColorPickerSetColor(this.value);
             });
 
-            $('#colorSelector', colorPickerBlock).ColorPicker({
+            colorSelector.ColorPicker({
                     color: '#d9411a',
                     onSubmit: function(hsb, hex, rgb, el) {
                             $(colorPickerInput).val(hex);
@@ -39,10 +44,10 @@ var colorPickerHandler = {
                             }
                     },
                     onChange: function (hsb, hex, rgb) {
-                            $('#colorSelector div').css('backgroundColor', '#' + hex);
+                            $('div', colorSelector).css('backgroundColor', '#' + hex);
                     }
             });
 
-        $('.colorpicker').css('z-index', "100000000");
+            $('.colorpicker').css('z-index', "100000000");
     }
 };

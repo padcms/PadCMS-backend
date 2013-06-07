@@ -1,0 +1,1 @@
+ALTER TABLE  `issue` ADD  `summary_color` VARCHAR( 6 ) NULL DEFAULT NULL AFTER  `issue_color`;
