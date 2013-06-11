@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `issue` (
   `deleted` enum('yes','no') NOT NULL DEFAULT 'no',
   `issue_color` varchar(6) DEFAULT NULL,
   `summary_color` varchar(6) DEFAULT NULL,
+  `pastille_color` varchar(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `product_id` (`product_id`),
   KEY `number` (`number`),

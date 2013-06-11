@@ -1,0 +1,1 @@
+ALTER TABLE  `issue` ADD  `pastille_color` VARCHAR( 6 ) NULL DEFAULT NULL;

@@ -109,6 +109,20 @@
                             <div class="description"></div>
                         </div>
 
+                        <div class="form-item{if isset($pastille_color) && $pastille_color.errors} error{/if}">
+                            <label>{if isset($pastille_color)}{$pastille_color.title|escape}{/if}</label>
+                            <div class="form-item-wrapper with-color-picker" >
+                                {if isset($pastille_color)}
+                                    {include file="Volcano/input.tpl" control=$pastille_color id="pastille_color" _class="form-text cpicker_fld" _additional='style="width:292px;"'}
+                                {/if}
+                                <div class="color-selector">
+                                    <div style="background-color: #{if isset($pastille_color)}{$pastille_color.value}{/if};"/></div>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+                            <div class="description"></div>
+                        </div>
+
                         {if isset($issue) && $issue.orientations}
                         <div class="form-item select-themed{if isset($orientation) && $orientation.errors} error{/if}">
                             <label>{if isset($orientation)}{$orientation.title|escape}{/if} <span>*</span></label>
