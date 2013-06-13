@@ -19,7 +19,7 @@ class AM_Cli_Task_TestPush extends AM_Cli_Task_Abstract
       $sToken   = $this->_getOption('token');
       $sMessage = $this->_getOption('message');
 
-      $oTaskPlanner = new AM_Task_Worker_AppleNotification_Planner();
+      $oTaskPlanner = new AM_Task_Worker_AppleNotification_PlannerTest();
       $oTaskPlanner->setOptions(array('issue_id' => $iIssueId,
                                       'message'  => $sMessage,
                                       'badge'    => 1,
