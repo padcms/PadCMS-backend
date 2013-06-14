@@ -15,7 +15,7 @@ class AM_Cli_Task_TestPush extends AM_Cli_Task_Abstract
 
     public function execute()
     {
-      $iIssueId  = intval($this->_getOption('token'));
+      $iIssueId  = intval($this->_getOption('issue'));
       $sToken   = $this->_getOption('token');
       $sMessage = $this->_getOption('message');
 
