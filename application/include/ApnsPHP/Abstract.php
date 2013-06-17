@@ -334,9 +334,14 @@ abstract class ApnsPHP_Abstract
 		/**
 		 * @see http://php.net/manual/en/context.ssl.php
 		 */
-		$streamContext = AM_Tools_Standard::getInstance()->stream_context_create(array('ssl' => array(
-			'local_cert' => $this->_sProviderCertificateFile
-		)));
+		$streamContext = AM_Tools_Standard::getInstance()->stream_context_create(
+      array(
+        'ssl' => array(
+          'local_cert' => $this->_sProviderCertificateFile,
+          'passphrase' => '1234',
+        ),
+      )
+    );
 
 		$this->_hSocket = AM_Tools_Standard::getInstance()->stream_socket_client($sURL, $nError, $sError,
 			$this->_nConnectTimeout, STREAM_CLIENT_CONNECT, $streamContext);
