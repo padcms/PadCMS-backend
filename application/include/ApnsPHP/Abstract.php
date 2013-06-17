@@ -338,7 +338,6 @@ abstract class ApnsPHP_Abstract
       array(
         'ssl' => array(
           'local_cert' => $this->_sProviderCertificateFile,
-          'passphrase' => '1234',
         ),
       )
     );
