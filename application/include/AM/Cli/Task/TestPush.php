@@ -35,12 +35,11 @@ class AM_Cli_Task_TestPush extends AM_Cli_Task_Abstract
       }
       $aDeviceToken = $oDeviceToken->toArray();
 
-
-      $oTaskPlanner = new AM_Task_Worker_AppleNotification_PlannerTest();
-      $oTaskPlanner->setOptions(array('issue_id' => $iIssueId,
-                                      'message'  => $sMessage,
-                                      'badge'    => 1,
-                                      'token'    => $aDeviceToken['token']))
-                   ->create();
+      $oWorker = new AM_Task_Worker_AppleNotification_Sender();
+      $oWorker->addOption('message', $sMessage);
+      $oWorker->addOption('application_id', $aIssue['application']);
+      $oWorker->addOption('tokens', array($aDeviceToken['token']));
+      $oWorker->addOption('badge', 0);
+      $oWorker->create();
     }
 }
