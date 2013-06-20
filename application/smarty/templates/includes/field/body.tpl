@@ -37,7 +37,7 @@
 
             {if isset($field.element.originUri)}
               <div class="actions">
-                  <a class="action-2" target="_blank" href="{$field.element.originUri}" title="{'Download'|translate}"></a>
+                  <a class="action-2" target="_blank" href="{$field.element.originUri}" title="{'Download original file'|translate}"></a>
               </div>
             {/if}
 
