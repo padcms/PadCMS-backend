@@ -35,9 +35,9 @@
 
             <span title="{if isset($field.element)}{$field.element.fileName}{/if}" class="name">{if isset($field.element)}{$field.element.fileNameShort}{/if}</span>
 
-            {if isset($field.element.bigUri)}
+            {if isset($field.element.originUri)}
               <div class="actions">
-                  <a class="action-2" target="_blank" href="{$field.element.bigUri}" title="{'Download'|translate}"></a>
+                  <a class="action-2" target="_blank" href="{$field.element.originUri}" title="{'Download'|translate}"></a>
               </div>
             {/if}
 
