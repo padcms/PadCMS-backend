@@ -37,7 +37,7 @@
 
             {if isset($field.element.bigUri)}
               <div class="actions">
-                  <a class="action-2" href="{$field.element.bigUri}" title="{'Download'|translate}"></a>
+                  <a class="action-2" target="_blank" href="{$field.element.bigUri}" title="{'Download'|translate}"></a>
               </div>
             {/if}
 
