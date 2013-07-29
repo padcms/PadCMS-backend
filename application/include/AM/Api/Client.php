@@ -186,6 +186,9 @@ class AM_Api_Client extends AM_Api
                     $aRevision = array(
                         'revision_id'               => $oRevision->id,
                         'revision_title'            => $oRevision->title,
+                        'revision_subtitle'         => $oRevision->subtitle,
+                        'revision_author'           => $oRevision->author,
+                        'revision_words'            => $oRevision->words,
                         'revision_state'            => AM_Model_Db_State::stateToText($oRevision->state),
                         'revision_cover_image_list' => '',
                         'revision_video'            => '',
