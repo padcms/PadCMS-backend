@@ -92,7 +92,7 @@
           <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
 
           <div
-              class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _contenteditable="true" _class="form-textarea"}{/if}</div>
+              class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
           <div class="clr"></div>
         </div>
 
