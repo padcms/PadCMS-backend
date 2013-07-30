@@ -144,6 +144,11 @@ class AM_Api_Client extends AM_Api
                 $aIssue = array(
                     'issue_id'              => $oIssue->id,
                     'issue_title'           => $oIssue->title,
+                    'issue_subtitle'        => $oIssue->subtitle,
+                    'issue_author'          => $oIssue->author,
+                    'issue_words'           => $oIssue->words,
+                    'issue_excerpt'         => $oIssue->excerpt,
+                    'issue_welcome'         => $oIssue->welcome,
                     'issue_number'          => $oIssue->number,
                     'issue_state'           => AM_Model_Db_State::stateToText($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
@@ -186,9 +191,6 @@ class AM_Api_Client extends AM_Api
                     $aRevision = array(
                         'revision_id'               => $oRevision->id,
                         'revision_title'            => $oRevision->title,
-                        'revision_subtitle'         => $oRevision->subtitle,
-                        'revision_author'           => $oRevision->author,
-                        'revision_words'            => $oRevision->words,
                         'revision_state'            => AM_Model_Db_State::stateToText($oRevision->state),
                         'revision_cover_image_list' => '',
                         'revision_video'            => '',

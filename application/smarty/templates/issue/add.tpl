@@ -1,6 +1,11 @@
 {include file="includes/header.tpl"}
 
+{capture name=css}
+  <link href="/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
+{/capture}
+
 {capture name=js}
+  <script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
   <script type="text/javascript" src="/js/issue/upload.js"></script>
   <script type="text/javascript" src="/js/colorpicker/colorpicker.js"></script>
   <script type="text/javascript" src="/js/colorpicker/color-handle.js"></script>
@@ -8,6 +13,7 @@
     window.issueId = '{if isset($issue)}{$issue.primaryKeyValue}{/if}';
     window.appId = '{if isset($issue)}{$issue.appId}{/if}';
     colorPickerHandler.init($('div.with-color-picker'));
+    CKEDITOR.replaceAll();
   </script>
 {/capture}
 
@@ -58,6 +64,14 @@
           </div>
         </div>
 
+        <div class="form-item{if isset($subtitle) && $subtitle.errors} error{/if}">
+          <label>{if isset($subtitle)}{$subtitle.title|escape}{/if} <span>*</span></label>
+
+          <div
+              class="form-item-wrapper">{if isset($subtitle)}{include file="Volcano/input.tpl" control=$subtitle _class="form-text"}{/if}</div>
+          <div class="clr"></div>
+        </div>
+
         <div class="form-item{if isset($author) && $author.errors} error{/if}">
           <label>{if isset($author)}{$author.title|escape}{/if} <span>*</span></label>
 
@@ -66,11 +80,19 @@
           <div class="clr"></div>
         </div>
 
-        <div class="form-item{if isset($subtitle) && $subtitle.errors} error{/if}">
-          <label>{if isset($subtitle)}{$subtitle.title|escape}{/if} <span>*</span></label>
+        <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
+          <label>{if isset($excerpt)}{$excerpt.title|escape}{/if}</label>
 
           <div
-              class="form-item-wrapper">{if isset($subtitle)}{include file="Volcano/input.tpl" control=$subtitle _class="form-text"}{/if}</div>
+              class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
+          <div class="clr"></div>
+        </div>
+
+        <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
+          <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
+
+          <div
+              class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _contenteditable="true" _class="form-textarea"}{/if}</div>
           <div class="clr"></div>
         </div>
 
@@ -86,7 +108,7 @@
         </div>
 
         <div class="form-item{if isset($words) && $words.errors} error{/if}">
-          <label>{if isset($words)}{$words.title|escape}{/if} <span>*</span></label>
+          <label>{if isset($words)}{$words.title|escape}{/if}</label>
 
           <div
               class="form-item-wrapper">{if isset($words)}{include file="Volcano/input.tpl" control=$words _class="form-text"}{/if}</div>

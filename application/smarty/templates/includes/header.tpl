@@ -17,7 +17,6 @@
         <link href="/js/lib/jquery/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
         <link href="/js/lib/jquery/jstree/themes/default/style.css" rel="stylesheet" type="text/css" />
         <link href="/css/layout.css" rel="stylesheet" media="screen" type="text/css" />
-        <link href="/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
 
         {if isset($smarty.capture.css)}{$smarty.capture.css}{/if}
 

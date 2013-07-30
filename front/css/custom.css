@@ -849,3 +849,7 @@ h3.title-inprogress a {
 #galleries-tabs {
     border: none;
 }
+
+div.cke_editable_inline {
+  border: 1px solid #A09F9F;
+}
