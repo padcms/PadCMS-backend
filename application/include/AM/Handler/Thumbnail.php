@@ -261,7 +261,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
      * @param string $sFileName
      * @return string
      */
-    public function getResourceUrl($sPreset, $sResourceType, $iId = null, $sFileName = null)
+    public function getResourceUrl($sPreset, $sResourceType, $iId = null, $sFileName = null, $sFileExtension = null)
     {
         if (is_null($iId) || is_null($sFileName)) {
             $sImageUrl = '/' . ltrim($this->getPresetDefaultThumbnailUrl($sPreset), '/');
@@ -272,6 +272,9 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         $aPathInfo = pathinfo($sFileName);
         if ('pdf' == Zend_Filter::filterStatic($aPathInfo['extension'], 'StringToLower', array('encoding' => 'UTF-8'))) {
             $sFileName = $aPathInfo['filename'] . '.png';
+        }
+        elseif ($sFileExtension) {
+          $sFileName = $aPathInfo['filename'] . '.' . $sFileExtension;
         }
 
         $sImageUrl = $this->getResourceStorage()->getResourceUrl($sPreset, $sResourceType, $iId, $sFileName);

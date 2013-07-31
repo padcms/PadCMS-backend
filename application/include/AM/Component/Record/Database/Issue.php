@@ -192,7 +192,7 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
             $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
 
             if ($oIssue->image) {
-                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image)
+                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image, 'png')
                     . '?' . strtotime($oIssue->updated);
             }
 

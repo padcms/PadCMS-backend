@@ -157,10 +157,10 @@ class AM_Api_Client extends AM_Api
                 );
 
                 if (!empty($oIssue->image)) {
-                    $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image)
+                    $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
                         . '?' . strtotime($oIssue->updated);
 
-                    $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image)
+                    $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
                         . '?' . strtotime($oIssue->updated);
                 }
 

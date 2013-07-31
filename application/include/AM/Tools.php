@@ -158,12 +158,12 @@ class AM_Tools extends Volcano_Tools
      * @param string $sFileName
      * @return string
      */
-    public static function getImageUrl($sPreset, $sType, $iId = null, $sFileName = null)
+    public static function getImageUrl($sPreset, $sType, $iId = null, $sFileName = null, $sFileExtension = null)
     {
         $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
         /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
 
-        $sImageUrl = $oThumbnailerHandler->getResourceUrl($sPreset, $sType, $iId, $sFileName);
+        $sImageUrl = $oThumbnailerHandler->getResourceUrl($sPreset, $sType, $iId, $sFileName, $sFileExtension);
 
         return $sImageUrl;
     }
