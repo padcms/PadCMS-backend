@@ -34,15 +34,25 @@ class AM_Component_Control_Database_File extends Volcano_Component_Control_Datab
             return true;
         }
         $fileFolder = str_replace("[ID]", trim(AM_Tools_String::generatePathFromId($recordKeyValue), DIRECTORY_SEPARATOR), $this->fileFolder);
-        if (!@is_dir($fileFolder))
+        if (!@is_dir($fileFolder)) {
             if (!@mkdir($fileFolder, Volcano_Component_Control_Database_File::$folderMode, true)) {
                 $this->errors[] = $this->localizer->translate("File I/O Error");
                 return false;
             }
-        if (!@move_uploaded_file($_FILES[$this->name]["tmp_name"], $fileFolder . "/" . $this->value)) {
+        }
+        $sDestination = $fileFolder . "/" . $this->value;
+        if (!@move_uploaded_file($_FILES[$this->name]["tmp_name"], $sDestination)) {
             $this->errors[] = $this->localizer->translate("File I/O Error");
             return false;
         }
-        return true;
+
+        $oThumbnailerHandler = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
+        /* @var $oThumbnailerHandler AM_Handler_Thumbnail */
+
+        $oThumbnailerHandler->clearSources()
+          ->addSourceFile($sDestination)
+          ->loadAllPresets(AM_Model_Db_Issue::PRESET_ISSUE_IMAGE)
+          ->createThumbnails();
+      return true;
     }
 }
