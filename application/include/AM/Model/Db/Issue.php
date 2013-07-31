@@ -52,6 +52,8 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
     const ORIENTATION_VERTICAL   = 'vertical';
     const ORIENTATION_HORIZONTAL = 'horizontal';
 
+    const PRESET_ISSUE_IMAGE = 'issue-image';
+
     const STATUS_WIP       = 1;
     const STATUS_PUBLISHED = 2;
     const STATUS_ARCHIVED  = 3;

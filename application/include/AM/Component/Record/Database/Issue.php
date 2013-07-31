@@ -68,8 +68,8 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'subtitle', 'Subtitle', array(array('require'), array('maximum length', 50)), 'subtitle');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'author', 'Author', array(array('require'), array('maximum length', 100)), 'author');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'words', 'Words', array(array('integer'), array('minimum value', 1)), 'words');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'excerpt', 'Excerpt', array(array('maximum length', 180)), 'excerpt');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'words', 'Words', array(array('require'), array('integer'), array('minimum value', 1)), 'words');
+        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'excerpt', 'Excerpt', array(array('maximum length', 180), array('require')), 'excerpt');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'welcome', 'Welcome message', array(array('maximum length', 350)), 'welcome');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number');
         $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
@@ -83,9 +83,17 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId);
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()'));
 
+        $validationsRules = array();
+
         if (!$iIssueId) {
+            $validationsRules[] = array('require');
             $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'user', $aUser['id']);
         }
+
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $iIssueId);
+        $sImageValue = !empty($oIssue->image) ? $oIssue->image : null;
+        $aControls[] = new AM_Component_Control_Database_File($oActionController, 'image', 'Image',  $validationsRules, 'image',
+            AM_Tools::getContentPath(AM_Model_Db_Issue::PRESET_ISSUE_IMAGE) . DIRECTORY_SEPARATOR . '[ID]', TRUE, $sImageValue);
 
         return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
     }
@@ -181,9 +189,14 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         $aHorizontalHelpPage = false;
 
         if ($this->primaryKeyValue) {
-            $oQuery = $this->db->select()->from('issue', array('static_pdf_mode'))
-                    ->where('id = ?', $this->primaryKeyValue);
-            $sStaticPdfMode = $this->db->fetchOne($oQuery);
+            $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
+
+            if ($oIssue->image) {
+                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image)
+                    . '?' . strtotime($oIssue->updated);
+            }
+
+            $sStaticPdfMode = $oIssue->static_pdf_mode;
 
             $oQuery = $this->db->select()->from('static_pdf', array('id', 'name', 'issue', 'updated' => 'UNIX_TIMESTAMP(updated)'))
                     ->where('issue = ?', $this->primaryKeyValue)
@@ -261,6 +274,7 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
         $aRecord = array(
             'staticPdfMode'      => (isset($sStaticPdfMode) && $sStaticPdfMode) ? $sStaticPdfMode : null,
+            'imageUri'           => isset($sIssueImageUri) ? $sIssueImageUri : null,
             'states'             => $aStates,
             'orientations'       => self::$_aValidOrientations,
             'pdf'                => isset($aPdfFiles) ? $aPdfFiles : array(),

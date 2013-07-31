@@ -72,6 +72,16 @@
           <div class="clr"></div>
         </div>
 
+        <div class="form-item{if isset($image) && $image.errors} error{/if}">
+          <label>{if isset($image)}{$image.title|escape}{/if} <span>*</span></label>
+
+          <div class="{if isset($issue.imageUri)}form-item-image-wrapper{else}form-item-wrapper{/if}">
+            {if isset($issue.imageUri)}<img height="150" width="270" src="{$issue.imageUri}">{/if}
+            {if isset($image)}{include file="Volcano/input.tpl" control=$image _type="file" _class="form-text"}{/if}
+          </div>
+          <div class="clr"></div>
+        </div>
+
         <div class="form-item{if isset($author) && $author.errors} error{/if}">
           <label>{if isset($author)}{$author.title|escape}{/if} <span>*</span></label>
 
@@ -81,7 +91,7 @@
         </div>
 
         <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
-          <label>{if isset($excerpt)}{$excerpt.title|escape}{/if}</label>
+          <label>{if isset($excerpt)}{$excerpt.title|escape}{/if} <span>*</span></label>
 
           <div
               class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
@@ -108,7 +118,7 @@
         </div>
 
         <div class="form-item{if isset($words) && $words.errors} error{/if}">
-          <label>{if isset($words)}{$words.title|escape}{/if}</label>
+          <label>{if isset($words)}{$words.title|escape}{/if} <span>*</span></label>
 
           <div
               class="form-item-wrapper">{if isset($words)}{include file="Volcano/input.tpl" control=$words _class="form-text"}{/if}</div>

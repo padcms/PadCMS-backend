@@ -156,6 +156,14 @@ class AM_Api_Client extends AM_Api
                     'revisions'             => array()
                 );
 
+                if (!empty($oIssue->image)) {
+                    $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image)
+                        . '?' . strtotime($oIssue->updated);
+
+                    $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image)
+                        . '?' . strtotime($oIssue->updated);
+                }
+
                 //Prepearing help pages
                 $oHelpPages = AM_Model_Db_Table_Abstract::factory('issue_help_page')->findAllBy(array('id_issue' => $oIssue->id));
 
