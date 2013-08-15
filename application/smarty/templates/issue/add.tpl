@@ -56,55 +56,59 @@
         <div class="form-item{if isset($title) && $title.errors} error{/if}">
           <label>{if isset($title)}{$title.title|escape}{/if} <span>*</span></label>
 
-          <div
-              class="form-item-wrapper">{if isset($title)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}</div>
+          <div class="form-item-wrapper">{if isset($title)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}</div>
           <div class="clr"></div>
           <div class="description">
             {'Current issue title, will be used on the device when user will try to browse available issues. Take care, this name may be seen by your customers.'|translate}
           </div>
         </div>
 
-        <div class="form-item{if isset($subtitle) && $subtitle.errors} error{/if}">
-          <label>{if isset($subtitle)}{$subtitle.title|escape}{/if} <span>*</span></label>
-
-          <div
-              class="form-item-wrapper">{if isset($subtitle)}{include file="Volcano/input.tpl" control=$subtitle _class="form-text"}{/if}</div>
-          <div class="clr"></div>
-        </div>
-
-        <div class="form-item{if isset($image) && $image.errors} error{/if}">
-          <label>{if isset($image)}{$image.title|escape}{/if} <span>*</span></label>
-
-          <div class="{if isset($issue.imageUri)}form-item-image-wrapper{else}form-item-wrapper{/if}">
-            {if isset($issue.imageUri)}<img height="150" width="270" src="{$issue.imageUri}">{/if}
-            {if isset($image)}{include file="Volcano/input.tpl" control=$image _type="file" _class="form-text"}{/if}
+        {if isset($subtitle)}
+          <div class="form-item{if isset($subtitle) && $subtitle.errors} error{/if}">
+            <label>{if isset($subtitle)}{$subtitle.title|escape}{/if} <span>*</span></label>
+            <div
+                class="form-item-wrapper">{if isset($subtitle)}{include file="Volcano/input.tpl" control=$subtitle _class="form-text"}{/if}</div>
+            <div class="clr"></div>
           </div>
-          <div class="clr"></div>
-        </div>
+        {/if}
 
-        <div class="form-item{if isset($author) && $author.errors} error{/if}">
-          <label>{if isset($author)}{$author.title|escape}{/if} <span>*</span></label>
+        {if isset($image)}
+          <div class="form-item{if isset($image) && $image.errors} error{/if}">
+            <label>{if isset($image)}{$image.title|escape}{/if} <span>*</span></label>
 
-          <div
-              class="form-item-wrapper">{if isset($author)}{include file="Volcano/input.tpl" control=$author _class="form-text"}{/if}</div>
-          <div class="clr"></div>
-        </div>
+            <div class="{if isset($issue.imageUri)}form-item-image-wrapper{else}form-item-wrapper{/if}">
+              {if isset($issue.imageUri)}<img height="150" width="270" src="{$issue.imageUri}">{/if}
+              {if isset($image)}{include file="Volcano/input.tpl" control=$image _type="file" _class="form-text"}{/if}
+            </div>
+            <div class="clr"></div>
+          </div>
+        {/if}
 
-        <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
-          <label>{if isset($excerpt)}{$excerpt.title|escape}{/if} <span>*</span></label>
+        {if isset($author)}
+          <div class="form-item{if isset($author) && $author.errors} error{/if}">
+            <label>{if isset($author)}{$author.title|escape}{/if} <span>*</span></label>
+            <div class="form-item-wrapper">{if isset($author)}{include file="Volcano/input.tpl" control=$author _class="form-text"}{/if}</div>
+            <div class="clr"></div>
+          </div>
+        {/if}
 
-          <div
-              class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
-          <div class="clr"></div>
-        </div>
+        {if isset($excerpt)}
+          <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
+            <label>{if isset($excerpt)}{$excerpt.title|escape}{/if} <span>*</span></label>
+            <div
+                class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
+            <div class="clr"></div>
+          </div>
+        {/if}
 
-        <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
-          <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
-
-          <div
-              class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
-          <div class="clr"></div>
-        </div>
+        {if isset($welcome)}
+          <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
+            <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
+            <div
+                class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
+            <div class="clr"></div>
+          </div>
+        {/if}
 
         <div class="form-item{if isset($number) && $number.errors} error{/if}">
           <label>{if isset($number)}{$number.title|escape}{/if} <span>*</span></label>
@@ -117,13 +121,14 @@
           </div>
         </div>
 
-        <div class="form-item{if isset($words) && $words.errors} error{/if}">
-          <label>{if isset($words)}{$words.title|escape}{/if} <span>*</span></label>
-
-          <div
-              class="form-item-wrapper">{if isset($words)}{include file="Volcano/input.tpl" control=$words _class="form-text"}{/if}</div>
-          <div class="clr"></div>
+        {if isset($welcome)}
+          <div class="form-item{if isset($words) && $words.errors} error{/if}">
+            <label>{if isset($words)}{$words.title|escape}{/if} <span>*</span></label>
+            <div
+                class="form-item-wrapper">{if isset($words)}{include file="Volcano/input.tpl" control=$words _class="form-text"}{/if}</div>
+            <div class="clr"></div>
         </div>
+        {/if}
 
         <div class="form-item{if isset($product_id) && $product_id.errors} error{/if}">
           <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>
@@ -140,9 +145,11 @@
         {if isset($issue) && $issue.states && $issue.primaryKeyValue}
           <div class="form-item select-themed{if isset($state) && $state.errors} error{/if}">
             <label>{if isset($state)}{$state.title|escape}{/if} <span>*</span></label>
-
-            <div
-                class="form-item-wrapper">{if isset($state)}{include file="Volcano/select.tpl" control=$state _values=$issue.states _class="form-text"}{/if}</div>
+            <div class="form-item-wrapper">{if isset($state)}{include file="Volcano/select.tpl" control=$state _values=$issue.states _class="form-text"}{/if}</div>
+            <div class="clr"></div>
+            <div class="description">
+              {'Issue state.'|translate}
+            </div>
           </div>
         {/if}
 

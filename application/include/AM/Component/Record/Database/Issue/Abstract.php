@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Model_Db_State class definition.
+ * AM_Component_Record_Database_Issue_Abstract class definition.
  *
  * LICENSE
  *
@@ -36,33 +36,31 @@
  */
 
 /**
- * State model class
- * @ingroup AM_Model
+ * Issue record component
+ * @ingroup AM_Component
  */
-class AM_Model_Db_State extends AM_Model_Db_Abstract
+abstract class AM_Component_Record_Database_Issue_Abstract extends AM_Component_Record_Database
 {
-    const STATE_WORK_IN_PROGRESS = 1;
-    const STATE_PUBLISHED        = 2;
-    const STATE_ARCHIVED         = 3;
-    const STATE_FOR_REVIEW       = 4;
 
     /**
-     * Returns status name by it's number
+     * @param string $sType Application type
      *
-     * @param string $sState
      * @return string|null
      */
-    public static function stateToName($sState)
-    {
-        switch ($sState) {
-            case self::STATE_PUBLISHED:
-                return 'published';
-            case self::STATE_ARCHIVED:
-                return 'archived';
-            case self::STATE_WORK_IN_PROGRESS:
-                return 'work-in-progress';
+    public static function getClassByApplicationType($sType) {
+        switch ($sType) {
+            case AM_Model_Db_ApplicationType::TYPE_GENERIC:
+                return 'AM_Component_Record_Database_Issue_Generic';
+            case AM_Model_Db_ApplicationType::TYPE_RUE98WE:
+                return 'AM_Component_Record_Database_Issue_Rue89we';
         }
-
         return null;
+    }
+
+    public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
+    {
+        $this->applicationId = $iApplicationId;
+        return parent::__construct($oActionController,
+                $sName, array(), $oActionController->oDb, 'issue', 'id', $iIssueId);
     }
 }

@@ -85,7 +85,13 @@ class IssueController extends AM_Controller_Action
             throw new AM_Controller_Exception_Forbidden('Access denied');
         }
 
-        $oComponentRecord = new AM_Component_Record_Database_Issue($this, 'issue', $iIssueId, $this->iApplicationId);
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $this->iApplicationId);
+        /* @var $oApplication AM_Model_Db_Application */
+
+        $sClass = AM_Component_Record_Database_Issue_Abstract::getClassByApplicationType($oApplication->type);
+        /* @var string */
+
+        $oComponentRecord = new $sClass($this, 'issue', $iIssueId, $this->iApplicationId);
         $sResult = $oComponentRecord->operation();
         if ($sResult) {
             $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $oComponentRecord->getPrimaryKeyValue());

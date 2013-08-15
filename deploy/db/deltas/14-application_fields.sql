@@ -1,1 +1,1 @@
-ALTER TABLE  `application` ADD  `type` VARCHAR( 50 ) NOT NULL DEFAULT  'default' AFTER  `title`;
+ALTER TABLE  `application` ADD  `type` VARCHAR( 50 ) NOT NULL DEFAULT  'generic' AFTER  `title`;

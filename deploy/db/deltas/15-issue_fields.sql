@@ -1,0 +1,4 @@
+ALTER TABLE  `issue` CHANGE  `excerpt`  `excerpt` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE  `issue` CHANGE  `author`  `author` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+ALTER TABLE  `issue` CHANGE  `words`  `words` INT( 10 ) UNSIGNED NULL DEFAULT NULL;
+ALTER TABLE  `issue` CHANGE  `image`  `image` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;

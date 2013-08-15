@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Component_Record_Database_Issue class definition.
+ * AM_Component_Record_Database_Issue_Generic class definition.
  *
  * LICENSE
  *
@@ -38,9 +38,8 @@
 /**
  * Issue record component
  * @ingroup AM_Component
- * @todo refactoring
  */
-class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
+class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Database_Issue_Abstract
 {
     const STATE_WORK_IN_PROGRESS = 1;
 
@@ -59,43 +58,21 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
     {
-        $aUser = $oActionController->getUser();
+        parent::__construct($oActionController, $sName, $iIssueId, $iApplicationId);
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'state', 'State', array(array('require')), 'state'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color', array(array('color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'summary_color', 'Summary color', array(array('summary_color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'pastille_color', 'Pastille color', array(array('pastille_color'))));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()')));
 
-        $this->applicationId = $iApplicationId;
-
-        $aControls = array();
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'subtitle', 'Subtitle', array(array('require'), array('maximum length', 50)), 'subtitle');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'author', 'Author', array(array('require'), array('maximum length', 100)), 'author');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'words', 'Words', array(array('require'), array('integer'), array('minimum value', 1)), 'words');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'excerpt', 'Excerpt', array(array('maximum length', 180), array('require')), 'excerpt');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'welcome', 'Welcome message', array(array('maximum length', 350)), 'welcome');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'state', 'State', array(array('require')), 'state');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color', array(array('color')));
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'summary_color', 'Summary color', array(array('summary_color')));
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'pastille_color', 'Pastille color', array(array('pastille_color')));
-        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId);
-        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()'));
-
-        $validationsRules = array();
-
-        if (!$iIssueId) {
-            $validationsRules[] = array('require');
-            $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'user', $aUser['id']);
-        }
-
-        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $iIssueId);
-        $sImageValue = !empty($oIssue->image) ? $oIssue->image : null;
-        $aControls[] = new AM_Component_Control_Database_File($oActionController, 'image', 'Image',  $validationsRules, 'image',
-            AM_Tools::getContentPath(AM_Model_Db_Issue::PRESET_ISSUE_IMAGE) . DIRECTORY_SEPARATOR . '[ID]', TRUE, $sImageValue);
-
-        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
+        $this->postInitialize();
     }
 
     /**

@@ -98,6 +98,7 @@ class AM_Api_Client extends AM_Api
             $aApplication = array(
                 'application_id'                       => $oApplication->id,
                 'application_title'                    => $oApplication->title,
+                'application_type'                     => $oApplication->type,
                 'application_description'              => $oApplication->description,
                 'application_product_id'               => $oApplication->product_id,
                 'application_notification_email'       => $oApplication->{'nm_email_' . $sPlatform},
@@ -144,24 +145,28 @@ class AM_Api_Client extends AM_Api
                 $aIssue = array(
                     'issue_id'              => $oIssue->id,
                     'issue_title'           => $oIssue->title,
-                    'issue_subtitle'        => $oIssue->subtitle,
-                    'issue_author'          => $oIssue->author,
-                    'issue_words'           => $oIssue->words,
-                    'issue_excerpt'         => $oIssue->excerpt,
-                    'issue_welcome'         => $oIssue->welcome,
                     'issue_number'          => $oIssue->number,
-                    'issue_state'           => AM_Model_Db_State::stateToText($oIssue->state),
+                    'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
                     'paid'                  => false,
                     'revisions'             => array()
                 );
 
-                if (!empty($oIssue->image)) {
-                    $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
-                        . '?' . strtotime($oIssue->updated);
+                if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+                    $aIssue['issue_subtitle']   = $oIssue->subtitle;
+                    $aIssue['issue_author']     = $oIssue->author;
+                    $aIssue['issue_words']      = $oIssue->words;
+                    $aIssue['issue_excerpt']    = $oIssue->excerpt;
+                    $aIssue['issue_welcome']    = $oIssue->welcome;
+                    if (!empty($oIssue->image)) {
+                        $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
+                                AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
+                                . '?' . strtotime($oIssue->updated);
 
-                    $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
-                        . '?' . strtotime($oIssue->updated);
+                        $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300',
+                                AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
+                            . '?' . strtotime($oIssue->updated);
+                    }
                 }
 
                 //Prepearing help pages
@@ -199,7 +204,7 @@ class AM_Api_Client extends AM_Api
                     $aRevision = array(
                         'revision_id'               => $oRevision->id,
                         'revision_title'            => $oRevision->title,
-                        'revision_state'            => AM_Model_Db_State::stateToText($oRevision->state),
+                        'revision_state'            => AM_Model_Db_State::stateToName($oRevision->state),
                         'revision_cover_image_list' => '',
                         'revision_video'            => '',
                         'revision_created'          => null,
