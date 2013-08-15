@@ -42,6 +42,13 @@
  */
 class AM_Component_Record_Database_Application extends AM_Component_Record_Database
 {
+
+    /** @var array */
+    protected static $_aValidTypes = array(
+        AM_Model_Db_ApplicationType::TYPE_GENERIC,
+        AM_Model_Db_ApplicationType::TYPE_RUE98WE,
+    ); /**< @type array */
+
     /**
      *
      * @param AM_Controller_Action $oActionController
@@ -53,11 +60,32 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iId, $iClientId)
     {
         $aControls   = array();
+
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'client', $iClientId);
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'preview', 'Preview', array(array('numeric')), 'preview');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'description', 'Description', array(array('require')), 'description');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'title',
+                'Title',
+                array(array('require')));
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'preview',
+                'Preview',
+                array(array('numeric')));
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'description',
+                'Description',
+                array(array('require')));
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'product_id',
+                'Product id',
+                array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'type',
+                'Type', array(array('require')));
 
         $aControls[] = new Volcano_Component_Control_Database($oActionController,
                 'nm_twitter_ios',
@@ -91,7 +119,8 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
                 'nm_email_android',
                 'Message');
 
-        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'application', 'id', $iId);
+        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb,
+                'application', 'id', $iId);
     }
 
     public function show()
@@ -105,6 +134,21 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
                 $this->controls['title']->setValue('Application #' . ($maxId ? $maxId + 1: 1));
             }
         }
+
+        $aTypes = array();
+        foreach (self::$_aValidTypes as $sType) {
+            $aTypes[$sType] = AM_Model_Db_ApplicationType::typeToText($sType);
+        }
+
+        $aRecord = array(
+            'types' => $aTypes,
+        );
+
+        if (isset($this->view->{$this->getName()})) {
+            $aRecord = array_merge($aRecord, $this->view->{$this->getName()});
+        }
+
+        $this->view->{$this->getName()} = $aRecord;
 
         parent::show();
     }
@@ -133,5 +177,24 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
 
         $sProductId = $this->controls['product_id']->getValue();
         $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
+    }
+
+    /**
+     * @return boolean
+     */
+    public function validate()
+    {
+        if (!parent::validate()) {
+            return false;
+        }
+
+        // Check state
+        if (array_search($this->controls['type']->getValue(), self::$_aValidTypes) === false) {
+            $this->errors[] = $this->actionController->__('Not valid type');
+
+            return false;
+        }
+
+        return true;
     }
 }

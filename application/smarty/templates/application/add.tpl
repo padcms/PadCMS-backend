@@ -51,6 +51,15 @@
                             </div>
                         </div>
 
+                        <div class="form-item select-themed{if isset($type) && $type.errors} error{/if}">
+                          <label>{if isset($type)}{$type.title|escape}{/if} <span>*</span></label>
+                          <div class="form-item-wrapper">{if isset($type)}{include file="Volcano/select.tpl" control=$type _values=$application.types _class="form-text"}{/if}</div>
+                          <div class="clr"></div>
+                          <div class="description">
+                              {'Application type.'|translate}
+                          </div>
+                        </div>
+
                         <div class="form-item{if isset($product_id) && $product_id.errors} error{/if}">
                             <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($product_id)}{include file="Volcano/input.tpl" control=$product_id _class="form-text"}{/if}</div>
