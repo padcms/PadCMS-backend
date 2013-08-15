@@ -1,8 +1,8 @@
-{include file="includes/header.tpl"}
-
 {capture name=css}
   <link href="/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
 {/capture}
+
+{include file="includes/header.tpl"}
 
 {capture name=js}
   <script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
