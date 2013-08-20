@@ -64,17 +64,15 @@ abstract class AM_Task_Worker_Notification_Planner_Abstract extends AM_Task_Work
         $oApplication = AM_Model_Db_Table_Abstract::factory('application')
             ->findOneBy('id', $iApplicationId);
 
-        if (!empty($oApplication->push_apple_enable) ) {
+        if (!empty($oApplication->push_apple_enabled) ) {
             $oTaskPlanner = new AM_Task_Worker_Notification_Planner_Apple();
             $oTaskPlanner->setOptions($options)
                 ->create();
         }
-        if (!empty($oApplication->push_boxcar_enable)) {
-            $oTaskPlanner = new AM_Task_Worker_Notification_Sender_Boxcar();
-            $oTaskPlanner->setOptions($options)
+        if (!empty($oApplication->push_boxcar_enabled)) {
+            $oTaskSender = new AM_Task_Worker_Notification_Sender_Boxcar();
+            $oTaskSender->setOptions($options)
                 ->create();
         }
-
-        return $oTaskPlanner;
     }
 }
