@@ -87,13 +87,43 @@
                                 <i>{'A nice magazine about life-style, decoration and cooking...'|translate}</i>
                             </div>
                         </div>
-                        <div id="share-tabs">
+                        <h2>{'Push notification settings'|translate}</h2>
+                        <div id="push-tabs">
                             <ul>
-                                <li><a href="#tab-1">iOS</a></li>
-                                <li><a href="#tab-2">Android</a></li>
+                                <li><a href="#tab-1">{'Apple'|translate}</a></li>
+                                <li><a href="#tab-2">{'Boxcar'|translate}</a></li>
                             </ul>
                             <div id="tab-1">
-                                <h2>{'Email notification for iOS'|translate}</h2>
+                                <h4>{'Apple notification'|translate}</h4>
+                                <div class="form-item{if isset($push_apple_enabled) && $push_apple_enabled.errors} error{/if}">
+                                    <label>{if isset($push_apple_enabled)}{$push_apple_enabled.title|translate|escape}{/if}</label>
+                                    <div class="form-item-wrapper">{if isset($push_apple_enabled)}{include file="Volcano/checkbox.tpl" control=$push_apple_enabled _class="form-text"}{/if}</div>
+                                </div>
+                            </div>
+                            <div id="tab-2">
+                                <h4>{'Boxcar notification'|translate}</h4>
+                                <div class="form-item{if isset($push_boxcar_enabled) && $push_boxcar_enabled.errors} error{/if}">
+                                    <label>{if isset($push_boxcar_enabled)}{$push_boxcar_enabled.title|translate|escape}{/if}</label>
+                                    <div class="form-item-wrapper">{if isset($push_boxcar_enabled)}{include file="Volcano/checkbox.tpl" control=$push_boxcar_enabled _class="form-text"}{/if}</div>
+                                </div>
+                                <div class="form-item{if isset($push_boxcar_provider_key) && $push_boxcar_provider_key.errors} error{/if}">
+                                    <label>{if isset($push_boxcar_provider_key)}{$push_boxcar_provider_key.title|translate|escape}{/if}</label>
+                                    <div class="form-item-wrapper">{if isset($push_boxcar_provider_key)}{include file="Volcano/input.tpl" control=$push_boxcar_provider_key _class="form-text"}{/if}</div>
+                                </div>
+                                <div class="form-item{if isset($push_boxcar_provider_secret) && $push_boxcar_provider_secret.errors} error{/if}">
+                                    <label>{if isset($push_boxcar_provider_secret)}{$push_boxcar_provider_secret.title|translate|escape}{/if}</label>
+                                    <div class="form-item-wrapper">{if isset($push_boxcar_provider_secret)}{include file="Volcano/input.tpl" control=$push_boxcar_provider_secret _class="form-text"}{/if}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>{'Notification settings'|translate}</h2>
+                        <div id="share-tabs">
+                            <ul>
+                                <li><a href="#tab-3">iOS</a></li>
+                                <li><a href="#tab-4">Android</a></li>
+                            </ul>
+                            <div id="tab-3">
+                                <h4>{'Email notification for iOS'|translate}</h4>
                                 <div class="form-item{if isset($nt_email_ios) && $nt_email_ios.errors} error{/if}">
                                     <label>{if isset($nt_email_ios)}{$nt_email_ios.title|translate|escape}{/if}</label>
                                     <div class="form-item-wrapper">{if isset($nt_email_ios)}{include file="Volcano/input.tpl" control=$nt_email_ios _class="form-text"}{/if}</div>
@@ -104,20 +134,20 @@
                                     <div class="textarea-wrapper">{if isset($nm_email_ios)}{include file="Volcano/textarea.tpl" control=$nm_email_ios _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
 
-                                <h2>{'Twitter notification for iOS'|translate}</h2>
+                                <h4>{'Twitter notification for iOS'|translate}</h4>
                                 <div class="form-item{if isset($nm_twitter_ios) && $nm_twitter_ios.errors} error{/if}">
                                     <label>{if isset($nm_twitter_ios)}{$nm_twitter_ios.title|translate|escape}{/if}</label>
                                     <div class="textarea-wrapper">{if isset($nm_twitter_ios)}{include file="Volcano/textarea.tpl" control=$nm_twitter_ios _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
 
-                                <h2>{'Facebook notification for iOS'|translate}</h2>
+                                <h4>{'Facebook notification for iOS'|translate}</h4>
                                 <div class="form-item{if isset($nm_fbook_ios) && $nm_fbook_ios.errors} error{/if}">
                                     <label>{if isset($nm_fbook_ios)}{$nm_fbook_ios.title|translate|escape}{/if}</label>
                                     <div class="textarea-wrapper">{if isset($nm_fbook_ios)}{include file="Volcano/textarea.tpl" control=$nm_fbook_ios _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
                             </div>
-                            <div id="tab-2">
-                                <h2>{'Email notification for Android'|translate}</h2>
+                            <div id="tab-4">
+                                <h4>{'Email notification for Android'|translate}</h4>
                                 <div class="form-item{if isset($nt_email_android) && $nt_email_android.errors} error{/if}">
                                     <label>{if isset($nt_email_android)}{$nt_email_android.title|translate|escape}{/if}</label>
                                     <div class="form-item-wrapper">{if isset($nt_email_android)}{include file="Volcano/input.tpl" control=$nt_email_android _class="form-text"}{/if}</div>
@@ -127,20 +157,19 @@
                                     <div class="textarea-wrapper">{if isset($nm_email_android)}{include file="Volcano/textarea.tpl" control=$nm_email_android _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
 
-                                <h2>{'Twitter notification for Android'|translate}</h2>
+                                <h4>{'Twitter notification for Android'|translate}</h4>
                                 <div class="form-item{if isset($nm_twitter_android) && $nm_twitter_android.errors} error{/if}">
                                     <label>{if isset($nm_twitter_android)}{$nm_twitter_android.title|translate|escape}{/if}</label>
                                     <div class="textarea-wrapper">{if isset($nm_twitter_android)}{include file="Volcano/textarea.tpl" control=$nm_twitter_android _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
 
-                                <h2>{'Facebook notification for Android'|translate}</h2>
+                                <h4>{'Facebook notification for Android'|translate}</h4>
                                 <div class="form-item{if isset($nm_fbook_android) && $nm_fbook.errors_android} error{/if}">
                                     <label>{if isset($nm_fbook_android)}{$nm_fbook_android.title|translate|escape}{/if}</label>
                                     <div class="textarea-wrapper">{if isset($nm_fbook_android)}{include file="Volcano/textarea.tpl" control=$nm_fbook_android _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="block-clear cblock-buttons">
                             <input type="submit" class="orange-but" value="{'Save'|translate}" />
                         </div>

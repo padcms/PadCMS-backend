@@ -863,3 +863,7 @@ div.cke_editable_inline {
 .cblock-form .form-item-image-wrapper img {
   padding: 10px 0 10px 30px;
 }
+
+#push-tabs {
+    border: none;
+}

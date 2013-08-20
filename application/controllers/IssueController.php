@@ -167,11 +167,10 @@ class IssueController extends AM_Controller_Action
                 $oIssue->save();
 
                 $sMessage     = $this->__('New issue is available');
-                $oTaskPlanner = new AM_Task_Worker_AppleNotification_Planner();
-                $oTaskPlanner->setOptions(array('issue_id' => $oIssue->id,
-                                                'message'  => $sMessage,
-                                                'badge'    => 1))
-                                ->create();
+                AM_Task_Worker_Notification_Planner_Abstract::createTask(array('issue_id' => $oIssue->id,
+                                                                               'message'  => $sMessage,
+                                                                               'badge'    => 1));
+
             }
 
             $aMessage['status'] = 1;

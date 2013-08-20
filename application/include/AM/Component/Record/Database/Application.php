@@ -119,6 +119,22 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
                 'nm_email_android',
                 'Message');
 
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'push_apple_enabled',
+                'Enable');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+                'push_boxcar_enabled',
+                'Enable');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+            'push_boxcar_provider_key',
+            'Key');
+
+        $aControls[] = new Volcano_Component_Control_Database($oActionController,
+            'push_boxcar_provider_secret',
+            'Secret');
+
         return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb,
                 'application', 'id', $iId);
     }

@@ -1,5 +1,8 @@
 <?php
 /**
+ * @file
+ * AM_Task_Worker_Notification_Planner_Boxcar class definition.
+ *
  * LICENSE
  *
  * This software is governed by the CeCILL-C  license under French law and
@@ -32,36 +35,46 @@
  * @version $DOXY_VERSION
  */
 
-class ApnsWorkerPlannerSuccessTest extends AM_Test_PHPUnit_DatabaseTestCase
+/**
+ * This is the superclass for planner task classes
+ * @ingroup AM_Task
+ */
+abstract class AM_Task_Worker_Notification_Planner_Abstract extends AM_Task_Worker_Abstract
 {
-    protected function _getDataSetYmlFile()
+    /**
+     * Create new task
+     * @return AM_Task_Worker_Notification_Planner
+     */
+    public static function createTask($options)
     {
-        return dirname(__FILE__)
-                . DIRECTORY_SEPARATOR . '_fixtures'
-                . DIRECTORY_SEPARATOR . 'ApnsWorkerPlannerSuccessTest.yml';
-    }
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')
+            ->findOneBy('id', $options['issue_id']);
+        /* @var $oIssue AM_Model_Db_Issue */
 
-    public function testShouldPlaneNotification()
-    {
-        //GIVEN
-        $oWorker = new AM_Task_Worker_Notification_Planner_Apple();
-        $oWorker->addOption('issue_id', 1);
-        $oWorker->addOption('message', 'Test message');
-        $oWorker->addOption('badge', 0);
-        $oWorker->create();
-
-        //WHEN
-        try {
-            $oWorker->run();
-        } catch (Exception $oException) {
-            $this->fail($oException->getMessage());
+        if (is_null($oIssue)) {
+            throw new AM_Task_Worker_Exception('Issue not found');
         }
 
-        //THEN
-        $oGivenDataSet    = $this->getConnection()->createQueryTable('task', 'SELECT id, task_type_id, status, options FROM task ORDER BY id');
-        $oExpectedDataSet = $this->createFlatXMLDataSet(dirname(__FILE__) . '/_dataset/ApnsWorkerPlannerSuccessTest.xml')
-                              ->getTable('task');
+        $iApplicationId = $oIssue->getApplication()->id;
 
-        $this->assertTablesEqual($oExpectedDataSet, $oGivenDataSet);
+        if (empty($iApplicationId)) {
+            throw new AM_Task_Worker_Exception('Wrong parameters were given');
+        }
+
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $iApplicationId);
+
+        if (!empty($oApplication->push_apple_enable) ) {
+            $oTaskPlanner = new AM_Task_Worker_Notification_Planner_Apple();
+            $oTaskPlanner->setOptions($options)
+                ->create();
+        }
+        if (!empty($oApplication->push_boxcar_enable)) {
+            $oTaskPlanner = new AM_Task_Worker_Notification_Sender_Boxcar();
+            $oTaskPlanner->setOptions($options)
+                ->create();
+        }
+
+        return $oTaskPlanner;
     }
 }

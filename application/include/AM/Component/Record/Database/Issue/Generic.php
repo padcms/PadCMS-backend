@@ -371,12 +371,9 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
 
         if ($bIsPublished) {
             $sMessage = $this->actionController->__('New issue is available');
-
-            $oTaskPlanner = new AM_Task_Worker_AppleNotification_Planner();
-            $oTaskPlanner->setOptions(array('issue_id' => $this->primaryKeyValue,
-                                            'message'  => $sMessage,
-                                            'badge'    => 1))
-                         ->create();
+            AM_Task_Worker_Notification_Planner_Abstract::createTask(array('issue_id' => $this->primaryKeyValue,
+                                                                           'message'  => $sMessage,
+                                                                           'badge'    => 1));
         }
 
         if ($this->controls['pdf_type']->getValue() != $sOldPdfMode) {

@@ -34,7 +34,7 @@
 
 class ApnsWorkerSenderSuccessTest extends AM_Test_PHPUnit_DatabaseTestCase
 {
-    /** @var AM_Task_Worker_AppleNotification_Sender * */
+    /** @var AM_Task_Worker_Notification_Sender_Apple * */
     protected $_oWorker       = null;
     protected $_oStandardMock = null;
     /** @var Zend_Config */
@@ -67,7 +67,7 @@ class ApnsWorkerSenderSuccessTest extends AM_Test_PHPUnit_DatabaseTestCase
     public function testShouldSendNotification()
     {
         //GIVEN
-        $this->_oWorker = new AM_Task_Worker_AppleNotification_Sender();
+        $this->_oWorker = new AM_Task_Worker_Notification_Sender_Apple();
         $this->_oWorker->addOption('message', 'Test message');
         $this->_oWorker->addOption('application_id', 11);
         $this->_oWorker->addOption('tokens', array('1e82db91c7ceddd72bf33d74ae052ac9c84a065b35148ac401388843106a7485'));

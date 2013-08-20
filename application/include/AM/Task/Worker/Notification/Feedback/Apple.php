@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Task_Worker_AppleNotification_Sender class definition.
+ * AM_Task_Worker_Notification_Feedback_Apple class definition.
  *
  * LICENSE
  *
@@ -36,13 +36,13 @@
  */
 
 /**
- * Task for sending push notification
+ * Task for checking tokens
  * @ingroup AM_Task
  */
-class AM_Task_Worker_AppleNotification_Sender extends AM_Task_Worker_Abstract
+class AM_Task_Worker_Notification_Feedback_Apple extends AM_Task_Worker_Abstract
 {
-    /** @var ApnsPHP_Push **/
-    protected $_oPushService = null; /**< @type ApnsPHP_Push */
+    /** @var ApnsPHP_Feedback **/
+    protected $_oFeedbackService = null; /**< @type ApnsPHP_Feedback */
 
     /**
      * @see AM_Task_Worker_Abstract::_fire()
@@ -51,72 +51,37 @@ class AM_Task_Worker_AppleNotification_Sender extends AM_Task_Worker_Abstract
      */
     protected function _fire()
     {
-        $aTokens  = (array) $this->getOption('tokens');
-        $sMessage = $this->getOption('message');
-        $iBadge   = intval($this->getOption('badge'));
+        $this->getFeedbackService()->connect();
 
-        // Instanciate a new ApnsPHP_Push object
-        $oPushService = $this->getPushService();
+        $aDeviceTokens = $this->getFeedbackService()->receive();
 
-        // Connect to the Apple Push Notification Service
-        $oPushService->connect();
-
-        foreach ($aTokens as $sToken) {
-            // Instantiate a new Message with a single recipient
-            $oPushMessage = new ApnsPHP_Message($sToken);
-
-            $oPushMessage->setText($sMessage);
-            $oPushMessage->setBadge($iBadge);
-
-            // Set a custom identifier. To get back this identifier use the getCustomIdentifier() method
-            // over a ApnsPHP_Message object retrieved with the getErrors() message.
-            $oPushMessage->setCustomIdentifier(sprintf('%s', $sToken));
-
-            // Add the message to the message queue
-            $oPushService->add($oPushMessage);
+        if (!empty($aDeviceTokens)) {
+            var_dump($aDeviceTokens);
         }
 
-        // Send all messages in the message queue
-        $oPushService->send();
-
-        // Disconnect from the Apple Push Notification Service
-        $oPushService->disconnect();
-
-        // Examine the error message container
-        $aErrorQueue = $oPushService->getErrors();
-        if (!empty($aErrorQueue)) {
-            $aErrors = array();
-            foreach ($aErrorQueue as $aError) {
-                /* @var $oMessage ApnsPHP_Message */
-                $oMessage      = $aError['MESSAGE'];
-                //Get last error message
-                $aMessageError = array_pop($aError['ERRORS']);
-                $aErrors[$oMessage->getCustomIdentifier()] = $aMessageError;
-            }
-            $this->addOption('errors', $aErrors);
-            throw new AM_Task_Worker_Exception('Messages have an unrecoverable errors');
-        }
+        // Disconnect from the Apple Push Notification Feedback Service
+        $this->getFeedbackService()->disconnect();
     }
 
     /**
-     * Set APNS push service
-     * @param ApnsPHP_Push $oPushService
-     * @return AM_Task_Worker_AppleNotification_Sender
+     * Set APNS feedback service
+     * @param ApnsPHP_Feedback $oFeedbackService
+     * @return AM_Task_Worker_Notification_Feedback_Apple
      */
-    public function setPushService(ApnsPHP_Push $oPushService)
+    public function setFeedbackService(ApnsPHP_Feedback $oFeedbackService)
     {
-        $this->_oPushService = $oPushService;
+        $this->_oFeedbackService = $oFeedbackService;
 
         return $this;
     }
 
     /**
-     * Get APNS push service
-     * @return ApnsPHP_Push
+     * Get APNS feedback service
+     * @return ApnsPHP_Feedback
      */
-    public function getPushService()
+    public function getFeedbackService()
     {
-        if (is_null($this->_oPushService)) {
+        if (is_null($this->_oFeedbackService)) {
             $iApplicationId = intval($this->getOption('application_id'));
             if (empty($iApplicationId)) {
                 throw new AM_Task_Worker_Exception('Wrong application id given');
@@ -127,12 +92,12 @@ class AM_Task_Worker_AppleNotification_Sender extends AM_Task_Worker_Abstract
 
             $sCertificateRootPath .= DIRECTORY_SEPARATOR . $iApplicationId . '_' . $sEnvironment . '.pem';
 
-            $this->_oPushService = new ApnsPHP_Push(
+            $this->_oFeedbackService = new ApnsPHP_Feedback(
                             constant('ApnsPHP_Abstract::' . Zend_Filter::filterStatic('ENVIRONMENT_'.$sEnvironment, 'StringToUpper')),
                             $sCertificateRootPath
             );
         }
 
-        return $this->_oPushService;
+        return $this->_oFeedbackService;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Task_Worker_AppleNotification_PlannerTest class definition.
+ * AM_Task_Worker_Notification_PlannerTest_Apple class definition.
  *
  * LICENSE
  *
@@ -39,7 +39,7 @@
  * Task for planning push notification sending
  * @ingroup AM_Task
  */
-class AM_Task_Worker_AppleNotification_PlannerTest extends AM_Task_Worker_Abstract
+class AM_Task_Worker_Notification_PlannerTest_Apple extends AM_Task_Worker_Abstract
 {
     /**
      * @see AM_Task_Worker_Abstract::_fire()
@@ -83,7 +83,7 @@ class AM_Task_Worker_AppleNotification_PlannerTest extends AM_Task_Worker_Abstra
           'tokens' => array($sDeviceToken)
         );
 
-        $oTaskSender = new AM_Task_Worker_AppleNotification_Sender();
+        $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
         $oTaskSender->setOptions($aSenderTaskOptions);
         $oTaskSender->create();
     }
