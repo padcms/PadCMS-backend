@@ -50,7 +50,6 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
     {
         $iIssueId = intval($this->getOption('issue_id'));
         $sMessage = $this->getOption('message');
-        $iBadge   = intval($this->getOption('badge'));
 
         $oIssue = AM_Model_Db_Table_Abstract::factory('issue')
             ->findOneBy('id', $iIssueId);
@@ -72,10 +71,21 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
         $sProviderKey = $oApplication->push_boxcar_provider_key;
         $sProviderSecret = $oApplication->push_boxcar_provider_secret;
 
+        if (empty($sProviderKey) || empty($sProviderSecret)) {
+            throw new AM_Task_Worker_Exception('Empty provider key or secret');
+        }
+        $sIcon = $oApplication->push_boxcar_icon;
+        $sName = $oApplication->push_boxcar_name;
+
+        $oTask = $this->_getTask();
+
+        if (is_null($oTask->id)) {
+            throw new AM_Task_Worker_Exception('Trying to run non created task');
+        }
+
         try {
-            $oBoxcar = new BoxcarPHP_Api($sProviderKey, '');
-            // @TODO refactor to broadcast.
-            $oBoxcar->notify($sProviderSecret, 'Test', $sMessage);
+            $oBoxcar = new BoxcarPHP_Api($sProviderKey, $sProviderSecret);
+            $oBoxcar->broadcast($sName, $sMessage, $oTask->id, '', '', $sIcon);
         }
         catch (BoxcarPHP_Exception $e) {
             $bError = true;
