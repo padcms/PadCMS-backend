@@ -128,22 +128,6 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
                 'Enable');
 
         $aControls[] = new Volcano_Component_Control_Database($oActionController,
-            'push_boxcar_provider_key',
-            'Key');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-            'push_boxcar_provider_secret',
-            'Secret');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'push_apple_enabled',
-                'Enable');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'push_boxcar_enabled',
-                'Enable');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
                 'push_boxcar_provider_key',
                 'Key');
 
