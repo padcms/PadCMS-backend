@@ -63,15 +63,6 @@
           </div>
         </div>
 
-        {if isset($subtitle)}
-          <div class="form-item{if isset($subtitle) && $subtitle.errors} error{/if}">
-            <label>{if isset($subtitle)}{$subtitle.title|escape}{/if} <span>*</span></label>
-            <div
-                class="form-item-wrapper">{if isset($subtitle)}{include file="Volcano/input.tpl" control=$subtitle _class="form-text"}{/if}</div>
-            <div class="clr"></div>
-          </div>
-        {/if}
-
         {if isset($image)}
           <div class="form-item{if isset($image) && $image.errors} error{/if}">
             <label>{if isset($image)}{$image.title|escape}{/if} <span>*</span></label>
@@ -107,6 +98,14 @@
             <div
                 class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
             <div class="clr"></div>
+          </div>
+        {/if}
+
+        {if isset($category)}
+          <div class="form-item{if isset($category) && $category.errors} error{/if}">
+              <label>{if isset($category)}{$category.title|escape}{/if}</label>
+              <div class="textarea-wrapper">{if isset($category)}{include file="Volcano/textarea.tpl" control=$category _class="form-textarea"}{/if}</div>
+              <div class="clr"></div>
           </div>
         {/if}
 

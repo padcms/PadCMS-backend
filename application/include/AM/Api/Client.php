@@ -109,6 +109,11 @@ class AM_Api_Client extends AM_Api
                 'issues'                               => array()
             );
 
+            if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+                $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
+                $aApplication['application_share_message'] = $oApplication->share_message;
+            }
+
             //Checking subscripton
             $oSubscription = null;
             if (!is_null($oDevice)) {
@@ -149,15 +154,25 @@ class AM_Api_Client extends AM_Api
                     'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
                     'paid'                  => false,
-                    'revisions'             => array()
+                    'revisions'             => array(),
+                    'tags' => array(
+                        array(
+                            'id' => 10,
+                            'title' => 'test1'
+                        ),
+                        array(
+                            'id' => 8,
+                            'title' => 'test2'
+                        )
+                    )
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                    $aIssue['issue_subtitle']   = $oIssue->subtitle;
                     $aIssue['issue_author']     = $oIssue->author;
                     $aIssue['issue_words']      = $oIssue->words;
-                    $aIssue['issue_excerpt']    = $oIssue->excerpt;
-                    $aIssue['issue_welcome']    = $oIssue->welcome;
+                    $aIssue['issue_excerpt']    = str_replace("\n", "\\n", $oIssue->excerpt);
+                    $aIssue['issue_welcome']    = str_replace("\n", "\\n", $oIssue->welcome);
+                    $aIssue['issue_category']    = str_replace("\n", "\\n", $oIssue->category);
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')

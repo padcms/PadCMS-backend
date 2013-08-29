@@ -47,19 +47,19 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         parent::__construct($oActionController, $sName, $iIssueId, $iApplicationId);
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'subtitle', 'Subtitle', array(array('require'), array('maximum length', 50)), 'subtitle'));
-
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'author', 'Author', array(array('require'), array('maximum length', 100)), 'author'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'words', 'Words', array(array('require'), array('integer'), array('minimum value', 1)), 'words'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'excerpt', 'Excerpt', array(array('require')), 'excerpt'));
+                'excerpt', 'Excerpt', array(array('maximum length', 180), array('require')), 'excerpt'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'welcome', 'Welcome message', array(), 'welcome'));
+                'welcome', 'Welcome message', array(array('maximum length', 350)), 'welcome'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'category', 'Category', array(array('maximum length', 255))));
 
         $aUser = $oActionController->getUser();
 
@@ -77,26 +77,5 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
                 . DIRECTORY_SEPARATOR . '[ID]', TRUE, $sImageValue));
 
         $this->postInitialize();
-    }
-
-    /**
-     * @return boolean
-     */
-    public function validate()
-    {
-        if (!parent::validate()) {
-            return false;
-        }
-
-        if (strlen(strip_tags($this->controls['excerpt']->getValue())) > 180) {
-            $this->errors[] = $this->actionController->__('Size of Field Excerpt cannot be above 180 characters');
-            return false;
-        }
-
-        if (strlen(strip_tags($this->controls['welcome']->getValue())) > 350) {
-            $this->errors[] = $this->actionController
-                ->__('Size of Field Welcome message cannot be above 350 characters');
-            return false;
-        }
     }
 }

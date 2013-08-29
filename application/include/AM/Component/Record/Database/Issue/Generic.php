@@ -59,18 +59,30 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
     {
         parent::__construct($oActionController, $sName, $iIssueId, $iApplicationId);
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'state', 'State', array(array('require')), 'state'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color', array(array('color'))));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'summary_color', 'Summary color', array(array('summary_color'))));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController, 'pastille_color', 'Pastille color', array(array('pastille_color'))));
-        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId));
-        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()')));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'title', 'Title', array(array('require')), 'title'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'number', 'Number', array(array('require')), 'number'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'state', 'State', array(array('require')), 'state'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'type', 'Issue type', array(array('require')), 'type'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'orientation', 'Orientation', array(), 'orientation'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'issue_color', 'Issue color', array(array('color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'summary_color', 'Summary color', array(array('summary_color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'pastille_color', 'Pastille color', array(array('pastille_color'))));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'application', $iApplicationId));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'updated', new Zend_Db_Expr('NOW()')));
 
         $this->postInitialize();
     }

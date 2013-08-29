@@ -87,7 +87,10 @@ class ApplicationController extends AM_Controller_Action
             throw new AM_Controller_Exception_Forbidden('Access denied');
         }
 
-        $oComponent = new AM_Component_Record_Database_Application($this, 'application', $iApplicationId, $iClientId);
+        $sClass = AM_Component_Record_Database_Application_Abstract::getClassByApplicationId($iApplicationId);
+        /* @var string */
+
+        $oComponent = new $sClass($this, 'application', $iApplicationId, $iClientId);
         if ($oComponent->operation()) {
             $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $oComponent->getPrimaryKeyValue());
             /* @var $oApplication AM_Model_Db_Application */
@@ -97,7 +100,13 @@ class ApplicationController extends AM_Controller_Action
                 $oIssue->exportRevisions();
             }
 
-            return $this->_redirect('/application/list/cid/' . $iClientId);
+            if (is_a($oComponent, 'AM_Component_Record_Database_Application_Add')) {
+                return $this->_redirect("/application/edit/aid/{$oApplication->id}/cid/$iClientId");
+            }
+            else {
+                return $this->_redirect('/application/list/cid/' . $iClientId);
+            }
+
         }
 
         $oComponent->show();

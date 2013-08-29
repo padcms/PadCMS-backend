@@ -2,6 +2,10 @@
 
 {capture name=js}
 <script type="text/javascript" src="/js/application/add.js"></script>
+<script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('message_for_readers');
+</script>
 {/capture}
 <div id="main">
 <div id="main-inner" class="clear-block">
@@ -42,7 +46,8 @@
                         <div class="form-item{if isset($title) && $title.errors} error{/if}">
                             <label>{if isset($title)}{$title.title|escape}{/if} <span>*</span></label>
                             <div class="form-item-wrapper">
-                                <input type="text" name="{if isset($title)}{$title.name}{/if}" value="{if isset($title)}{$title.value|escape}{/if}" class="form-text"/>
+                                {if isset($title) && empty($application.primaryKeyValue)}{include file="Volcano/input.tpl" control=$title _class="form-text"}
+                                {elseif isset($title) && !empty($application.primaryKeyValue)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}
                             </div>
                             <div class="clr"></div>
                             <div class="description">
@@ -53,13 +58,17 @@
 
                         <div class="form-item select-themed{if isset($type) && $type.errors} error{/if}">
                           <label>{if isset($type)}{$type.title|escape}{/if} <span>*</span></label>
-                          <div class="form-item-wrapper">{if isset($type)}{include file="Volcano/select.tpl" control=$type _values=$application.types _class="form-text"}{/if}</div>
+                          <div class="form-item-wrapper">
+                              {if isset($type) && empty($application.primaryKeyValue)}{include file="Volcano/select.tpl" control=$type _values=$application.types _class="form-text"}
+                              {elseif isset($type) && !empty($application.primaryKeyValue)}{include file="Volcano/select.tpl" control=$type _values=$application.types _class="form-text"}{/if}
+                          </div>
                           <div class="clr"></div>
                           <div class="description">
                               {'Application type.'|translate}
                           </div>
                         </div>
 
+                        {if !empty($application.primaryKeyValue)}
                         <div class="form-item{if isset($product_id) && $product_id.errors} error{/if}">
                             <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($product_id)}{include file="Volcano/input.tpl" control=$product_id _class="form-text"}{/if}</div>
@@ -69,7 +78,7 @@
                             </div>
                         </div>
 
-                        <div class="form-item{if isset($preview) && $preview.errors} error{/if}">
+                        <div class="form-item{if isset($previe) && $preview.errors} error{/if}">
                             <label>{if isset($preview)}{$preview.title|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($preview)}{include file="Volcano/input.tpl" control=$preview _class="form-text"}{/if}</div>
                             <div class="clr"></div>
@@ -86,6 +95,17 @@
                                 {'Very usefull if you have many applications and title is not clear enough. Example : '|translate}
                                 <i>{'A nice magazine about life-style, decoration and cooking...'|translate}</i>
                             </div>
+                        </div>
+
+                        <div class="form-item{if isset($message_for_readers) && $message_for_readers.errors} error{/if}">
+                            <label>{if isset($message_for_readers)}{$message_for_readers.title|escape}{/if}</label>
+                            <div class="textarea-wrapper">{if isset($message_for_readers)}{include file="Volcano/textarea.tpl" control=$message_for_readers _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'For out readers ...'|translate|cat:"'"}{/if}</div>
+                            <div class="clr"></div>
+                        </div>
+                        <div class="form-item{if isset($share_message) && $share_message.errors} error{/if}">
+                            <label>{if isset($share_message)}{$share_message.title|escape}{/if}</label>
+                            <div class="textarea-wrapper">{if isset($share_message)}{include file="Volcano/textarea.tpl" control=$share_message _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'Share message ...'|translate|cat:"'"}{/if}</div>
+                            <div class="clr"></div>
                         </div>
                         <h2>{'Push notification settings'|translate}</h2>
                         <div id="push-tabs">
@@ -172,12 +192,13 @@
                                 </div>
 
                                 <h4>{'Facebook notification for Android'|translate}</h4>
-                                <div class="form-item{if isset($nm_fbook_android) && $nm_fbook.errors_android} error{/if}">
+                                <div class="form-item{if isset($nm_fbook_android) && $nm_fbook_android.errors} error{/if}">
                                     <label>{if isset($nm_fbook_android)}{$nm_fbook_android.title|translate|escape}{/if}</label>
                                     <div class="textarea-wrapper">{if isset($nm_fbook_android)}{include file="Volcano/textarea.tpl" control=$nm_fbook_android _rows=3 _cols=45 _class="form-textarea"}{/if}</div>
                                 </div>
                             </div>
                         </div>
+                        {/if}
                         <div class="block-clear cblock-buttons">
                             <input type="submit" class="orange-but" value="{'Save'|translate}" />
                         </div>
