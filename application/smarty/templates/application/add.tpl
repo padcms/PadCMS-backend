@@ -69,7 +69,7 @@
                             </div>
                         </div>
 
-                        <div class="form-item{if isset($previe) && $preview.errors} error{/if}">
+                        <div class="form-item{if isset($preview) && $preview.errors} error{/if}">
                             <label>{if isset($preview)}{$preview.title|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($preview)}{include file="Volcano/input.tpl" control=$preview _class="form-text"}{/if}</div>
                             <div class="clr"></div>
