@@ -99,7 +99,7 @@
 
                         <div class="form-item{if isset($message_for_readers) && $message_for_readers.errors} error{/if}">
                             <label>{if isset($message_for_readers)}{$message_for_readers.title|escape}{/if}</label>
-                            <div class="textarea-wrapper">{if isset($message_for_readers)}{include file="Volcano/textarea.tpl" control=$message_for_readers _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'For out readers ...'|translate|cat:"'"}{/if}</div>
+                            <div class="textarea-wrapper">{if isset($message_for_readers)}{include file="Volcano/textarea.tpl" control=$message_for_readers _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'For our readers ...'|translate|cat:"'"}{/if}</div>
                             <div class="clr"></div>
                         </div>
                         <div class="form-item{if isset($share_message) && $share_message.errors} error{/if}">

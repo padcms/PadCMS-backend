@@ -104,7 +104,7 @@
         {if isset($category)}
           <div class="form-item{if isset($category) && $category.errors} error{/if}">
               <label>{if isset($category)}{$category.title|escape}{/if}</label>
-              <div class="textarea-wrapper">{if isset($category)}{include file="Volcano/textarea.tpl" control=$category _class="form-textarea"}{/if}</div>
+              <div class="form-item-wrapper">{if isset($category)}{include file="Volcano/input.tpl" control=$category _class="form-text"}{/if}</div>
               <div class="clr"></div>
           </div>
         {/if}

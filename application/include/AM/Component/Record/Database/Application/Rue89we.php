@@ -134,7 +134,7 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'message_for_readers',
-                'For out readers'));
+                'For our readers'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'share_message',

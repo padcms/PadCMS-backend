@@ -1,0 +1,1 @@
+ALTER TABLE  `issue` CHANGE  `category`  `category` VARCHAR( 255 ) NULL DEFAULT NULL;
