@@ -32,3 +32,13 @@ CKEDITOR.editorConfig = function( config ) {
 	// Let's have it basic on dialogs as well.
 	config.removeDialogTabs = 'link:advanced';
 };
+
+// Custom config.
+CKEDITOR.config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Subscript,Superscript';
+CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+CKEDITOR.config.toolbar = [
+  { name: 'c', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] }
+];
+CKEDITOR.config.toolbarGroups = [
+  { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] }
+];

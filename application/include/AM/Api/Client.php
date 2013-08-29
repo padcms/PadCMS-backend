@@ -156,8 +156,8 @@ class AM_Api_Client extends AM_Api
                     $aIssue['issue_subtitle']   = $oIssue->subtitle;
                     $aIssue['issue_author']     = $oIssue->author;
                     $aIssue['issue_words']      = $oIssue->words;
-                    $aIssue['issue_excerpt']    = str_replace("\n", "\\n", $oIssue->excerpt);
-                    $aIssue['issue_welcome']    = str_replace("\n", "\\n", $oIssue->welcome);
+                    $aIssue['issue_excerpt']    = $oIssue->excerpt;
+                    $aIssue['issue_welcome']    = $oIssue->welcome;
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')

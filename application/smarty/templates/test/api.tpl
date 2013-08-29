@@ -19,7 +19,9 @@ Query:<br/>
 <a href="http://jsonlint.com/">jsonlint.com</a>
 </p>
 
-<div id="result">Result...<div>
+<textarea id="result" style="margin: 2px; width: 646px; height: 284px;">
+  Result...
+</textarea>
 
 <script type="text/javascript" src="{$baseUrl}/js/lib/jquery/jquery-1.7.1.min.js"></script>
 
@@ -36,7 +38,7 @@ $(document).ready(function(){
             data: $('#query').val(),
             success: function (data, textStatus) {
                 console.log(data);
-                $('#result').html('<pre>' + data + '</pre>');
+                $('#result').text(data);
             }
         });
     });
