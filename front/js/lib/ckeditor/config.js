@@ -8,37 +8,15 @@ CKEDITOR.editorConfig = function( config ) {
 	// For the complete reference:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-	// The toolbar groups arrangement, optimized for a single toolbar row.
-	config.toolbarGroups = [
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-		{ name: 'forms' },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'links' },
-		{ name: 'insert' },
-		{ name: 'styles' },
-		{ name: 'colors' },
-		{ name: 'tools' },
-		{ name: 'others' },
-		{ name: 'about' }
-	];
+  CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+  CKEDITOR.config.toolbar = [
+    { name: 'basic', items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] }
+  ];
 
 	// The default plugins included in the basic setup define some buttons that
 	// we don't want too have in a basic editor. We remove them here.
-	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+  CKEDITOR.config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Subscript,Superscript';
 
 	// Let's have it basic on dialogs as well.
 	config.removeDialogTabs = 'link:advanced';
 };
-
-// Custom config.
-CKEDITOR.config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Subscript,Superscript';
-CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
-CKEDITOR.config.toolbar = [
-  { name: 'c', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike' ] }
-];
-CKEDITOR.config.toolbarGroups = [
-  { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] }
-];
