@@ -16,7 +16,10 @@ Query:<br/>
 <button id="go">Go!</button>
 
 <p>
-<a href="http://jsonlint.com/">jsonlint.com</a>
+<a href="http://jsonlint.com/" target="_blank">jsonlint.com</a>
+</p>
+<p>
+<a href="http://jsoneditoronline.org/" target="_blank">jsoneditoronline.org</a>
 </p>
 
 <textarea id="result" style="margin: 2px; width: 646px; height: 284px;">
