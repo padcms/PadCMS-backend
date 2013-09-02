@@ -719,7 +719,6 @@ a.cbutton-add span {
   height:28px;
 }
 .cblock-form .select-themed{
-  height: 28px;
   overflow: visible;
 }
 .select-themed .form-item-wrapper {
@@ -761,7 +760,6 @@ a.cbutton-add span {
 .cblock-form .textarea-wrapper{
   float:left;
   width:346px;
-  height:214px;
 }
 
 .cblock-add-app a.cbutton span {

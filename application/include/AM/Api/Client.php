@@ -98,6 +98,7 @@ class AM_Api_Client extends AM_Api
             $aApplication = array(
                 'application_id'                       => $oApplication->id,
                 'application_title'                    => $oApplication->title,
+                'application_type'                     => $oApplication->type,
                 'application_description'              => $oApplication->description,
                 'application_product_id'               => $oApplication->product_id,
                 'application_notification_email'       => $oApplication->{'nm_email_' . $sPlatform},
@@ -107,6 +108,11 @@ class AM_Api_Client extends AM_Api
                 'application_preview'                  => $oApplication->preview,
                 'issues'                               => array()
             );
+
+            if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+                $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
+                $aApplication['application_share_message'] = $oApplication->share_message;
+            }
 
             //Checking subscripton
             $oSubscription = null;
@@ -145,11 +151,38 @@ class AM_Api_Client extends AM_Api
                     'issue_id'              => $oIssue->id,
                     'issue_title'           => $oIssue->title,
                     'issue_number'          => $oIssue->number,
-                    'issue_state'           => AM_Model_Db_State::stateToText($oIssue->state),
+                    'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
                     'paid'                  => false,
-                    'revisions'             => array()
+                    'revisions'             => array(),
+                    'tags' => array(
+                        array(
+                            'id' => 10,
+                            'title' => 'test1'
+                        ),
+                        array(
+                            'id' => 8,
+                            'title' => 'test2'
+                        )
+                    )
                 );
+
+                if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+                    $aIssue['issue_author']     = $oIssue->author;
+                    $aIssue['issue_words']      = $oIssue->words;
+                    $aIssue['issue_excerpt']    = str_replace("\n", "\\n", $oIssue->excerpt);
+                    $aIssue['issue_welcome']    = str_replace("\n", "\\n", $oIssue->welcome);
+                    $aIssue['issue_category']    = str_replace("\n", "\\n", $oIssue->category);
+                    if (!empty($oIssue->image)) {
+                        $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
+                                AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
+                                . '?' . strtotime($oIssue->updated);
+
+                        $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300',
+                                AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
+                            . '?' . strtotime($oIssue->updated);
+                    }
+                }
 
                 //Prepearing help pages
                 $oHelpPages = AM_Model_Db_Table_Abstract::factory('issue_help_page')->findAllBy(array('id_issue' => $oIssue->id));
@@ -186,11 +219,13 @@ class AM_Api_Client extends AM_Api
                     $aRevision = array(
                         'revision_id'               => $oRevision->id,
                         'revision_title'            => $oRevision->title,
-                        'revision_state'            => AM_Model_Db_State::stateToText($oRevision->state),
+                        'revision_state'            => AM_Model_Db_State::stateToName($oRevision->state),
                         'revision_cover_image_list' => '',
                         'revision_video'            => '',
                         'revision_created'          => null,
                         'revision_color'            => $oIssue->issue_color,
+                        'summary_color'             => $oIssue->summary_color,
+                        'pastille_color'            => $oIssue->pastille_color,
                         'revision_horizontal_mode'  => $oIssue->static_pdf_mode,
                         'revision_orientation'      => $oIssue->orientation,
                         'help_pages'                => array(AM_Model_Db_IssueHelpPage::TYPE_HORIZONTAL => '', AM_Model_Db_IssueHelpPage::TYPE_VERTICAL => ''),

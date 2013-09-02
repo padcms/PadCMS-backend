@@ -1,10 +1,10 @@
 task_type:
   -
     id: 1
-    class: AM_Task_Worker_AppleNotification_Planner
+    class: AM_Task_Worker_Notification_Planner_Apple
   -
     id: 2
-    class: AM_Task_Worker_AppleNotification_Sender
+    class: AM_Task_Worker_Notification_Sender_Apple
 
 device_token:
   -

@@ -40,7 +40,7 @@
  * @ingroup AM_Component
  * @todo refactoring
  */
-class AM_Component_Record_Database_Application extends AM_Component_Record_Database
+class AM_Component_Record_Database_Application_Add extends AM_Component_Record_Database_Application_Abstract
 {
     /**
      *
@@ -48,58 +48,20 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
      * @param string $sName
      * @param int $iId
      * @param int $iClientId
-     * @return viod
+     * @return void
      */
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iId, $iClientId)
     {
-        $aControls   = array();
-        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'client', $iClientId);
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'preview', 'Preview', array(array('numeric')), 'preview');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'description', 'Description', array(array('require')), 'description');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/')));
+        parent::__construct($oActionController, $sName, $iId, $iClientId);
 
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_twitter_ios',
-                'Message');
 
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_fbook_ios',
-                'Message');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nt_email_ios',
-                'Title');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_email_ios',
-                'Message');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_twitter_android',
-                'Message');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_fbook_android',
-                'Message');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nt_email_android',
-                'Title');
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController,
-                'nm_email_android',
-                'Message');
-
-        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'application', 'id', $iId);
+        $this->postInitialize();
     }
+
 
     public function show()
     {
         if (!$this->isSubmitted) {
-            if (!$this->controls['preview']->getValue())
-                $this->controls['preview']->setValue(0);
-
             if (!$this->controls['title']->getValue()) {
                 $maxId = $this->getMaxId();
                 $this->controls['title']->setValue('Application #' . ($maxId ? $maxId + 1: 1));
@@ -117,8 +79,8 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
     protected function getMaxId()
     {
         $oQuery = $this->db->select()
-                ->from('application', 'MAX(id)')
-                ->where('client = ?', $this->controls['client']->getValue());
+            ->from('application', 'MAX(id)')
+            ->where('client = ?', $this->controls['client']->getValue());
 
         return $this->db->fetchOne($oQuery);
     }
@@ -127,11 +89,24 @@ class AM_Component_Record_Database_Application extends AM_Component_Record_Datab
     {
         $sTitle = $this->controls['title']->getValue();
         $this->controls['title']->setValue(AM_Tools::filter_xss($sTitle));
+    }
 
-        $sDescription = $this->controls['description']->getValue();
-        $this->controls['description']->setValue(AM_Tools::filter_xss($sDescription));
+    /**
+     * @return boolean
+     */
+    public function validate()
+    {
+        if (!parent::validate()) {
+            return false;
+        }
 
-        $sProductId = $this->controls['product_id']->getValue();
-        $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
+        // Check state
+        if (array_search($this->controls['type']->getValue(), self::$_aValidTypes) === false) {
+            $this->errors[] = $this->actionController->__('Not valid type');
+
+            return false;
+        }
+
+        return true;
     }
 }

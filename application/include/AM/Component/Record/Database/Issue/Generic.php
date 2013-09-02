@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Component_Record_Database_Issue class definition.
+ * AM_Component_Record_Database_Issue_Generic class definition.
  *
  * LICENSE
  *
@@ -38,9 +38,8 @@
 /**
  * Issue record component
  * @ingroup AM_Component
- * @todo refactoring
  */
-class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
+class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Database_Issue_Abstract
 {
     const STATE_WORK_IN_PROGRESS = 1;
 
@@ -59,28 +58,33 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
     {
-        $aUser = $oActionController->getUser();
+        parent::__construct($oActionController, $sName, $iIssueId, $iApplicationId);
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'title', 'Title', array(array('require')), 'title'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'number', 'Number', array(array('require')), 'number'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'state', 'State', array(array('require')), 'state'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'type', 'Issue type', array(array('require')), 'type'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'orientation', 'Orientation', array(), 'orientation'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'issue_color', 'Issue color', array(array('color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'summary_color', 'Summary color', array(array('summary_color'))));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'pastille_color', 'Pastille color', array(array('pastille_color'))));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'application', $iApplicationId));
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'updated', new Zend_Db_Expr('NOW()')));
 
-        $this->applicationId = $iApplicationId;
-
-        $aControls = array();
-
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'title', 'Title', array(array('require')), 'title');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'number', 'Number', array(array('require')), 'number');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.\_]+$/')));
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'state', 'State', array(array('require')), 'state');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'type', 'Issue type', array(array('require')), 'type');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'orientation', 'Orientation', array(), 'orientation');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'pdf_type', 'Horizontal PDF', null, 'static_pdf_mode');
-        $aControls[] = new Volcano_Component_Control_Database($oActionController, 'issue_color', 'Issue color', array(array('color')));
-        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'application', $iApplicationId);
-        $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()'));
-
-        if (!$iIssueId) {
-            $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'user', $aUser['id']);
-        }
-
-        return parent::__construct($oActionController, $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
+        $this->postInitialize();
     }
 
     /**
@@ -174,9 +178,14 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
         $aHorizontalHelpPage = false;
 
         if ($this->primaryKeyValue) {
-            $oQuery = $this->db->select()->from('issue', array('static_pdf_mode'))
-                    ->where('id = ?', $this->primaryKeyValue);
-            $sStaticPdfMode = $this->db->fetchOne($oQuery);
+            $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
+
+            if ($oIssue->image) {
+                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image, 'png')
+                    . '?' . strtotime($oIssue->updated);
+            }
+
+            $sStaticPdfMode = $oIssue->static_pdf_mode;
 
             $oQuery = $this->db->select()->from('static_pdf', array('id', 'name', 'issue', 'updated' => 'UNIX_TIMESTAMP(updated)'))
                     ->where('issue = ?', $this->primaryKeyValue)
@@ -254,6 +263,7 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
         $aRecord = array(
             'staticPdfMode'      => (isset($sStaticPdfMode) && $sStaticPdfMode) ? $sStaticPdfMode : null,
+            'imageUri'           => isset($sIssueImageUri) ? $sIssueImageUri : null,
             'states'             => $aStates,
             'orientations'       => self::$_aValidOrientations,
             'pdf'                => isset($aPdfFiles) ? $aPdfFiles : array(),
@@ -373,12 +383,9 @@ class AM_Component_Record_Database_Issue extends AM_Component_Record_Database
 
         if ($bIsPublished) {
             $sMessage = $this->actionController->__('New issue is available');
-
-            $oTaskPlanner = new AM_Task_Worker_AppleNotification_Planner();
-            $oTaskPlanner->setOptions(array('issue_id' => $this->primaryKeyValue,
-                                            'message'  => $sMessage,
-                                            'badge'    => 1))
-                         ->create();
+            AM_Task_Worker_Notification_Planner_Abstract::createTask(array('issue_id' => $this->primaryKeyValue,
+                                                                           'message'  => $sMessage,
+                                                                           'badge'    => 1));
         }
 
         if ($this->controls['pdf_type']->getValue() != $sOldPdfMode) {

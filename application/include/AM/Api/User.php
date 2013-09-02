@@ -139,7 +139,7 @@ class AM_Api_User extends AM_Api
                     'issue_id'              => $oIssue->id,
                     'issue_title'           => $oIssue->title,
                     'issue_number'          => $oIssue->number,
-                    'issue_state'           => AM_Model_Db_State::stateToText($oIssue->state),
+                    'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
                     'revisions'             => array()
                 );
@@ -153,11 +153,13 @@ class AM_Api_User extends AM_Api
                     $aRevision = array(
                         'revision_id'               => $oRevision->id,
                         'revision_title'            => $oRevision->title,
-                        'revision_state'            => AM_Model_Db_State::stateToText($oRevision->state),
+                        'revision_state'            => AM_Model_Db_State::stateToName($oRevision->state),
                         'revision_cover_image_list' => '',
                         'revision_video'            => '',
                         'revision_created'          => null,
                         'revision_color'            => $oIssue->issue_color,
+                        'summary_color'             => $oIssue->summary_color,
+                        'pastille_color'            => $oIssue->pastille_color,
                         'revision_horizontal_mode'  => $oIssue->static_pdf_mode,
                         'revision_orientation'      => $oIssue->orientation,
                         'help_pages'                => array(AM_Model_Db_IssueHelpPage::TYPE_HORIZONTAL => '', AM_Model_Db_IssueHelpPage::TYPE_VERTICAL => ''),

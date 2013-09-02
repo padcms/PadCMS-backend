@@ -52,7 +52,7 @@ class AM_Model_Db_State extends AM_Model_Db_Abstract
      * @param string $sState
      * @return string|null
      */
-    public static function stateToText($sState)
+    public static function stateToName($sState)
     {
         switch ($sState) {
             case self::STATE_PUBLISHED:

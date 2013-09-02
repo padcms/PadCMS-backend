@@ -44,7 +44,7 @@ class ApnsWorkerPlannerSuccessTest extends AM_Test_PHPUnit_DatabaseTestCase
     public function testShouldPlaneNotification()
     {
         //GIVEN
-        $oWorker = new AM_Task_Worker_AppleNotification_Planner();
+        $oWorker = new AM_Task_Worker_Notification_Planner_Apple();
         $oWorker->addOption('issue_id', 1);
         $oWorker->addOption('message', 'Test message');
         $oWorker->addOption('badge', 0);

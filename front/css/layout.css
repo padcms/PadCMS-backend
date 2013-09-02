@@ -1,11 +1,11 @@
-#colorSelector {
+.color-selector {
 	position: relative;
 	width: 36px;
 	height: 36px;
 	background: url(../images/colorpicker/select.png);
 	display: inline;
 }
-#colorSelector div {
+.color-selector div {
 	position: absolute;
 	left: 3px;
 	top: 2px;
@@ -14,16 +14,16 @@
 	background: url(../images/colorpicker/select.png) center;
 }
 
-#colorSelector div {
+.color-selector div {
     top: 15px\0/; /* IE8 hack */
 }
 
 @-moz-document url-prefix() {
-	#colorSelector div  {
+	.color-selector div  {
 		top: 13px;
 	}
 
-	div.toc #colorSelector div  {
+	div.toc .color-selector div  {
 		top: 15px;
 	}
 }

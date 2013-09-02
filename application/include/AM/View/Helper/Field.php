@@ -113,6 +113,8 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
             } else {
                 $aElementView['smallUri'] = AM_Tools::getIconForNonImageFile($sResourceFileName);
             }
+
+            $aElementView['originUri'] = '/content/element/' . AM_Tools_String::generatePathFromId(intval($oElement->id), '/') . "/$sResourceKeyName.{$aFileInfo['extension']}";
         }
 
         return $aElementView;
