@@ -61,6 +61,9 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'category', 'Category', array(array('maximum length', 255))));
 
+        $this->addControl(new AM_Component_Control_Tags($oActionController,
+                'tags', 'Tags'));
+
         $aUser = $oActionController->getUser();
 
         $validationsRules = array();
@@ -77,5 +80,37 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
                 . DIRECTORY_SEPARATOR . '[ID]', TRUE, $sImageValue));
 
         $this->postInitialize();
+    }
+
+    /**
+     * @return void
+     */
+    public function show()
+    {
+        $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+            array(
+                 'entity' => $this->primaryKeyValue,
+                 'entity_type' => 'issue',
+            ));
+        $sExistingTags = '';
+        foreach ($oTermEntities as $oTermEntity) {
+            $oTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $oTermEntity->term);
+            $sExistingTags .= $oTag->title . ', ';
+        }
+
+        if (!$this->controls['tags']->getValue())
+            $this->controls['tags']->setValue($sExistingTags);
+
+        $aRecord = array(
+            'appId'      => $this->applicationId,
+        );
+
+        if (isset($this->view->{$this->getName()})) {
+            $aRecord = array_merge($aRecord, $this->view->{$this->getName()});
+        }
+
+        $this->view->{$this->getName()} = $aRecord;
+
+        parent::show();
     }
 }

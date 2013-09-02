@@ -59,4 +59,95 @@ class AM_Component_Record_Database extends Volcano_Component_Record_Database
             }
         }
     }
+
+    protected function update() {
+        foreach ($this->controls as $control) {
+            if ($control instanceof AM_Component_Control_Tags) {
+                $aTags = explode(', ', $control->getValue());
+                $iATagsSize = count($aTags);
+                if (empty($aTags[$iATagsSize-1])) {
+                    array_pop($aTags);
+                }
+                if (!empty($aTags[0])) {
+                    $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+                        ->findOneBy('id', $this->applicationId)
+                        ->getVocabularyTag();
+                    $oTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsByTitle($aTags, 'issue', $oVocabulary->id, $this->primaryKeyValue);
+                    $aExistingTags = array();
+                    $aExistingTermEntities = array();
+                    $aCurrentIssueTags = array();
+                    $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+                        array(
+                             'entity' => $this->primaryKeyValue,
+                             'entity_type' => 'issue',
+                        ));
+
+                    foreach ($oTermEntities as $oTermEntity) {
+                        $aExistingTermEntitiesId[$oTermEntity->term] = $oTermEntity->id;
+                    }
+                    foreach ($oTags as $oTag) {
+                        if (empty($oTag->term_id)) {
+                            $aExistingTags[$oTag->id] = $oTag->title;
+                        }
+                        elseif (!empty($aExistingTermEntitiesId[$oTag->id])) {
+                            unset($aExistingTermEntitiesId[$oTag->id]);
+                            $aCurrentIssueTags[$oTag->id] = $oTag->title;
+                        }
+                    }
+                    $aNewTags = array_diff($aTags, $aExistingTags);
+                    $aNewTags = array_diff($aNewTags, $aCurrentIssueTags);
+                    foreach ($aNewTags as $sTagTitle) {
+                        $oTagTerm = $oVocabulary->createTag($sTagTitle);
+                        $aExistingTags[$oTagTerm->id] = $oTagTerm->title;
+                    }
+                    if (!empty($aExistingTermEntitiesId)) {
+                        AM_Model_Db_Table_Abstract::factory('termEntity')->deleteTermEntities($aExistingTermEntitiesId);
+                    }
+                    foreach ($aExistingTags as $iTagId => $sTagTitle) {
+                        $oTermEntity = AM_Model_Db_Table_Abstract::factory('termEntity')->createTermEntity($iTagId, $this->primaryKeyValue, 'issue');
+                    }
+                }
+            }
+        }
+
+        return parent::update();
+    }
+
+    protected function insert() {
+        if (!parent::insert()) {
+            return false;
+        }
+
+        foreach ($this->controls as $control) {
+            if ($control instanceof AM_Component_Control_Tags) {
+                $aTags = explode(', ', $control->getValue());
+                $iATagsSize = count($aTags);
+                if (empty($aTags[$iATagsSize-1])) {
+                    array_pop($aTags);
+                }
+                if (!empty($aTags[0])) {
+                    $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+                        ->findOneBy('id', $this->applicationId)
+                        ->getVocabularyTag();
+                    $oTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsByTitle($aTags, 'issue', $oVocabulary->id);
+                    $aExistingTags = array();
+                    foreach ($oTags as $oTag) {
+                        if (empty($oTag->term)) {
+                            $aExistingTags[$oTag->id] = $oTag->title;
+                        }
+                    }
+                    $aNewTags = array_diff($aTags, $aExistingTags);
+                   foreach ($aNewTags as $sTagTitle) {
+                       $oTagTerm = $oVocabulary->createTag($sTagTitle);
+                       $aExistingTags[$oTagTerm->id] = $oTagTerm->title;
+
+                   }
+                   foreach ($aExistingTags as $iTagId => $sTagTitle) {
+                       $oTermEntity = AM_Model_Db_Table_Abstract::factory('termEntity')->createTermEntity($iTagId, $this->primaryKeyValue, 'issue');
+                   }
+                }
+            }
+        }
+        return "insert";
+    }
 }

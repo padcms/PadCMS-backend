@@ -365,4 +365,57 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
         $oTerm->save();
     }
 
+    /**
+     * Retruns tags by title
+     * @param AM_Model_Db_Page $oPage
+     * @param string $sTagName
+     * @return AM_Model_Db_Rowset_Term
+     */
+    public function getTagsByTitle($aTermTitle, $sEntityType, $sVocabularyId , $iEntityId = 0)
+    {
+        $oQuery = $this->select()
+            ->from('term', array('MIN(term.id) as id', 'title'))
+            ->setIntegrityCheck(false)
+            ->joinLeft('term_entity', 'term_entity.entity = :entity AND term_entity.term = term.id AND term_entity.entity_type = :entity_type', 'id as term_id')
+            ->where('term.deleted = "no"')
+            ->where('term.title IN (' . $this->_db->quote($aTermTitle) . ')')
+            ->where('term.vocabulary = :vocabulary_id')
+            ->group('title')
+            ->bind(
+                array(
+                     ':entity' => $iEntityId,
+                     ':entity_type' => $sEntityType,
+                     ':vocabulary_id' => $sVocabularyId
+                ));
+
+        $oTerms = $this->fetchAll($oQuery);
+
+        return $oTerms;
+    }
+
+    /**
+     * Retruns tags by title
+     * @param AM_Model_Db_Page $oPage
+     * @param string $sTagName
+     * @return AM_Model_Db_Rowset_Term
+     */
+    public function getAutocompleteTags($sTermTitle, $iVocabularyId, $aExistingTags)
+    {
+        $oQuery = $this->select()
+            ->from('term', array('id', 'title'))
+            ->where('term.deleted = "no"')
+            ->where('term.vocabulary = :vocabulary_id')
+            ->where('term.title LIKE CONCAT("%", ?, "%")', trim($sTermTitle));
+        if (!empty($aExistingTags)) {
+            $oQuery->where('term.title NOT IN (' . $this->_db->quote($aExistingTags) . ')');
+        }
+        $oQuery->bind(
+                array(
+                     ':vocabulary_id' => $iVocabularyId
+                ));
+
+        $oTerms = $this->fetchAll($oQuery);
+
+        return $oTerms;
+    }
 }

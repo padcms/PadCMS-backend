@@ -105,14 +105,15 @@ class AM_Api_Client extends AM_Api
                 'application_notification_email_title' => $oApplication->{'nt_email_' . $sPlatform},
                 'application_notification_twitter'     => $oApplication->{'nm_twitter_' . $sPlatform},
                 'application_notification_facebook'    => $oApplication->{'nm_fbook_' . $sPlatform},
-                'application_preview'                  => $oApplication->preview,
-                'issues'                               => array()
+                'application_preview'                  => $oApplication->preview
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
                 $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
                 $aApplication['application_share_message'] = $oApplication->share_message;
             }
+
+            $aApplication['issues'] = array();
 
             //Checking subscripton
             $oSubscription = null;
@@ -147,6 +148,20 @@ class AM_Api_Client extends AM_Api
 
             $oIssues = AM_Model_Db_Table_Abstract::factory('issue')->findAllBy($aCriteria);
             foreach ($oIssues as $oIssue) {
+                $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+                    array(
+                         'entity' => $oIssue->id,
+                         'entity_type' => 'issue',
+                    ));
+                $aTags = array();
+                foreach ($oTermEntities as $oTermEntity) {
+                    $oTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $oTermEntity->term);
+                    $aTags[] = array(
+                        'id' => $oTag->id,
+                        'title' => $oTag->title,
+                    );
+                }
+
                 $aIssue = array(
                     'issue_id'              => $oIssue->id,
                     'issue_title'           => $oIssue->title,
@@ -155,16 +170,7 @@ class AM_Api_Client extends AM_Api
                     'issue_product_id'      => $oIssue->product_id,
                     'paid'                  => false,
                     'revisions'             => array(),
-                    'tags' => array(
-                        array(
-                            'id' => 10,
-                            'title' => 'test1'
-                        ),
-                        array(
-                            'id' => 8,
-                            'title' => 'test2'
-                        )
-                    )
+                    'tags'                  => $aTags,
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {

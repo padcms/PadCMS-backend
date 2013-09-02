@@ -110,6 +110,31 @@ class IssueController extends AM_Controller_Action
         $oBreadCrumbHelper->show();
     }
 
+    /**
+     * Issue tag-autocomplete action
+     */
+    public function tagAutocompleteAction()
+    {
+        $aTags = array();
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $this->iApplicationId)
+            ->getVocabularyTag();
+        $sTagName = $_GET['ns'];
+        $aExistingTags = explode(', ', $_GET['et']);
+        array_pop($aExistingTags);
+
+        $oTags = AM_Model_Db_Table_Abstract::factory('term')->getAutocompleteTags($sTagName, $oVocabulary->id, $aExistingTags);
+
+        foreach ($oTags as $oTag) {
+            $aTags[] = array(
+                'id' => $oTag->id,
+                'value' => $oTag->title,
+            );
+        }
+
+        return $this->getHelper('Json')->sendJson($aTags);
+    }
+
     /*
      * Issue list action
      */
