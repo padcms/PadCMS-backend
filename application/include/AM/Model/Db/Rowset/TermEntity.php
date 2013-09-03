@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Component_Record_Database_Issue_Abstract class definition.
+ * AM_Model_Db_Rowset_TermPage class definition.
  *
  * LICENSE
  *
@@ -36,34 +36,7 @@
  */
 
 /**
- * Issue record component
- * @ingroup AM_Component
+ * @ingroup AM_Model
  */
-abstract class AM_Component_Record_Database_Issue_Abstract extends AM_Component_Record_Database
-{
-
-    /**
-     * @param string $sType Application type
-     *
-     * @return string|null
-     */
-    public static function getClassByApplicationType($sType) {
-        switch ($sType) {
-            case AM_Model_Db_ApplicationType::TYPE_GENERIC:
-                return 'AM_Component_Record_Database_Issue_Generic';
-            case AM_Model_Db_ApplicationType::TYPE_RUE98WE:
-                return 'AM_Component_Record_Database_Issue_Rue89we';
-        }
-        return null;
-    }
-
-    public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
-    {
-        $this->applicationId = $iApplicationId;
-
-        $aControls   = array();
-
-        return parent::__construct($oActionController,
-                $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
-    }
-}
+class AM_Model_Db_Rowset_TermEntity extends AM_Model_Db_Rowset_Abstract
+{ }

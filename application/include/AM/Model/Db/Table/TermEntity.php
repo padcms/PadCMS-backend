@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Component_Record_Database_Issue_Abstract class definition.
+ * AM_Model_Db_Table_TermPage class definition.
  *
  * LICENSE
  *
@@ -36,34 +36,24 @@
  */
 
 /**
- * Issue record component
- * @ingroup AM_Component
+ * @ingroup AM_Model
  */
-abstract class AM_Component_Record_Database_Issue_Abstract extends AM_Component_Record_Database
+class AM_Model_Db_Table_TermEntity extends AM_Model_Db_Table_Abstract
 {
+    public function createTermEntity($iTermId, $iEntityId, $iEntityType)
+    {
+        $oTermEntity                = new AM_Model_Db_TermEntity();
+        $oTermEntity->term          = $iTermId;
+        $oTermEntity->entity        = $iEntityId;
+        $oTermEntity->entity_type   = $iEntityType;
+        $oTermEntity->save();
 
-    /**
-     * @param string $sType Application type
-     *
-     * @return string|null
-     */
-    public static function getClassByApplicationType($sType) {
-        switch ($sType) {
-            case AM_Model_Db_ApplicationType::TYPE_GENERIC:
-                return 'AM_Component_Record_Database_Issue_Generic';
-            case AM_Model_Db_ApplicationType::TYPE_RUE98WE:
-                return 'AM_Component_Record_Database_Issue_Rue89we';
-        }
-        return null;
+        return $oTermEntity;
     }
 
-    public function  __construct(AM_Controller_Action $oActionController, $sName, $iIssueId, $iApplicationId)
-    {
-        $this->applicationId = $iApplicationId;
-
-        $aControls   = array();
-
-        return parent::__construct($oActionController,
-                $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
+    public function deleteTermEntities($aTermEntitiesId) {
+        foreach ($aTermEntitiesId as $aTermEntityId) {
+            $this->findOneBy('id', $aTermEntityId)->delete();
+        }
     }
 }

@@ -494,6 +494,17 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
      */
     public function delete()
     {
+        /* Delete term relationships for issue. */
+        $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+            array(
+                 'entity' => $this->id,
+                 'entity_type' => 'issue',
+            ));
+        foreach ($oTermEntities as $oTermEntity) {
+            $oTermEntity->delete();
+        }
+        /* End of delete term relationships for issue. */
+
         $this->getRevisions()->delete();
         $this->getHorizontalPdfs()->delete();
         $this->getHelpPages()->delete();

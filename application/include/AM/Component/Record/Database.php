@@ -59,4 +59,27 @@ class AM_Component_Record_Database extends Volcano_Component_Record_Database
             }
         }
     }
+
+    protected function update() {
+        foreach ($this->controls as $control) {
+            if ($control instanceof AM_Component_Control_Tags) {
+                $control->updateValue();
+            }
+        }
+
+        return parent::update();
+    }
+
+    protected function insert() {
+        if (!parent::insert()) {
+            return false;
+        }
+
+        foreach ($this->controls as $control) {
+            if ($control instanceof AM_Component_Control_Tags) {
+                $control->insertValue($this->primaryKeyValue);
+            }
+        }
+        return "insert";
+    }
 }

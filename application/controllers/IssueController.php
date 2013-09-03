@@ -44,11 +44,15 @@ class IssueController extends AM_Controller_Action
     /** @var int Application id **/
     protected $iApplicationId = null; /**< @type int */
 
+    /** @var int Issue id **/
+    protected $iIssueId = null; /**< @type int */
+
     public function preDispatch()
     {
         parent::preDispatch();
 
         $this->iApplicationId = intval($this->_getParam('aid'));
+        $this->iIssueId = intval($this->_getParam('iid'));
 
         if ($this->iApplicationId && !AM_Model_Db_Table_Abstract::factory('application')->checkAccess($this->iApplicationId, $this->_aUserInfo)) {
             throw new AM_Controller_Exception_Forbidden();
@@ -108,6 +112,31 @@ class IssueController extends AM_Controller_Action
         $oBreadCrumbHelper = new AM_View_Helper_Breadcrumbs($this->view, $this->oDb, $this->getUser(),
                 AM_View_Helper_Breadcrumbs::ISSUE, $this->_getAllParams());
         $oBreadCrumbHelper->show();
+    }
+
+    /**
+     * Issue tag-autocomplete action
+     */
+    public function tagAutocompleteAction()
+    {
+        $aTags = array();
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $this->iApplicationId)
+            ->getVocabularyTag();
+        $sTagName = $_GET['ns'];
+        $aExistingTags = explode(', ', $_GET['et']);
+        array_pop($aExistingTags);
+
+        $oTags = AM_Model_Db_Table_Abstract::factory('term')->getAutocompleteTags($sTagName, $oVocabulary->id, $aExistingTags);
+
+        foreach ($oTags as $oTag) {
+            $aTags[] = array(
+                'id' => $oTag->id,
+                'value' => $oTag->title,
+            );
+        }
+
+        return $this->getHelper('Json')->sendJson($aTags);
     }
 
     /*
@@ -564,5 +593,18 @@ class IssueController extends AM_Controller_Action
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
+    }
+
+    public function getApplicationId() {
+        return $this->iApplicationId;
+    }
+
+    public function getIssueId() {
+        if (!empty($this->iIssueId)) {
+            return $this->iIssueId;
+        }
+        else {
+            return null;
+        }
     }
 }

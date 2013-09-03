@@ -6,6 +6,7 @@
 
 {capture name=js}
   <script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/js/lib/jquery/jquery.autocomplete.js"></script>
   <script type="text/javascript" src="/js/issue/upload.js"></script>
   <script type="text/javascript" src="/js/colorpicker/colorpicker.js"></script>
   <script type="text/javascript" src="/js/colorpicker/color-handle.js"></script>
@@ -56,7 +57,9 @@
         <div class="form-item{if isset($title) && $title.errors} error{/if}">
           <label>{if isset($title)}{$title.title|escape}{/if} <span>*</span></label>
 
-          <div class="form-item-wrapper">{if isset($title)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}</div>
+          <div class="form-item-wrapper">
+              {if isset($title)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}
+          </div>
           <div class="clr"></div>
           <div class="description">
             {'Current issue title, will be used on the device when user will try to browse available issues. Take care, this name may be seen by your customers.'|translate}
@@ -105,6 +108,17 @@
           <div class="form-item{if isset($category) && $category.errors} error{/if}">
               <label>{if isset($category)}{$category.title|escape}{/if}</label>
               <div class="form-item-wrapper">{if isset($category)}{include file="Volcano/input.tpl" control=$category _class="form-text"}{/if}</div>
+              <div class="clr"></div>
+          </div>
+        {/if}
+
+        {if isset($tags)}
+          <div class="form-item{if isset($tags) && $tags.errors} error{/if}">
+              <label>{if isset($tags)}{$tags.title|escape}{/if}</label>
+              <div class="form-item-wrapper">
+                  {*{if isset($tags)}{include file="Volcano/input.tpl" control=$tags _class="form-text"}{/if}*}
+                  <input id="autocomplete" name="{$tags.name}" value="{$tags.value|escape}" type="text" class="form-text" />
+              </div>
               <div class="clr"></div>
           </div>
         {/if}
