@@ -71,7 +71,7 @@
             <label>{if isset($image)}{$image.title|escape}{/if} <span>*</span></label>
 
             <div class="{if isset($issue.imageUri)}form-item-image-wrapper{else}form-item-wrapper{/if}">
-              {if isset($issue.imageUri)}<img height="150" width="270" src="{$issue.imageUri}">{/if}
+              {if isset($issue.imageUri)}<img src="{$issue.imageUri}">{/if}
               {if isset($image)}{include file="Volcano/input.tpl" control=$image _type="file" _class="form-text"}{/if}
             </div>
             <div class="clr"></div>
