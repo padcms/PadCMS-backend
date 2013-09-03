@@ -39,12 +39,14 @@
                         <div class="form-item{if isset($title) && $title.errors} error{/if}">
                             <label>{if isset($title)}{$title.title|translate|escape}{/if} <span>*</span></label>
                             <div class="form-item-wrapper">{if isset($title)}{include file="Volcano/input.tpl" control=$title _class="form-text"}{/if}</div>
+                            <div class="clr"></div>
                         </div>
 
                         {if isset($revision) && $revision.copy_from_revisions && !$revision.primaryKeyValue}
                         <div class="form-item select-themed{if $revision.errors} error{/if}">
                             <label>{$copy_from.title|translate|escape}</label>
                             <div class="form-item-wrapper">{include file="Volcano/select.tpl" control=$copy_from _values=$revision.copy_from_revisions _class="select"}</div>
+                            <div class="clr"></div>
                         </div>
                         {/if}
 
@@ -52,6 +54,7 @@
                         <div class="form-item select-themed{if $state.errors} error{/if}">
                             <label>{$state.title|translate|escape} <span>*</span></label>
                             <div class="form-item-wrapper">{include file="Volcano/select.tpl" control=$state _values=$revision.states _class="select"}</div>
+                            <div class="clr"></div>
                         </div>
                         {/if}
 

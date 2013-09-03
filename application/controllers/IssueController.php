@@ -44,11 +44,15 @@ class IssueController extends AM_Controller_Action
     /** @var int Application id **/
     protected $iApplicationId = null; /**< @type int */
 
+    /** @var int Issue id **/
+    protected $iIssueId = null; /**< @type int */
+
     public function preDispatch()
     {
         parent::preDispatch();
 
         $this->iApplicationId = intval($this->_getParam('aid'));
+        $this->iIssueId = intval($this->_getParam('iid'));
 
         if ($this->iApplicationId && !AM_Model_Db_Table_Abstract::factory('application')->checkAccess($this->iApplicationId, $this->_aUserInfo)) {
             throw new AM_Controller_Exception_Forbidden();
@@ -589,5 +593,18 @@ class IssueController extends AM_Controller_Action
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
+    }
+
+    public function getApplicationId() {
+        return $this->iApplicationId;
+    }
+
+    public function getIssueId() {
+        if (!empty($this->iIssueId)) {
+            return $this->iIssueId;
+        }
+        else {
+            return null;
+        }
     }
 }
