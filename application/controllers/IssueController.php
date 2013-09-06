@@ -54,6 +54,13 @@ class IssueController extends AM_Controller_Action
         $this->iApplicationId = intval($this->_getParam('aid'));
         $this->iIssueId = intval($this->_getParam('iid'));
 
+        if (!empty($this->iIssueId) && empty($this->iApplicationId)) {
+            $oApplication = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id',  $this->iIssueId)->getApplication();
+            if (!empty($oApplication)) {
+                $this->iApplicationId = $oApplication->id;
+            }
+        }
+
         if ($this->iApplicationId && !AM_Model_Db_Table_Abstract::factory('application')->checkAccess($this->iApplicationId, $this->_aUserInfo)) {
             throw new AM_Controller_Exception_Forbidden();
         }

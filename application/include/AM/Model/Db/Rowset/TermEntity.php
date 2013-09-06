@@ -39,4 +39,16 @@
  * @ingroup AM_Model
  */
 class AM_Model_Db_Rowset_TermEntity extends AM_Model_Db_Rowset_Abstract
-{ }
+{
+    public function copyToIssue(AM_Model_Db_Issue $oIssueTo) {
+        foreach ($this as $oTermEntity) {
+            $oTermEntity->copyToIssue($oIssueTo);
+        }
+    }
+
+    public function moveToIssue(AM_Model_Db_Issue $oIssueTo) {
+        foreach ($this as $oTermEntity) {
+            $oTermEntity->moveToIssue($oIssueTo);
+        }
+    }
+}
