@@ -250,6 +250,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         }
 
         $oRevisions = $this->getRevisions();
+        $iIssueFromId    = $this->id;
 
         $this->user = $oUser->id;
         $this->save();
@@ -258,6 +259,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
             $oRevisions->moveToIssue($this);
         }
 
+        $this->moveTags($iIssueFromId);
         $this->exportRevisions();
 
         return $this;
@@ -273,6 +275,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         $oRevisions      = $this->getRevisions();
         $oHorizontalPdfs = $this->getHorizontalPdfs();
         $oApplication    = $this->getApplication();
+        $iIssueFromId    = $this->id;
 
         $aData = array();
         $aData['application'] = $oApplication->id;
@@ -290,6 +293,8 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         if (!empty($oHorizontalPdfs)) {
             $oHorizontalPdfs->copyToIssue($this);
         }
+
+        $this->copyTags($iIssueFromId);
 
         $this->compileHorizontalPdfs();
         $this->exportRevisions();
@@ -309,6 +314,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         $oRevisions  = $this->getRevisions();
         /* @var $oHorizontalPdfs AM_Model_Db_Rowset_StaticPdf*/
         $oHorizontalPdfs = $this->getHorizontalPdfs();
+        $iIssueFromId    = $this->id;
 
         $aData                = array();
         $aData['application'] = $oApplication->id;
@@ -328,6 +334,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
             $oHorizontalPdfs->copyToIssue($this);
         }
 
+        $this->copyTags($iIssueFromId);
         $this->compileHorizontalPdfs();
         $this->exportRevisions();
 
@@ -348,6 +355,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
 
         /* @var $oRevisions AM_Model_Db_Table_RevisionSet */
         $oRevisions  = $this->getRevisions();
+        $iIssueFromId    = $this->id;
 
         $this->user        = $oUser->id;
         $this->application = $oApplication->id;
@@ -358,6 +366,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
             $oRevisions->moveToIssue($this, false);
         }
 
+        $this->moveTags($iIssueFromId);
         $this->exportRevisions();
 
         return $this;
@@ -517,5 +526,23 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
 
         $this->deleted = 'yes';
         $this->save();
+    }
+
+    public function moveTags($iIssueFromId) {
+        $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+            array(
+                 'entity' => $iIssueFromId,
+                 'entity_type' => 'issue',
+            ));
+        $oTermEntities->moveToIssue($this);
+    }
+
+    public function copyTags($iIssueFromId) {
+        $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
+            array(
+                 'entity' => $iIssueFromId,
+                 'entity_type' => 'issue',
+            ));
+        $oTermEntities->copyToIssue($this);
     }
 }

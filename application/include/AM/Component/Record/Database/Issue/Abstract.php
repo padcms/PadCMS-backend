@@ -63,6 +63,12 @@ abstract class AM_Component_Record_Database_Issue_Abstract extends AM_Component_
 
         $aControls   = array();
 
+        $aUser = $oActionController->getUser();
+
+        if (!$iIssueId) {
+            $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'user', $aUser['id']);
+        }
+
         return parent::__construct($oActionController,
                 $sName, $aControls, $oActionController->oDb, 'issue', 'id', $iIssueId);
     }

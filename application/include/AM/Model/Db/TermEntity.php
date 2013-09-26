@@ -40,4 +40,44 @@
  * @ingroup AM_Model
  */
 class AM_Model_Db_TermEntity extends AM_Model_Db_Abstract
-{ }
+{
+    public function copyToIssue(AM_Model_Db_Issue $oIssueTo) {
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $oIssueTo->application)
+            ->getVocabularyTag();
+        $oTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $this->term);
+        $oNewTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy(
+            array(
+                 'title' => $oTag->title,
+                 'vocabulary' => $oVocabulary->id
+            ));
+        if (empty($oNewTag)) {
+            $oNewTag = $oVocabulary->createTag($oTag->title);
+        }
+        $oNewTermEntity                = new AM_Model_Db_TermEntity();
+        $oNewTermEntity->term          = $oNewTag->id;
+        $oNewTermEntity->entity        = $oIssueTo->id;
+        $oNewTermEntity->entity_type   = $this->entity_type;
+        $oNewTermEntity->save();
+        return $oNewTermEntity;
+    }
+
+    public function moveToIssue(AM_Model_Db_Issue $oIssueTo) {
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $oIssueTo->application)
+            ->getVocabularyTag();
+        $oTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy('id', $this->term);
+        $oNewTag = AM_Model_Db_Table_Abstract::factory('term')->findOneBy(
+            array(
+                 'title' => $oTag->title,
+                 'vocabulary' => $oVocabulary->id
+            ));
+        if (empty($oNewTag)) {
+            $oNewTag = $oVocabulary->createTag($oTag->title);
+        }
+        $this->term = $oNewTag->id;
+        $this->entity = $oIssueTo->id;
+        $this->save();
+        return $this;
+    }
+}

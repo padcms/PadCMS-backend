@@ -23,9 +23,9 @@ if(jQuery) (function($) {
 			//
 
 			var init = function(select, data) {
-
+				
 				var options;
-
+				
 				// Disable for iOS devices (their native controls are more suitable for a touch device)
 				if( navigator.userAgent.match(/iPad|iPhone|Android|IEMobile|BlackBerry/i) ) return false;
 
@@ -39,7 +39,7 @@ if(jQuery) (function($) {
 					inline = select.attr('multiple') || parseInt(select.attr('size')) > 1;
 
 				var settings = data || {};
-
+				
 				control
 					.width(select.outerWidth())
 					.addClass(select.attr('class'))
@@ -57,16 +57,16 @@ if(jQuery) (function($) {
 						control.removeClass('selectBox-active');
 						select.trigger('blur');
 					});
-
+				
 				if( !$(window).data('selectBox-bindings') ) {
 					$(window)
 						.data('selectBox-bindings', true)
 						.bind('scroll.selectBox', hideMenus)
 						.bind('resize.selectBox', hideMenus);
 				}
-
+				
 				if( select.attr('disabled') ) control.addClass('selectBox-disabled');
-
+				
 				// Focus on control when label is clicked
 				select.bind('click.selectBox', function(event) {
 					control.focus();
@@ -129,12 +129,12 @@ if(jQuery) (function($) {
 					//
 					var label = $('<span class="selectBox-label" />'),
 						arrow = $('<span class="selectBox-arrow" />');
-
+					
 					// Update label
 					label
 						.attr('class', getLabelClass(select))
 						.text(getLabelText(select));
-
+					
 					options = getOptions(select, 'dropdown');
 					options.appendTo('BODY');
 
@@ -166,15 +166,15 @@ if(jQuery) (function($) {
 						.bind('close.selectBox', function(event, triggerData) {
 							if(triggerData && triggerData._selectBox === true) return;
 							hideMenus();
-						})
+						})						
 						.insertAfter(select);
-
+					
 					// Set label width
 					var labelWidth = control.width() - arrow.outerWidth() - parseInt(label.css('paddingLeft')) - parseInt(label.css('paddingLeft'));
 					label.width(labelWidth);
-
+					
 					disableSelection(control);
-
+					
 				}
 
 				// Store data for later use and show the control
@@ -183,7 +183,7 @@ if(jQuery) (function($) {
 					.data('selectBox-control', control)
 					.data('selectBox-settings', settings)
 					.hide();
-
+				
 			};
 
 
@@ -224,7 +224,7 @@ if(jQuery) (function($) {
 
 						options = $('<ul class="selectBox-options" />');
 						options = _getOptions(select, options);
-
+						
 						options
 							.find('A')
 								.bind('mouseover.selectBox', function(event) {
@@ -276,7 +276,7 @@ if(jQuery) (function($) {
 								.bind('mouseout.selectBox', function(event) {
 									removeHover(select, $(this).parent());
 								});
-
+						
 						// Inherit classes for dropdown menu
 						var classes = select.attr('class') || '';
 						if( classes !== '' ) {
@@ -291,28 +291,28 @@ if(jQuery) (function($) {
 				}
 
 			};
-
-
+			
+			
 			var getLabelClass = function(select) {
 				var selected = $(select).find('OPTION:selected');
 				return ('selectBox-label ' + (selected.attr('class') || '')).replace(/\s+$/, '');
 			};
-
-
+			
+			
 			var getLabelText = function(select) {
 				var selected = $(select).find('OPTION:selected');
 				return selected.text() || '\u00A0';
 			};
-
-
+			
+			
 			var setLabel = function(select) {
 				select = $(select);
 				var control = select.data('selectBox-control');
 				if( !control ) return;
 				control.find('.selectBox-label').attr('class', getLabelClass(select)).text(getLabelText(select));
 			};
-
-
+			
+			
 			var destroy = function(select) {
 
 				select = $(select);
@@ -329,14 +329,14 @@ if(jQuery) (function($) {
 					.show();
 
 			};
-
-
+			
+			
 			var refresh = function(select) {
 				select = $(select);
 				select.selectBox('options', select.html());
 			};
 
-
+			
 			var showMenu = function(select) {
 
 				select = $(select);
@@ -348,7 +348,7 @@ if(jQuery) (function($) {
 				hideMenus();
 
 				var borderBottomWidth = isNaN(control.css('borderBottomWidth')) ? 0 : parseInt(control.css('borderBottomWidth'));
-
+				
 				// Menu position
 				options
 					.width(control.innerWidth())
@@ -356,12 +356,12 @@ if(jQuery) (function($) {
 						top: control.offset().top + control.outerHeight() - borderBottomWidth,
 						left: control.offset().left
 					});
-
+				
 				if( select.triggerHandler('beforeopen') ) return false;
 				var dispatchOpenEvent = function() {
 					select.triggerHandler('open', { _selectBox: true });
 				};
-
+				
 				// Show menu
 				switch( settings.menuTransition ) {
 
@@ -378,9 +378,9 @@ if(jQuery) (function($) {
 						break;
 
 				}
-
+				
 				if( !settings.menuSpeed ) dispatchOpenEvent();
-
+				
 				// Center on selected option
 				var li = options.find('.selectBox-selected:first');
 				keepOptionInView(select, li, true);
@@ -407,32 +407,39 @@ if(jQuery) (function($) {
 						select = options.data('selectBox-select'),
 						control = select.data('selectBox-control'),
 						settings = select.data('selectBox-settings');
-
+					
 					if( select.triggerHandler('beforeclose') ) return false;
-
+					
 					var dispatchCloseEvent = function() {
 						select.triggerHandler('close', { _selectBox: true });
-					};
+					};					
+					
+					if( settings ) {
+					    switch( settings.menuTransition ) {
 
-					switch( settings.menuTransition ) {
+					      case 'fade':
+						options.fadeOut(settings.menuSpeed, dispatchCloseEvent);
+						break;
 
-						case 'fade':
-							options.fadeOut(settings.menuSpeed, dispatchCloseEvent);
-							break;
+					      case 'slide':
+						options.slideUp(settings.menuSpeed, dispatchCloseEvent);
+						break;
 
-						case 'slide':
-							options.slideUp(settings.menuSpeed, dispatchCloseEvent);
-							break;
+					      default:
+						options.hide(settings.menuSpeed, dispatchCloseEvent);
+						break;
 
-						default:
-							options.hide(settings.menuSpeed, dispatchCloseEvent);
-							break;
+					    }
 
-					}
+					    if( !settings.menuSpeed ) dispatchCloseEvent();
 
-					if( !settings.menuSpeed ) dispatchCloseEvent();
-
-					control.removeClass('selectBox-menuShowing');
+					    control.removeClass('selectBox-menuShowing');
+					  }
+					  else {
+					    $(this).hide();
+					    $(this).triggerHandler('close', { _selectBox: true });
+					    $(this).removeClass('selectBox-menuShowing');
+					  }
 
 				});
 
@@ -486,7 +493,7 @@ if(jQuery) (function($) {
 				if( control.hasClass('selectBox-dropdown') ) {
 					control.find('.selectBox-label').text(li.text());
 				}
-
+				
 				// Update original control's value
 				var i = 0, selection = [];
 				if( select.attr('multiple') ) {
@@ -496,7 +503,7 @@ if(jQuery) (function($) {
 				} else {
 					selection = li.find('A').attr('rel');
 				}
-
+				
 				// Remember most recently selected item
 				control.data('selectBox-last-selected', li);
 
@@ -745,7 +752,7 @@ if(jQuery) (function($) {
 
 				// Update label
 				setLabel(select);
-
+				
 				// Update control values
 				options.find('.selectBox-selected').removeClass('selectBox-selected');
 				options.find('A').each( function() {
@@ -874,7 +881,7 @@ if(jQuery) (function($) {
 						setValue(this, data);
 					});
 					break;
-
+				
 				case 'refresh':
 					$(this).each( function() {
 						refresh(this);

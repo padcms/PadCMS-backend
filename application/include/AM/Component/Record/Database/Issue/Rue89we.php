@@ -64,13 +64,10 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         $this->addControl(new AM_Component_Control_Tags($oActionController,
                 'tags', 'Tags'));
 
-        $aUser = $oActionController->getUser();
-
         $validationsRules = array();
 
         if (!$iIssueId) {
             $validationsRules[] = array('require');
-            $this->addControl(new Volcano_Component_Control_Database_Static($oActionController, 'user', $aUser['id']));
         }
         $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $iIssueId);
         $sImageValue = !empty($oIssue->image) ? $oIssue->image : null;
