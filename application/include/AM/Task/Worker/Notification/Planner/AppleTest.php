@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Task_Worker_Notification_PlannerTest_Apple class definition.
+ * AM_Task_Worker_Notification_Planner_AppleTest class definition.
  *
  * LICENSE
  *
@@ -39,7 +39,7 @@
  * Task for planning push notification sending
  * @ingroup AM_Task
  */
-class AM_Task_Worker_Notification_PlannerTest_Apple extends AM_Task_Worker_Abstract
+class AM_Task_Worker_Notification_Planner_AppleTest extends AM_Task_Worker_Abstract
 {
     /**
      * @see AM_Task_Worker_Abstract::_fire()
