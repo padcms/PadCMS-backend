@@ -262,10 +262,12 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
                 continue;
             }
 
+            $this->getLogger()->debug(sprintf('Running task #%s with type #%s', $oTask->id, $oTask->task_type_id));
+
             try {
-                $this->getLogger()->debug(sprintf('Running task #%s with type #%s', $oTask->id, $oTask->task_type_id));
                 $oWorker = $oTask->getWorker();
                 /* @var $oWorker AM_Task_Worker_Abstract */
+
             } catch(Exception $oException) {
                 $this->getLogger()->crit($oException);
               continue;
