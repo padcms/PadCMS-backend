@@ -77,7 +77,7 @@ class AM_Task_Worker_Notification_Planner_Apple extends AM_Task_Worker_Abstract
 
         $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId);
 
-        $oTaskSender = new AM_Task_Worker_AppleNotification_Sender();
+        $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
 
         $aDevices = array_chunk($oDevices->toArray(), 1000);
 
