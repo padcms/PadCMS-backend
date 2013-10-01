@@ -262,30 +262,33 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
                 continue;
             }
 
+            $oWorker = null;
             try {
                 $this->getLogger()->debug(sprintf('Running task #%s with type #%s', $oTask->id, $oTask->task_type_id));
-
                 $oWorker = $oTask->getWorker();
                 /* @var $oWorker AM_Task_Worker_Abstract */
-
-                $this->getLogger()->debug(sprintf('Task worker is  %s', get_class($oWorker)));
-
-                $oWorker->run();
-
-                $this->getLogger()->debug(sprintf('Finishing task #%s', $oTask->id));
-
-                $oWorker->finish();
-                $oWorker = null;
-
-                $this->getLogger()->debug(sprintf('Task #%s is finished', $oTask->id));
-            } catch (Exception $oException) {
-                $this->getLogger()->crit(sprintf('Task #%s has an error', $oTask->id));
+            } catch(Exception $oException) {
                 $this->getLogger()->crit($oException);
+            }
 
-                if ($oWorker) {
-                  $oWorker->error($oException);
+            if ($oWorker) {
+                try {
+                    $this->getLogger()->debug(sprintf('Task worker is  %s', get_class($oWorker)));
+
+                    $oWorker->run();
+
+                    $this->getLogger()->debug(sprintf('Finishing task #%s', $oTask->id));
+
+                    $oWorker->finish();
+
+                    $this->getLogger()->debug(sprintf('Task #%s is finished', $oTask->id));
+                } catch (Exception $oException) {
+                    $this->getLogger()->crit(sprintf('Task #%s has an error', $oTask->id));
+                    $this->getLogger()->crit($oException);
+
+                    $oWorker->error($oException);
+                    continue;
                 }
-                continue;
             }
         }
 
