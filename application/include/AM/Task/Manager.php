@@ -275,13 +275,16 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
                 $this->getLogger()->debug(sprintf('Finishing task #%s', $oTask->id));
 
                 $oWorker->finish();
+                $oWorker = null;
 
                 $this->getLogger()->debug(sprintf('Task #%s is finished', $oTask->id));
             } catch (Exception $oException) {
                 $this->getLogger()->crit(sprintf('Task #%s has an error', $oTask->id));
                 $this->getLogger()->crit($oException);
 
-                $oWorker->error($oException);
+                if ($oWorker) {
+                  $oWorker->error($oException);
+                }
                 continue;
             }
         }
