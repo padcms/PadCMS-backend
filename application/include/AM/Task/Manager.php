@@ -266,7 +266,7 @@ class AM_Task_Manager implements AM_Task_Manager_Interface
 
             try {
                 $oWorker = $oTask->getWorker();
-                /* @var $oWorker AM_Task_Worker_Abstract */
+            /* @var $oWorker AM_Task_Worker_Abstract */
 
             } catch(Exception $oException) {
                 $this->getLogger()->crit($oException);

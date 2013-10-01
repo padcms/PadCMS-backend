@@ -51,7 +51,7 @@ class AM_Task_Worker_Notification_Planner_AppleTest extends AM_Task_Worker_Abstr
         $iIssueId     = intval($this->getOption('issue_id'));
         $sMessage     = $this->getOption('message');
         $iBadge       = intval($this->getOption('badge'));
-        $sDeviceToken = intval($this->getOption('token'));
+        $sDeviceToken = $this->getOption('token');
 
         $oIssue = AM_Model_Db_Table_Abstract::factory('issue')
                 ->findOneBy('id', $iIssueId);
