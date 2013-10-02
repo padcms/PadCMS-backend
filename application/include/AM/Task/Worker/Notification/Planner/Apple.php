@@ -85,7 +85,7 @@ class AM_Task_Worker_Notification_Planner_Apple extends AM_Task_Worker_Abstract
             }
             $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId,
                 'tokens' => $aTokens);
-            $this->getLogger()->debug('debug_@1: %s', serialize($aSenderTaskOptions));
+            $this->getLogger()->debug(sprintf('debug_@1: %s', serialize($aSenderTaskOptions)));
             $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
             $oTaskSender->setOptions($aSenderTaskOptions);
             $oTaskSender->create();
