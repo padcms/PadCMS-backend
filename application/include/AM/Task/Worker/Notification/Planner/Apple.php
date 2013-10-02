@@ -77,17 +77,16 @@ class AM_Task_Worker_Notification_Planner_Apple extends AM_Task_Worker_Abstract
 
         $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId);
 
-        $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
-
         $aDevices = array_chunk($oDevices->toArray(), 1000);
 
         foreach ($aDevices as $aDeviceSlice) {
             $aTokens = array();
             foreach ($aDeviceSlice as $aDevice) {
-                $this->getLogger()->debug(sprintf('Prepearing message for token \'%s\'', $aDevice["token"]));
+                $this->getLogger()->debug(sprintf('Preparing message for token \'%s\'', $aDevice["token"]));
                 $aTokens[] = $aDevice['token'];
             }
             $aSenderTaskOptions['tokens'] = $aTokens;
+            $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
             $oTaskSender->setOptions($aSenderTaskOptions);
             $oTaskSender->create();
         }
