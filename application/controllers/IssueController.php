@@ -199,7 +199,7 @@ class IssueController extends AM_Controller_Action
 
             if (AM_Model_Db_State::STATE_PUBLISHED != $oIssue->state) {
                 $oIssue->state   = AM_Model_Db_State::STATE_PUBLISHED;
-                $oIssue->updated = new Zend_Db_Expr('NOw()');
+                $oIssue->updated = new Zend_Db_Expr('now()');
                 $oIssue->save();
 
                 $sMessage     = $this->__('New issue is available');
