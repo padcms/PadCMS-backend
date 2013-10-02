@@ -51,7 +51,6 @@ class AM_Task_Worker_Notification_Sender_Apple extends AM_Task_Worker_Abstract
      */
     protected function _fire()
     {
-        return;
         $aTokens  = (array) $this->getOption('tokens');
         $sMessage = $this->getOption('message');
         $iBadge   = intval($this->getOption('badge'));
