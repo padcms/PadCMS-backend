@@ -871,4 +871,8 @@ div.cke_editable_inline {
 #AnyTime--publish-date.AnyTime-pkr {
     z-index: 100;
 }
+
+#AnyTime--publish-date.AnyTime-pkr .AnyTime-cur-btn {
+    color: #000000;
+}
 /* - - - */
