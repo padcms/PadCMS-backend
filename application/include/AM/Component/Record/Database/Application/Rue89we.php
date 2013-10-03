@@ -72,6 +72,12 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 array(array('require'))));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'welcome',
+                'Welcome message',
+                array(array('maximum length', 350)),
+                'welcome'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'product_id',
                 'Product id',
                 array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));

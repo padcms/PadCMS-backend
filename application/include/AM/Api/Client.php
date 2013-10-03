@@ -109,8 +109,9 @@ class AM_Api_Client extends AM_Api
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+                $aApplication['application_welcome']             = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
                 $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
-                $aApplication['application_share_message'] = $oApplication->share_message;
+                $aApplication['application_share_message']       = $oApplication->share_message;
             }
 
             $aApplication['issues'] = array();
@@ -171,13 +172,13 @@ class AM_Api_Client extends AM_Api
                     'paid'                  => false,
                     'revisions'             => array(),
                     'tags'                  => $aTags,
+                    'issue_publish_date'    => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
                     $aIssue['issue_author']     = $oIssue->author;
                     $aIssue['issue_words']      = $oIssue->words;
                     $aIssue['issue_excerpt']    = str_replace("\n", "\\n", $oIssue->excerpt);
-                    $aIssue['issue_welcome']    = str_replace("\n", "\\n", $oIssue->welcome);
                     $aIssue['issue_category']    = str_replace("\n", "\\n", $oIssue->category);
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',

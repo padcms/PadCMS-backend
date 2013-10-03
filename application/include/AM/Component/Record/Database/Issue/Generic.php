@@ -83,6 +83,10 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
                 'application', $iApplicationId));
         $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
                 'updated', new Zend_Db_Expr('NOW()')));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'publish_date', 'Publish date', array(), 'publish_date'));
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'paid', 'Paid', array(), 'paid'));
 
         $this->postInitialize();
     }

@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
     CKEDITOR.replace('message_for_readers');
+    CKEDITOR.replace('welcome');
 </script>
 {/capture}
 <div id="main">
@@ -96,6 +97,15 @@
                                 <i>{'A nice magazine about life-style, decoration and cooking...'|translate}</i>
                             </div>
                         </div>
+
+                        {if isset($welcome)}
+                            <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
+                                <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
+                                <div
+                                     class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
+                                <div class="clr"></div>
+                            </div>
+                        {/if}
 
                         <div class="form-item{if isset($message_for_readers) && $message_for_readers.errors} error{/if}">
                             <label>{if isset($message_for_readers)}{$message_for_readers.title|escape}{/if}</label>

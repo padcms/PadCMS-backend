@@ -866,3 +866,9 @@ div.cke_editable_inline {
 #push-tabs {
     border: none;
 }
+
+/* For anytime js plugin */
+#AnyTime--publish-date.AnyTime-pkr {
+    z-index: 100;
+}
+/* - - - */

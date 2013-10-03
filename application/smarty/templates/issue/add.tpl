@@ -1,5 +1,6 @@
 {capture name=css}
   <link href="/css/colorpicker.css" rel="stylesheet" media="screen" type="text/css" />
+  <link href="/js/lib/anytime/anytime.compressed.css" rel="stylesheet" type="text/css" />
 {/capture}
 
 {include file="includes/header.tpl"}
@@ -10,11 +11,14 @@
   <script type="text/javascript" src="/js/issue/upload.js"></script>
   <script type="text/javascript" src="/js/colorpicker/colorpicker.js"></script>
   <script type="text/javascript" src="/js/colorpicker/color-handle.js"></script>
+  <script type="text/javascript" src="/js/lib/anytime/anytime.compressed.js"></script>
+    <script type="text/javascript" src="/js/issue/publish-date.js"></script>
   <script type="text/javascript">
     window.issueId = '{if isset($issue)}{$issue.primaryKeyValue}{/if}';
     window.appId = '{if isset($issue)}{$issue.appId}{/if}';
     colorPickerHandler.init($('div.with-color-picker'));
     CKEDITOR.replaceAll();
+    AnyTime.picker('publish-date');
   </script>
 {/capture}
 
@@ -95,15 +99,6 @@
           </div>
         {/if}
 
-        {if isset($welcome)}
-          <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
-            <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
-            <div
-                class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
-            <div class="clr"></div>
-          </div>
-        {/if}
-
         {if isset($category)}
           <div class="form-item{if isset($category) && $category.errors} error{/if}">
               <label>{if isset($category)}{$category.title|escape}{/if}</label>
@@ -116,7 +111,6 @@
           <div class="form-item{if isset($tags) && $tags.errors} error{/if}">
               <label>{if isset($tags)}{$tags.title|escape}{/if}</label>
               <div class="form-item-wrapper">
-                  {*{if isset($tags)}{include file="Volcano/input.tpl" control=$tags _class="form-text"}{/if}*}
                   <input id="autocomplete" name="{$tags.name}" value="{$tags.value|escape}" type="text" class="form-text" />
               </div>
               <div class="clr"></div>
@@ -134,7 +128,7 @@
           </div>
         </div>
 
-        {if isset($welcome)}
+        {if isset($words)}
           <div class="form-item{if isset($words) && $words.errors} error{/if}">
             <label>{if isset($words)}{$words.title|escape}{/if} <span>*</span></label>
             <div
@@ -158,13 +152,33 @@
         {if isset($issue) && $issue.states && $issue.primaryKeyValue}
           <div class="form-item select-themed{if isset($state) && $state.errors} error{/if}">
             <label>{if isset($state)}{$state.title|escape}{/if} <span>*</span></label>
-            <div class="form-item-wrapper">{if isset($state)}{include file="Volcano/select.tpl" control=$state _values=$issue.states _class="form-text"}{/if}</div>
+            <div class="form-item-wrapper">{if isset($state)}{include file="Volcano/select.tpl" control=$state _values=$issue.states _class="form-text issue-state"}{/if}</div>
             <div class="clr"></div>
             <div class="description">
               {'Issue state.'|translate}
             </div>
           </div>
         {/if}
+
+        {if isset($publish_date)}
+          <div class="publish-date-wrapper form-item{if isset($publish_date) && $publish_date.errors} error{/if}">
+              <label>{if isset($publish_date)}{$publish_date.title|escape}{/if}</label>
+              <div class="form-item-wrapper">
+                  {if isset($publish_date)}
+                      <input id="publish-date" name="{$publish_date.name}" value="{$publish_date.value|escape}" type="text" class="form-text" />
+                  {/if}
+              </div>
+              <div class="clr"></div>
+          </div>
+        {/if}
+
+      {if isset($paid)}
+          <div class="form-item{if isset($paid) && $paid.errors} error{/if}">
+              <label>{if isset($paid)}{$paid.title|escape}{/if}</label>
+              <div class="form-item-wrapper">{if isset($paid)}{include file="Volcano/checkbox.tpl" control=$paid _class="form-text"}{/if}</div>
+              <div class="clr"></div>
+          </div>
+      {/if}
 
         <div class="form-item{if isset($issue_color) && $issue_color.errors} error{/if}">
           <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>
@@ -431,6 +445,7 @@
     </div>
   </div>
 {/if}
+
 </div>
 </div>
 </div>

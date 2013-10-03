@@ -56,9 +56,6 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
                 'excerpt', 'Excerpt', array(array('maximum length', 180), array('require')), 'excerpt'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'welcome', 'Welcome message', array(array('maximum length', 350)), 'welcome'));
-
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'category', 'Category', array(array('maximum length', 255))));
 
         $this->addControl(new AM_Component_Control_Tags($oActionController,

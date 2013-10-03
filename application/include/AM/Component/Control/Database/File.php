@@ -55,4 +55,26 @@ class AM_Component_Control_Database_File extends Volcano_Component_Control_Datab
           ->createThumbnails();
       return true;
     }
+
+    public function translate_filename($filename)
+    {
+        // Replace whitespace.
+        $filename = str_replace(' ', '_', $filename);
+        // Remove remaining unsafe characters.
+        $filename = preg_replace('![^0-9A-Za-z_.-]!', '', $filename);
+        // Remove multiple consecutive non-alphabetical characters.
+        $filename = preg_replace('/(_)_+|(\.)\.+|(-)-+/', '\\1\\2\\3', $filename);
+        // Force lowercase to prevent issues on case-insensitive file systems.
+        $filename = strtolower($filename);
+        return $filename;
+    }
+
+    /**
+     * Return value for DB operations
+     * @return string
+     */
+    public function getDbValue() {
+        $this->setDbValue($this->translate_filename($this->value));
+        return $this->value;
+    }
 }
