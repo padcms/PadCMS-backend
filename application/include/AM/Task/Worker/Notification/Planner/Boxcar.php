@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Task_Worker_Notification_Sender_Boxcar class definition.
+ * AM_Task_Worker_Notification_Planner_Apple class definition.
  *
  * LICENSE
  *
@@ -36,10 +36,10 @@
  */
 
 /**
- * Task for sending push notification
+ * Task for planning push notification sending
  * @ingroup AM_Task
  */
-class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
+class AM_Task_Worker_Notification_Planner_Boxcar extends AM_Task_Worker_Abstract
 {
     /**
      * @see AM_Task_Worker_Abstract::_fire()
@@ -48,42 +48,47 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
      */
     protected function _fire()
     {
-        $aTokens  = (array) $this->getOption('tokens');
+        $iIssueId = intval($this->getOption('issue_id'));
         $sMessage = $this->getOption('message');
         $iBadge   = intval($this->getOption('badge'));
-        $iApplicationId = intval($this->getOption('application_id'));
+
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')
+                ->findOneBy('id', $iIssueId);
+        /* @var $oIssue AM_Model_Db_Issue */
+
+        if (is_null($oIssue)) {
+            throw new AM_Task_Worker_Exception('Issue not found');
+        }
+
+        $iApplicationId = $oIssue->getApplication()->id;
 
         if (empty($iApplicationId)) {
             throw new AM_Task_Worker_Exception('Wrong parameters were given');
         }
 
-        $oApplication = AM_Model_Db_Table_Abstract::factory('application')
-            ->findOneBy('id', $iApplicationId);
+        $oDevices = AM_Model_Db_Table_Abstract::factory('device_token')
+                ->findAllBy(array('application_id' => $iApplicationId));
 
-        $sProviderKey = $oApplication->push_boxcar_provider_key;
-        $sProviderSecret = $oApplication->push_boxcar_provider_secret;
-
-        if (empty($sProviderKey) || empty($sProviderSecret)) {
-            throw new AM_Task_Worker_Exception('Empty provider key or secret');
-        }
-
-        $oTask = $this->_getTask();
-
-        if (is_null($oTask->id)) {
-            throw new AM_Task_Worker_Exception('Trying to run non created task');
-        }
-
-        try {
-            $oBoxcar = new BoxcarPHP_Api($sProviderKey, $sProviderSecret);
-            //$oBoxcar->broadcast($sMessage);
-        }
-        catch (BoxcarPHP_Exception $e) {
-            $bError = true;
-            $this->error();
-        }
-
-        if (empty($bError)) {
+        if (0 === $oDevices->count()) {
             $this->finish();
+            $this->getLogger()->debug('There are not devices to notificate');
+            return;
+        }
+
+        $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId);
+
+        $aDevices = array_chunk($oDevices->toArray(), 100);
+
+        foreach ($aDevices as $aDeviceSlice) {
+            $aTokens = array();
+            foreach ($aDeviceSlice as $aDevice) {
+                $this->getLogger()->debug(sprintf('Preparing message for token \'%s\'', $aDevice["token"]));
+                $aTokens[] = $aDevice['token'];
+            }
+            $aSenderTaskOptions['tokens'] = $aTokens;
+            $oTaskSender = new AM_Task_Worker_Notification_Sender_Boxcar();
+            $oTaskSender->setOptions($aSenderTaskOptions);
+            $oTaskSender->create();
         }
     }
 }

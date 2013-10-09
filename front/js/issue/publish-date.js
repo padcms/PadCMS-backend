@@ -6,7 +6,12 @@
  * http://www.cecill.info/licences/Licence_CeCILL-C_V1-fr.html
  */
 $(document).ready(function() {
-    $('.issue-state').change(function() {
+    $issueState = $('.issue-state');
+    if ($issueState.val() != 2) {
+        $('#publish-date').prop('disabled', true);
+        $('.publish-date-wrapper').hide();
+    }
+    $issueState.change(function() {
         if ($(this).val() == 2) {
             $('#publish-date').prop('disabled', false);
             $('.publish-date-wrapper').show();

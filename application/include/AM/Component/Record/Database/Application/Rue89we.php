@@ -72,15 +72,15 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 array(array('require'))));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'welcome',
-                'Welcome message',
+                'long_intro',
+                'Long intro',
                 array(array('maximum length', 350)),
-                'welcome'));
+                'long_intro'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'product_id',
                 'Product id',
-                array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+                array(array('regexp', '/^[a-zA-Z0-9\._]+$/'))));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'nm_twitter_ios',
@@ -146,6 +146,14 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 'share_message',
                 'Share message',
                 array(array('maximum length', 200))));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'application_notification_google',
+                'Notification Google'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'application_email',
+                'Application Email'));
 
         $this->postInitialize();
     }

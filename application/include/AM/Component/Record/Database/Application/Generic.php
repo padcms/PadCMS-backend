@@ -67,7 +67,7 @@ class AM_Component_Record_Database_Application_Generic extends AM_Component_Reco
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'product_id',
                 'Product id',
-                array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+                array(array('regexp', '/^[a-zA-Z0-9\._]+$/'))));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'nm_twitter_ios',

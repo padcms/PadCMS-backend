@@ -90,11 +90,11 @@
           </div>
         {/if}
 
-        {if isset($excerpt)}
-          <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
-            <label>{if isset($excerpt)}{$excerpt.title|escape}{/if} <span>*</span></label>
+        {if isset($short_intro)}
+          <div class="form-item{if isset($short_intro) && $short_intro.errors} error{/if}">
+            <label>{if isset($short_intro)}{$short_intro.title|escape}{/if} <span>*</span></label>
             <div
-                class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
+                class="textarea-wrapper">{if isset($short_intro)}{include file="Volcano/textarea.tpl" control=$short_intro _class="form-textarea"}{/if}</div>
             <div class="clr"></div>
           </div>
         {/if}

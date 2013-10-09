@@ -109,9 +109,11 @@ class AM_Api_Client extends AM_Api
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                $aApplication['application_welcome']             = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
+                $aApplication['application_long_intro']          = !empty($oApplication->long_intro) ? str_replace("\n", "\\n", $oApplication->long_intro) : null;
                 $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
                 $aApplication['application_share_message']       = $oApplication->share_message;
+                $aApplication['application_notification_google'] = $oApplication->application_notification_google;
+                $aApplication['application_email']               = $oApplication->application_email;
             }
 
             $aApplication['issues'] = array();
@@ -169,17 +171,17 @@ class AM_Api_Client extends AM_Api
                     'issue_number'          => $oIssue->number,
                     'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
-                    'paid'                  => false,
+                    'paid'                  => empty($oIssue->paid) ? false : true,
                     'revisions'             => array(),
                     'tags'                  => $aTags,
                     'issue_publish_date'    => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                    $aIssue['issue_author']     = $oIssue->author;
-                    $aIssue['issue_words']      = $oIssue->words;
-                    $aIssue['issue_excerpt']    = str_replace("\n", "\\n", $oIssue->excerpt);
-                    $aIssue['issue_category']    = str_replace("\n", "\\n", $oIssue->category);
+                    $aIssue['issue_author']       = $oIssue->author;
+                    $aIssue['issue_words']        = $oIssue->words;
+                    $aIssue['issue_short_intro']  = str_replace("\n", "\\n", $oIssue->short_intro);
+                    $aIssue['issue_category']     = str_replace("\n", "\\n", $oIssue->category);
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')

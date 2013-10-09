@@ -19,12 +19,12 @@ class BoxcarPHP_Api {
     /**
      * The useragent to send though
      */
-    const USERAGENT = 'UKD1_Boxcar_Client';
+    const USERAGENT = 'PHP';
 
     /**
      * The endpoint for service.
      */
-    const ENDPOINT = 'http://boxcar.io/devices/providers/';
+    const ENDPOINT = 'https://yellow2.process-one.net/api/push/';
 
     /**
      * Timeout for the API requests in seconds
@@ -77,40 +77,6 @@ class BoxcarPHP_Api {
     }
 
     /**
-     * Invite an existing user to add your provider
-     *
-     * @param string $email the email address to invite
-     * @return bool
-     */
-    public function invite ($email) {
-        $result = $this->http_post('notifications/subscribe', array('email' => $email));
-
-        if ($result['http_code'] === 404) {
-            throw new BoxcarPHP_Exception('User not found', $result['http_code']);
-        } else {
-            return $this->default_response_handler($result);
-        }
-    }
-
-    /**
-     * Send a notification
-     *
-     * @param string $emailThe users MD5'd e-mail address
-     * @param string $name the name of the sender
-     * @param string $message the message body
-     * @param string $id an optional unique id, will stop the same message getting sent twice
-     * @param string $payload Optional; The payload to be passed in as part of the redirection URL.
-     *                        Keep this as short as possible. If your redirection URL contains "::user::" in it,
-     *                        this will replace it in the URL. An example payload would be the users username, to
-     *                        take them to the appropriate page when redirecting
-     * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
-     * @param string $icon  Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
-     */
-    public function notify ($email, $name, $message, $id = null, $payload = null, $source_url = null, $icon = null) {
-        return $this->do_notify('notifications', $email, $name, $message, $id, $payload, $source_url, $icon);
-    }
-
-    /**
      * Send a notification to all users of your provider
      *
      * @param string $name the name of the sender
@@ -123,8 +89,8 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon  Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    public function broadcast ($name, $message, $id = null, $payload = null, $source_url = null, $icon = null) {
-        return $this->do_notify('notifications/broadcast', null, $name, $message, $id, $payload, $source_url, $icon);
+    public function broadcast ($message) {
+        return $this->do_notify($message);
     }
 
 
@@ -141,22 +107,12 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    private function do_notify($task, $email, $name, $message, $id = null, $payload = null, $source_url = null, $icon = null) {
-        // if the icon was not set for this message, check for the default icon and use that if set
-        if (is_null($icon) && !is_null($this->default_icon_url)) {
-            $icon = $this->default_icon_url;
-        }
-
+    private function do_notify($message) {
         $notification = array(
-            'token'                                 => $this->api_key,
-            'secret'                                => $this->secret,
-            'email'                                 => !is_null($email) ? $email : null,
-            'notification[from_screen_name]'        => $name,
-            'notification[message]'                 => $message,
-            'notification[from_remote_service_id]'  => $id,
-            'notification[redirect_payload]'        => $payload,
-            'notification[source_url]'              => $source_url,
-            'notification[icon_url]'                => $icon,
+            'aps' => array(
+                'badge' => 'auto',
+                'alert' => $message
+            )
         );
 
         // unset the null ones...
@@ -166,7 +122,7 @@ class BoxcarPHP_Api {
             }
         }
 
-        $result = $this->http_post($task, $notification);
+        $result = $this->http_post($this->api_key, $this->secret, $notification);
 
         return $this->default_response_handler($result);
     }
@@ -218,19 +174,20 @@ class BoxcarPHP_Api {
      * @param array $data
      * @return array
      */
-    private function http_post ($task, $data) {
-        $url = self::ENDPOINT . $this->api_key . '/' . $task . '/';
+    private function http_post ($access_key, $secret_key, $data) {
 
-        $post_fields = http_build_query($data);
+        $post_data = json_encode($data);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, self::ENDPOINT);
         curl_setopt($ch, CURLOPT_USERAGENT, self::USERAGENT);
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, FALSE);
         curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($ch, CURLOPT_USERPWD, "$access_key:$secret_key");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
 
         $result = curl_exec ($ch);
 

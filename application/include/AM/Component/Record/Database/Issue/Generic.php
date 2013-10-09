@@ -64,7 +64,7 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'number', 'Number', array(array('require')), 'number'));
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\.]+$/'))));
+                'product_id', 'Product Id', array(array('regexp', '/^[a-zA-Z0-9\._]+$/'))));
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'state', 'State', array(array('require')), 'state'));
         $this->addControl(new Volcano_Component_Control_Database($oActionController,

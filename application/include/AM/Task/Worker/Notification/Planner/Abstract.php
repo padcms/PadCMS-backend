@@ -70,7 +70,7 @@ abstract class AM_Task_Worker_Notification_Planner_Abstract extends AM_Task_Work
                 ->create();
         }
         if (!empty($oApplication->push_boxcar_enabled)) {
-            $oTaskSender = new AM_Task_Worker_Notification_Sender_Boxcar();
+            $oTaskSender = new AM_Task_Worker_Notification_Planner_Boxcar();
             $oTaskSender->setOptions($options)
                 ->create();
         }
