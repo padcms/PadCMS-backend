@@ -184,11 +184,6 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
         if ($this->primaryKeyValue) {
             $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
 
-            if ($oIssue->image) {
-                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image, 'png')
-                    . '?' . strtotime($oIssue->updated);
-            }
-
             $sStaticPdfMode = $oIssue->static_pdf_mode;
 
             $oQuery = $this->db->select()->from('static_pdf', array('id', 'name', 'issue', 'updated' => 'UNIX_TIMESTAMP(updated)'))
@@ -267,7 +262,6 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
 
         $aRecord = array(
             'staticPdfMode'      => (isset($sStaticPdfMode) && $sStaticPdfMode) ? $sStaticPdfMode : null,
-            'imageUri'           => isset($sIssueImageUri) ? $sIssueImageUri : null,
             'states'             => $aStates,
             'orientations'       => self::$_aValidOrientations,
             'pdf'                => isset($aPdfFiles) ? $aPdfFiles : array(),

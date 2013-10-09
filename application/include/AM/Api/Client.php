@@ -114,6 +114,12 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
                 $aApplication['application_email']               = $oApplication->application_email;
+
+                if (!empty($oApplication->newsstand_cover_image)) {
+                    $aApplication['application_newsstand_cover_path'] = AM_Tools::getImageUrl('1066-600',
+                            AM_Model_Db_Application::PRESET_APPLICATION_IMAGE, $oApplication->id, $oApplication->newsstand_cover_image, 'png')
+                        . '?' . strtotime($oApplication->updated);
+                }
             }
 
             $aApplication['issues'] = array();

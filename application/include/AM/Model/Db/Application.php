@@ -41,6 +41,8 @@
  */
 class AM_Model_Db_Application extends AM_Model_Db_Abstract
 {
+    const PRESET_APPLICATION_IMAGE = 'application-image';
+
     /** @var AM_Model_Db_Vocabulary **/
     protected $_oVocabularyTag = null; /**< @type AM_Model_Db_Vocabulary */
 

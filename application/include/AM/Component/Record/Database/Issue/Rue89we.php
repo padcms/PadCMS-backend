@@ -95,8 +95,18 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         if (!$this->controls['tags']->getValue())
             $this->controls['tags']->setValue($sExistingTags);
 
+        if ($this->primaryKeyValue) {
+            $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
+
+            if ($oIssue->image) {
+                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $this->primaryKeyValue, $oIssue->image, 'png')
+                    . '?' . strtotime($oIssue->updated);
+            }
+        }
+
         $aRecord = array(
             'appId'      => $this->applicationId,
+            'imageUri'   => isset($sIssueImageUri) ? $sIssueImageUri : null,
         );
 
         if (isset($this->view->{$this->getName()})) {

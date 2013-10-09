@@ -125,6 +125,10 @@ class AM_Component_Record_Database_Application_Generic extends AM_Component_Reco
                 'push_boxcar_icon',
                 'Icon'));
 
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'updated',
+                new Zend_Db_Expr('NOW()')));
+
         $this->postInitialize();
     }
 

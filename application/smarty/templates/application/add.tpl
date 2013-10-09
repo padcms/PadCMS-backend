@@ -69,6 +69,18 @@
                           </div>
                         </div>
 
+                        {if isset($newsstand_cover_image)}
+                            <div class="form-item{if isset($newsstand_cover_image) && $newsstand_cover_image.errors} error{/if}">
+                                <label>{if isset($newsstand_cover_image)}{$newsstand_cover_image.title|escape}{/if}</label>
+
+                                <div class="{if isset($application.imageUri)}form-item-image-wrapper{else}form-item-wrapper{/if}">
+                                    {if isset($application.imageUri)}<img src="{$application.imageUri}">{/if}
+                                    {if isset($newsstand_cover_image)}{include file="Volcano/input.tpl" control=$newsstand_cover_image _type="file" _class="form-text"}{/if}
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        {/if}
+
                         {if !empty($application.primaryKeyValue)}
                         <div class="form-item{if isset($product_id) && $product_id.errors} error{/if}">
                             <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>

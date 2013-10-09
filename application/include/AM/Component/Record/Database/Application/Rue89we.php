@@ -43,19 +43,13 @@
 class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Record_Database_Application_Abstract
 {
 
-//    /** @var array */
-//    protected static $_aValidTypes = array(
-//        AM_Model_Db_ApplicationType::TYPE_GENERIC,
-//        AM_Model_Db_ApplicationType::TYPE_RUE98WE,
-//    ); /**< @type array */
-
     /**
      *
      * @param AM_Controller_Action $oActionController
      * @param string $sName
      * @param int $iId
      * @param int $iClientId
-     * @return viod
+     * @return void
      */
     public function  __construct(AM_Controller_Action $oActionController, $sName, $iId, $iClientId)
     {
@@ -155,6 +149,17 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 'application_email',
                 'Application Email'));
 
+        $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
+                'updated',
+                new Zend_Db_Expr('NOW()')));
+
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $iId);
+        $sImageValue = !empty($oApplication->image) ? $oApplication->image : null;
+        $this->addControl(new AM_Component_Control_Database_File($oActionController,
+                'newsstand_cover_image', 'Cover image',  array(), 'newsstand_cover_image',
+                AM_Tools::getContentPath(AM_Model_Db_Application::PRESET_APPLICATION_IMAGE)
+                . DIRECTORY_SEPARATOR . '[ID]', TRUE, $sImageValue));
+
         $this->postInitialize();
     }
 
@@ -164,6 +169,27 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
             if (!$this->controls['preview']->getValue())
                 $this->controls['preview']->setValue(0);
         }
+
+        if ($this->primaryKeyValue) {
+            $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $this->primaryKeyValue);
+
+            if ($oApplication->newsstand_cover_image) {
+                $sIssueImageUri = AM_Tools::getImageUrl('270-150', AM_Model_Db_Application::PRESET_APPLICATION_IMAGE, $this->primaryKeyValue, $oApplication->newsstand_cover_image, 'png');
+                if (!empty($oApplication->updated)) {
+                    $sIssueImageUri .= '?' . strtotime($oApplication->updated);
+                }
+            }
+        }
+
+        $aRecord = array(
+            'imageUri' => isset($sIssueImageUri) ? $sIssueImageUri : null,
+        );
+
+        if (isset($this->view->{$this->getName()})) {
+            $aRecord = array_merge($aRecord, $this->view->{$this->getName()});
+        }
+
+        $this->view->{$this->getName()} = $aRecord;
 
         parent::show();
     }
