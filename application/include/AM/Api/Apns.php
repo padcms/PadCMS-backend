@@ -68,12 +68,16 @@ class AM_Api_Apns extends AM_Api
         }
 
         $oDeviceToken = AM_Model_Db_Table_Abstract::factory('device_token')
-                ->findOneBy(array('udid'           => $sUdid,
-                                  'token'          => $sToken,
+                ->findOneBy(array('token'          => $sToken,
                                   'application_id' => $iApplicationId));
 
         if (!is_null($oDeviceToken)) {
-            $oDeviceToken->token = $sToken;
+            $oDeviceToken->udid    = $sUdid;
+            $oDeviceToken->token   = $sToken;
+            $oDeviceToken->updated = new Zend_Db_Expr('NOW()');
+            if (!empty($oDeviceToken->expired)) {
+                $oDeviceToken->expired = NULL;
+            }
             $oDeviceToken->save();
             return array('code' => self::RESULT_RECORD_EXISTS);
         }

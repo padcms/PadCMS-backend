@@ -66,10 +66,16 @@ class AM_Task_Worker_Notification_Planner_Apple extends AM_Task_Worker_Abstract
             throw new AM_Task_Worker_Exception('Wrong parameters were given');
         }
 
-        $oDevices = AM_Model_Db_Table_Abstract::factory('device_token')
-                ->findAllBy(array('application_id' => $iApplicationId));
+        $oQuery = AM_Model_Db_Table_Abstract::factory('device_token')
+            ->getAdapter()->select()
+            ->distinct()
+            ->from('device_token', array('token' => 'device_token.token'))
+            ->where('device_token.expired IS NULL')
+            ->where('device_token.application_id = ?', $iApplicationId);
 
-        if (0 === $oDevices->count()) {
+        $aTokensRow   = AM_Model_Db_Table_Abstract::factory('device_token')->getAdapter()->fetchAll($oQuery);
+
+        if (empty($aTokensRow)) {
             $this->finish();
             $this->getLogger()->debug('There are not devices to notificate');
             return;
@@ -77,13 +83,13 @@ class AM_Task_Worker_Notification_Planner_Apple extends AM_Task_Worker_Abstract
 
         $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId);
 
-        $aDevices = array_chunk($oDevices->toArray(), 100);
+        $aTokensGroups = array_chunk($aTokensRow, 100);
 
-        foreach ($aDevices as $aDeviceSlice) {
+        foreach ($aTokensGroups as $aTokensGroup) {
             $aTokens = array();
-            foreach ($aDeviceSlice as $aDevice) {
-                $this->getLogger()->debug(sprintf('Preparing message for token \'%s\'', $aDevice["token"]));
-                $aTokens[] = $aDevice['token'];
+            foreach ($aTokensGroup as $aToken) {
+                $this->getLogger()->debug(sprintf('Preparing message for token \'%s\'', $aToken["token"]));
+                $aTokens[] = $aToken['token'];
             }
             $aSenderTaskOptions['tokens'] = $aTokens;
             $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
