@@ -177,7 +177,7 @@ class AM_Api_Client extends AM_Api
                     'issue_number'          => $oIssue->number,
                     'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
                     'issue_product_id'      => $oIssue->product_id,
-                    'paid'                  => empty($oIssue->paid) ? false : true,
+                    'paid'                  => false,
                     'revisions'             => array(),
                     'tags'                  => $aTags,
                     'issue_publish_date'    => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,

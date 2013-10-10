@@ -86,6 +86,7 @@ class AM_Api_Apns extends AM_Api
         $oDeviceToken->udid           = $sUdid;
         $oDeviceToken->token          = $sToken;
         $oDeviceToken->application_id = $iApplicationId;
+        $oDeviceToken->updated        = new Zend_Db_Expr('NOW()');
         $oDeviceToken->save();
 
         return array('code' => self::RESULT_SUCCESS);
