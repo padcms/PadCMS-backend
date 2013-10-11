@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/js/lib/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
     CKEDITOR.replace('message_for_readers');
-    CKEDITOR.replace('long_intro');
+    CKEDITOR.replace('welcome');
 </script>
 {/capture}
 <div id="main">
@@ -110,11 +110,11 @@
                             </div>
                         </div>
 
-                        {if isset($long_intro)}
-                            <div class="form-item{if isset($long_intro) && $long_intro.errors} error{/if}">
-                                <label>{if isset($long_intro)}{$long_intro.title|escape}{/if}</label>
+                        {if isset($welcome)}
+                            <div class="form-item{if isset($welcome) && $welcome.errors} error{/if}">
+                                <label>{if isset($welcome)}{$welcome.title|escape}{/if}</label>
                                 <div
-                                     class="textarea-wrapper">{if isset($long_intro)}{include file="Volcano/textarea.tpl" control=$long_intro _class="form-textarea"}{/if}</div>
+                                     class="textarea-wrapper">{if isset($welcome)}{include file="Volcano/textarea.tpl" control=$welcome _class="form-textarea"}{/if}</div>
                                 <div class="clr"></div>
                             </div>
                         {/if}

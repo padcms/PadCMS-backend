@@ -90,12 +90,30 @@
           </div>
         {/if}
 
-        {if isset($short_intro)}
-          <div class="form-item{if isset($short_intro) && $short_intro.errors} error{/if}">
-            <label>{if isset($short_intro)}{$short_intro.title|escape}{/if} <span>*</span></label>
+        {if isset($excerpt)}
+          <div class="form-item{if isset($excerpt) && $excerpt.errors} error{/if}">
+            <label>{if isset($excerpt)}{$excerpt.title|escape}{/if} <span>*</span></label>
             <div
-                class="textarea-wrapper">{if isset($short_intro)}{include file="Volcano/textarea.tpl" control=$short_intro _class="form-textarea"}{/if}</div>
+                class="textarea-wrapper">{if isset($excerpt)}{include file="Volcano/textarea.tpl" control=$excerpt _class="form-textarea"}{/if}</div>
             <div class="clr"></div>
+          </div>
+        {/if}
+
+        <div class="form-item{if isset($title_short) && $title_short.errors} error{/if}">
+          <label>{if isset($title_short)}{$title_short.title|escape}{/if}</label>
+
+          <div class="form-item-wrapper">
+              {if isset($title_short)}{include file="Volcano/input.tpl" control=$title_short _class="form-text"}{/if}
+          </div>
+          <div class="clr"></div>
+        </div>
+
+        {if isset($excerpt_short)}
+          <div class="form-item{if isset($excerpt_short) && $excerpt_short.errors} error{/if}">
+              <label>{if isset($excerpt_short)}{$excerpt_short.title|escape}{/if}</label>
+              <div
+                      class="textarea-wrapper">{if isset($excerpt_short)}{include file="Volcano/textarea.tpl" control=$excerpt_short _class="form-textarea"}{/if}</div>
+              <div class="clr"></div>
           </div>
         {/if}
 
@@ -172,13 +190,21 @@
           </div>
         {/if}
 
-      {if isset($paid)}
+        {if isset($paid)}
           <div class="form-item{if isset($paid) && $paid.errors} error{/if}">
               <label>{if isset($paid)}{$paid.title|escape}{/if}</label>
               <div class="form-item-wrapper">{if isset($paid)}{include file="Volcano/checkbox.tpl" control=$paid _class="form-text"}{/if}</div>
               <div class="clr"></div>
           </div>
-      {/if}
+        {/if}
+
+        {if isset($is_issue_individually_paid)}
+          <div class="form-item{if isset($is_issue_individually_paid) && $is_issue_individually_paid.errors} error{/if}">
+              <label>{if isset($is_issue_individually_paid)}{$is_issue_individually_paid.title|escape}{/if}</label>
+              <div class="form-item-wrapper">{if isset($is_issue_individually_paid)}{include file="Volcano/checkbox.tpl" control=$is_issue_individually_paid _class="form-text"}{/if}</div>
+              <div class="clr"></div>
+          </div>
+        {/if}
 
         <div class="form-item{if isset($issue_color) && $issue_color.errors} error{/if}">
           <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>

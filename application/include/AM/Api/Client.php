@@ -109,7 +109,7 @@ class AM_Api_Client extends AM_Api
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                $aApplication['application_long_intro']          = !empty($oApplication->long_intro) ? str_replace("\n", "\\n", $oApplication->long_intro) : null;
+                $aApplication['application_welcome_message']     = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
                 $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
@@ -172,22 +172,25 @@ class AM_Api_Client extends AM_Api
                 }
 
                 $aIssue = array(
-                    'issue_id'              => $oIssue->id,
-                    'issue_title'           => $oIssue->title,
-                    'issue_number'          => $oIssue->number,
-                    'issue_state'           => AM_Model_Db_State::stateToName($oIssue->state),
-                    'issue_product_id'      => $oIssue->product_id,
-                    'paid'                  => false,
-                    'revisions'             => array(),
-                    'tags'                  => $aTags,
-                    'issue_publish_date'    => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
+                    'issue_id'                   => $oIssue->id,
+                    'issue_title'                => $oIssue->title,
+                    'issue_number'               => $oIssue->number,
+                    'issue_state'                => AM_Model_Db_State::stateToName($oIssue->state),
+                    'issue_product_id'           => $oIssue->product_id,
+                    'paid'                       => !empty($oIssue->paid) ? true : false,
+                    'is_issue_individually_paid' => !empty($oIssue->is_issue_individually_paid) ? true : false,
+                    'revisions'                  => array(),
+                    'tags'                       => $aTags,
+                    'issue_publish_date'         => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                    $aIssue['issue_author']       = $oIssue->author;
-                    $aIssue['issue_words']        = $oIssue->words;
-                    $aIssue['issue_short_intro']  = str_replace("\n", "\\n", $oIssue->short_intro);
-                    $aIssue['issue_category']     = str_replace("\n", "\\n", $oIssue->category);
+                    $aIssue['issue_author']        = $oIssue->author;
+                    $aIssue['issue_words']         = $oIssue->words;
+                    $aIssue['issue_excerpt']       = !empty($oIssue->excerpt) ? str_replace("\n", "\\n", $oIssue->excerpt) : null;
+                    $aIssue['issue_title_short']   = $oIssue->title_short;
+                    $aIssue['issue_excerpt_short'] = !empty($oIssue->excerpt_short) ? str_replace("\n", "\\n", $oIssue->excerpt_short) : null;
+                    $aIssue['issue_category']      = !empty($oIssue->category) ? str_replace("\n", "\\n", $oIssue->category) : null;
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
