@@ -66,26 +66,43 @@ class AM_Task_Worker_Notification_Planner_Boxcar extends AM_Task_Worker_Abstract
             throw new AM_Task_Worker_Exception('Wrong parameters were given');
         }
 
-        $oDevices = AM_Model_Db_Table_Abstract::factory('device_token')
-                ->findAllBy(array('application_id' => $iApplicationId));
+        $oTokensApple = AM_Model_Db_Table_Abstract::factory('device_token')->getTokens($iApplicationId, AM_Model_Pns_Type::PLATFORM_IOS);
 
-        if (0 === $oDevices->count()) {
+        $oTokensAndroid = AM_Model_Db_Table_Abstract::factory('device_token')->getTokens($iApplicationId, AM_Model_Pns_Type::PLATFORM_ANDROID);
+
+        if (0 === $oTokensApple->count() && 0 === $oTokensAndroid->count()) {
             $this->finish();
-            $this->getLogger()->debug('There are not devices to notificate');
+            $this->getLogger()->debug('There are not tokens to notificate');
             return;
         }
 
         $aSenderTaskOptions = array('message' => $sMessage, 'badge' => $iBadge, 'application_id' => $iApplicationId);
 
-        $aDevices = array_chunk($oDevices->toArray(), 100);
+        $aTokensApple = array_chunk($oTokensApple->toArray(), 100);
+        $aTokensAndroid = array_chunk($oTokensAndroid->toArray(), 100);
 
-        foreach ($aDevices as $aDeviceSlice) {
-            $aTokens = array();
-            foreach ($aDeviceSlice as $aDevice) {
-                $this->getLogger()->debug(sprintf('Preparing message for token \'%s\'', $aDevice["token"]));
-                $aTokens[] = $aDevice['token'];
+        $iMoreTokenSliceCount = (count($aTokensApple) > count($aTokensAndroid)) ? count($aTokensApple) : count($aTokensAndroid);
+
+        for ($i = 0; $i < $iMoreTokenSliceCount; $i++) {
+            $aTokensAndroidPrepared = array();
+            $aTokensApplePrepared   = array();
+
+            if (!empty($aTokensAndroid[$i]) && is_array($aTokensAndroid[$i])) {
+                foreach ($aTokensAndroid[$i] as $aTokenAndroid) {
+                    $this->getLogger()->debug(sprintf('Preparing message for token android \'%s\'', $aTokenAndroid['token']));
+                    $aTokensAndroidPrepared[] = $aTokenAndroid['token'];
+                }
             }
-            $aSenderTaskOptions['tokens'] = $aTokens;
+
+            if (!empty($aTokensApple[$i]) && is_array($aTokensApple[$i])) {
+                foreach ($aTokensApple[$i] as $aTokenApple) {
+                    $this->getLogger()->debug(sprintf('Preparing message for token apple \'%s\'', $aTokenApple['token']));
+                    $aTokensApplePrepared[] = $aTokenApple['token'];
+                }
+            }
+
+            $aSenderTaskOptions['tokens_apple'] = $aTokensApplePrepared;
+            $aSenderTaskOptions['tokens_android'] = $aTokensAndroidPrepared;
             $oTaskSender = new AM_Task_Worker_Notification_Sender_Boxcar();
             $oTaskSender->setOptions($aSenderTaskOptions);
             $oTaskSender->create();

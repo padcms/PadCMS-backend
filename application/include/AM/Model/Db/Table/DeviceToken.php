@@ -40,4 +40,21 @@
  */
 class AM_Model_Db_Table_DeviceToken extends AM_Model_Db_Table_Abstract
 {
+    /**
+     * Return tokens for apple
+     * @param AM_Model_Db_Page $oPage
+     * @param string $sTagName
+     * @return AM_Model_Db_Rowset_Term
+     */
+    public function getTokens($iApplicationId, $sPlatform)
+    {
+        $oQuery = $this->select()
+            ->distinct()
+            ->from('device_token', array('token' => 'device_token.token'))
+            ->where('device_token.expired IS NULL')
+            ->where('device_token.application_id = ?', $iApplicationId)
+            ->where('device_token.type_os = ?', $sPlatform);
+        $aTokens = $this->fetchAll($oQuery);
+        return $aTokens;
+    }
 }

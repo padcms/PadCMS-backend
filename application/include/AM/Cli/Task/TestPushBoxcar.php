@@ -3,7 +3,7 @@
  * Send test push message
  * @ingroup AM_Cli
  */
-class AM_Cli_Task_TestPush extends AM_Cli_Task_Abstract
+class AM_Cli_Task_TestPushBoxcar extends AM_Cli_Task_Abstract
 {
   protected function _configure()
   {
@@ -25,7 +25,7 @@ class AM_Cli_Task_TestPush extends AM_Cli_Task_Abstract
 //        $sToken = $oDeviceToken->token;
 //    }
 
-    $oTaskPlanner = new AM_Task_Worker_Notification_Planner_AppleTest();
+    $oTaskPlanner = new AM_Task_Worker_Notification_Planner_BoxcarTest();
     $oTaskPlanner->setOptions(array('issue_id' => $iIssueId,
                                     'message'  => $sMessage,
                                     'badge'    => 1,

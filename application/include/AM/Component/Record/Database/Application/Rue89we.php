@@ -125,14 +125,6 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 'Secret'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'push_boxcar_name',
-                'Name'));
-
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'push_boxcar_icon',
-                'Icon'));
-
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'message_for_readers',
                 'For our readers'));
 

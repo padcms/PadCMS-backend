@@ -48,7 +48,8 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
      */
     protected function _fire()
     {
-        $aTokens  = (array) $this->getOption('tokens');
+        $aTokensApple  = (array) $this->getOption('tokens_apple');
+        $aTokensAndroid  = (array) $this->getOption('tokens_android');
         $sMessage = $this->getOption('message');
         $iBadge   = intval($this->getOption('badge'));
         $iApplicationId = intval($this->getOption('application_id'));
@@ -75,7 +76,7 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
 
         try {
             $oBoxcar = new BoxcarPHP_Api($sProviderKey, $sProviderSecret);
-            //$oBoxcar->broadcast($sMessage);
+            $oBoxcar->broadcast($sMessage, $iBadge, $aTokensApple, $aTokensAndroid);
         }
         catch (BoxcarPHP_Exception $e) {
             $bError = true;

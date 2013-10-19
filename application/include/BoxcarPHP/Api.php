@@ -89,8 +89,8 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon  Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    public function broadcast ($message) {
-        return $this->do_notify($message);
+    public function broadcast ($message, $badge, $tokens_apple, $tokens_android) {
+        return $this->do_notify($message, $badge, $tokens_apple, $tokens_android);
     }
 
 
@@ -107,20 +107,15 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    private function do_notify($message) {
+    private function do_notify($message, $badge, $tokens_apple, $tokens_android) {
         $notification = array(
             'aps' => array(
-                'badge' => 'auto',
+                'badge' => $badge,
                 'alert' => $message
-            )
+            ),
+            'device_tokens'    => $tokens_apple,
+            'registration_ids' => $tokens_android
         );
-
-        // unset the null ones...
-        foreach ($notification as $key => $value) {
-            if (is_null($notification[$key])) {
-                unset($notification[$key]);
-            }
-        }
 
         $result = $this->http_post($this->api_key, $this->secret, $notification);
 

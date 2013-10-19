@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * AM_Task_Worker_Notification_Planner_AppleTest class definition.
+ * AM_Api_Apns class definition.
  *
  * LICENSE
  *
@@ -36,48 +36,29 @@
  */
 
 /**
- * Task for planning push notification sending
- * @ingroup AM_Task
+ * This class is responsible for saving device token for apple push notification service
+ * @ingroup AM_Api
  */
-class AM_Task_Worker_Notification_Planner_AppleTest extends AM_Task_Worker_Abstract
+class AM_Api_PnsApple extends AM_Api_PnsAbstract
 {
     /**
-     * @see AM_Task_Worker_Abstract::_fire()
-     * @throws AM_Task_Worker_Exception
+     * Saves device token, which will use to send notifications
+     *
+     * @param string $sUdid
+     * @param int $iApplicationId
+     * @param string $sToken
      * @return void
+     * @throws AM_Api_Apns_Exception
      */
-    protected function _fire()
+    public function setDeviceToken($sUdid, $iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
     {
-        $iIssueId     = intval($this->getOption('issue_id'));
-        $sMessage     = $this->getOption('message');
-        $iBadge       = intval($this->getOption('badge'));
-        $sDeviceToken = $this->getOption('token');
+        $aRetVal = parent::setDeviceToken($sUdid, $iApplicationId, $sToken, $sVersionOs, $sVersionApp);
+        $oDeviceToken = $aRetVal['oDeviceToken'];
 
-        $this->getLogger()->debug('Token value %s', $sDeviceToken);
+        $oDeviceToken->type_os = AM_Model_Pns_Type::PLATFORM_IOS;
+        $oDeviceToken->save();
 
-        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')
-                ->findOneBy('id', $iIssueId);
-        /* @var $oIssue AM_Model_Db_Issue */
-
-        if (is_null($oIssue)) {
-            throw new AM_Task_Worker_Exception('Issue not found');
-        }
-
-        $iApplicationId = $oIssue->getApplication()->id;
-
-        if (empty($iApplicationId)) {
-            throw new AM_Task_Worker_Exception('Wrong parameters were given');
-        }
-
-        $aSenderTaskOptions = array(
-          'message' => $sMessage,
-          'badge' => $iBadge,
-          'application_id' => $iApplicationId,
-          'tokens' => array($sDeviceToken)
-        );
-
-        $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
-        $oTaskSender->setOptions($aSenderTaskOptions);
-        $oTaskSender->create();
+        unset($aRetVal['oDeviceToken']);
+        return $aRetVal;
     }
 }

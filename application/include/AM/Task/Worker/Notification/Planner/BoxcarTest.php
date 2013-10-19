@@ -39,7 +39,7 @@
  * Task for planning push notification sending
  * @ingroup AM_Task
  */
-class AM_Task_Worker_Notification_Planner_AppleTest extends AM_Task_Worker_Abstract
+class AM_Task_Worker_Notification_Planner_BoxcarTest extends AM_Task_Worker_Abstract
 {
     /**
      * @see AM_Task_Worker_Abstract::_fire()
@@ -69,14 +69,27 @@ class AM_Task_Worker_Notification_Planner_AppleTest extends AM_Task_Worker_Abstr
             throw new AM_Task_Worker_Exception('Wrong parameters were given');
         }
 
+        $oToken = AM_Model_Db_Table_Abstract::factory('device_token')->findOneBy(
+            array(
+                'token' => $sDeviceToken,
+                'application_id' => $iApplicationId
+            )
+        );
+
         $aSenderTaskOptions = array(
           'message' => $sMessage,
           'badge' => $iBadge,
-          'application_id' => $iApplicationId,
-          'tokens' => array($sDeviceToken)
+          'application_id' => $iApplicationId
         );
 
-        $oTaskSender = new AM_Task_Worker_Notification_Sender_Apple();
+        if ($oToken->type_os == 'ios') {
+            $aSenderTaskOptions['tokens_apple'] = array($sDeviceToken);
+        }
+        else {
+            $aSenderTaskOptions['tokens_android'] = array($sDeviceToken);
+        }
+
+        $oTaskSender = new AM_Task_Worker_Notification_Sender_Boxcar();
         $oTaskSender->setOptions($aSenderTaskOptions);
         $oTaskSender->create();
     }

@@ -166,14 +166,6 @@
                                     <label>{if isset($push_boxcar_provider_secret)}{$push_boxcar_provider_secret.title|translate|escape}{/if}</label>
                                     <div class="form-item-wrapper">{if isset($push_boxcar_provider_secret)}{include file="Volcano/input.tpl" control=$push_boxcar_provider_secret _class="form-text"}{/if}</div>
                                 </div>
-                                <div class="form-item{if isset($push_boxcar_name) && $push_boxcar_name.errors} error{/if}">
-                                    <label>{if isset($push_boxcar_name)}{$push_boxcar_name.title|translate|escape}{/if}</label>
-                                    <div class="form-item-wrapper">{if isset($push_boxcar_name)}{include file="Volcano/input.tpl" control=$push_boxcar_name _class="form-text"}{/if}</div>
-                                </div>
-                                <div class="form-item{if isset($push_boxcar_icon) && $push_boxcar_icon.errors} error{/if}">
-                                    <label>{if isset($push_boxcar_icon)}{$push_boxcar_icon.title|translate|escape}{/if}</label>
-                                    <div class="form-item-wrapper">{if isset($push_boxcar_icon)}{include file="Volcano/input.tpl" control=$push_boxcar_icon _class="form-text"}{/if}</div>
-                                </div>
                             </div>
                         </div>
                         <h2>{'Notification settings'|translate}</h2>
