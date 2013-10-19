@@ -44,6 +44,8 @@ abstract class AM_Api_PnsAbstract extends AM_Api
     const RESULT_SUCCESS       = 1;
     const RESULT_RECORD_EXISTS = 2;
 
+    protected $oDeviceToken;
+
     /**
      * Saves device token, which will use to send notifications
      *
@@ -74,30 +76,30 @@ abstract class AM_Api_PnsAbstract extends AM_Api
             throw new AM_Api_PnsAbstract_Exception(sprintf('Invalid token given: "%s"', $sToken));
         }
 
-        $oDeviceToken = AM_Model_Db_Table_Abstract::factory('device_token')
+        $this->oDeviceToken = AM_Model_Db_Table_Abstract::factory('device_token')
                 ->findOneBy(array('token'          => $sToken,
                                   'application_id' => $iApplicationId));
 
-        if (!is_null($oDeviceToken)) {
-            $oDeviceToken->token       = $sToken;
-            $oDeviceToken->version_os  = $sVersionOs;
-            $oDeviceToken->version_app = $sVersionApp;
-            $oDeviceToken->updated     = new Zend_Db_Expr('NOW()');
-            if (!empty($oDeviceToken->expired)) {
-                $oDeviceToken->expired = NULL;
+        if (!is_null($this->oDeviceToken)) {
+            $this->oDeviceToken->token       = $sToken;
+            $this->oDeviceToken->version_os  = $sVersionOs;
+            $this->oDeviceToken->version_app = $sVersionApp;
+            $this->oDeviceToken->updated     = new Zend_Db_Expr('NOW()');
+            if (!empty($this->oDeviceToken->expired)) {
+                $this->oDeviceToken->expired = NULL;
             }
-            $oDeviceToken->save();
-            return array('code' => self::RESULT_RECORD_EXISTS, 'oDeviceToken' => $oDeviceToken);
+            $this->oDeviceToken->save();
+            return array('code' => self::RESULT_RECORD_EXISTS);
         }
 
-        $oDeviceToken                 = new AM_Model_Db_DeviceToken();
-        $oDeviceToken->token          = $sToken;
-        $oDeviceToken->version_os     = $sVersionOs;
-        $oDeviceToken->version_app    = $sVersionApp;
-        $oDeviceToken->application_id = $iApplicationId;
-        $oDeviceToken->updated        = new Zend_Db_Expr('NOW()');
-        $oDeviceToken->save();
+        $this->oDeviceToken                 = new AM_Model_Db_DeviceToken();
+        $this->oDeviceToken->token          = $sToken;
+        $this->oDeviceToken->application_id = $iApplicationId;
+        $this->oDeviceToken->updated        = new Zend_Db_Expr('NOW()');
+        $this->oDeviceToken->version_os     = $sVersionOs;
+        $this->oDeviceToken->version_app    = $sVersionApp;
+        $this->oDeviceToken->save();
 
-        return array('code' => self::RESULT_SUCCESS, 'oDeviceToken' => $oDeviceToken);
+        return array('code' => self::RESULT_SUCCESS);
     }
 }
