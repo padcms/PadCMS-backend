@@ -82,6 +82,9 @@ class AM_Task_Worker_Notification_Planner_BoxcarTest extends AM_Task_Worker_Abst
           'application_id' => $iApplicationId
         );
 
+        $aSenderTaskOptions['tokens_apple']   = array();
+        $aSenderTaskOptions['tokens_android'] = array();
+
         if ($oToken->type_os == 'ios') {
             $aSenderTaskOptions['tokens_apple'] = array($sDeviceToken);
         }
