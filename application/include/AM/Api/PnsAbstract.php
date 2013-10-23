@@ -49,15 +49,13 @@ abstract class AM_Api_PnsAbstract extends AM_Api
     /**
      * Saves device token, which will use to send notifications
      *
-     * @param string $sUdid
      * @param int $iApplicationId
      * @param string $sToken
      * @return void
      * @throws AM_Api_Apns_Exception
      */
-    public function setDeviceToken($sUdid, $iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
+    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
     {
-        $sUdid          = trim($sUdid);
         $iApplicationId = intval($iApplicationId);
         $sToken         = trim($sToken);
         if (!empty($sVersionOs)) {
@@ -65,11 +63,6 @@ abstract class AM_Api_PnsAbstract extends AM_Api
         }
         if (!empty($sVersionApp)) {
             $sVersionApp = trim($sVersionApp);
-        }
-
-
-        if (empty($sUdid)) {
-            throw new AM_Api_PnsAbstract_Exception(sprintf('Invalid UDID given: "%s"', $sUdid));
         }
 
         if (empty($sToken)) {

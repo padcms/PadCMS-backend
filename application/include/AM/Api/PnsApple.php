@@ -50,9 +50,9 @@ class AM_Api_PnsApple extends AM_Api_PnsAbstract
      * @return void
      * @throws AM_Api_Apns_Exception
      */
-    public function setDeviceToken($sUdid, $iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
+    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL, $sUdid = NULL)
     {
-        $aResult = parent::setDeviceToken($sUdid, $iApplicationId, $sToken, $sVersionOs, $sVersionApp);
+        $aResult = parent::setDeviceToken($iApplicationId, $sToken, $sVersionOs, $sVersionApp);
 
         $this->oDeviceToken->type_os = AM_Model_Pns_Type::PLATFORM_IOS;
         $this->oDeviceToken->save();
