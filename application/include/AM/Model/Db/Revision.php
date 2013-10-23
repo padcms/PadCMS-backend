@@ -166,6 +166,10 @@ class AM_Model_Db_Revision extends AM_Model_Db_Abstract
         if (is_null($this->_oPageRoot)) {
             $this->_oPageRoot = AM_Model_Db_Table_Abstract::factory('page')
                     ->findOneBy(array('revision' => $this->id, 'template' => AM_Model_Db_Template::TPL_COVER_PAGE, 'deleted' => 'no'));
+            if (is_null($this->_oPageRoot)) {
+                $this->_oPageRoot = AM_Model_Db_Table_Abstract::factory('page')
+                    ->findOneBy(array('revision' => $this->id, 'root_page' => TRUE, 'deleted' => 'no'));
+            }
         }
 
         return $this->_oPageRoot;

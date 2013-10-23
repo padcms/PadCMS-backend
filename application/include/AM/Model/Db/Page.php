@@ -516,13 +516,22 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
         foreach ($oTemplates as $oTemplate) {
             /** @var $oTemplate AM_Model_Db_Template **/
 
-            //Check template compatibility:
-            //1) if current template has TOP(LEFT, ...) connector, new template must have same connector
-            //2) if current template hasn't TOP(LEFT, ...) connector, new template may have the same or may not
-            $bIsDisabled = ($oPageTemplate->hasConnector(self::LINK_TOP) ? !$oTemplate->hasConnector(self::LINK_TOP) : false) ||
-                        ($oPageTemplate->hasConnector(self::LINK_BOTTOM)? !$oTemplate->hasConnector(self::LINK_BOTTOM) : false) ||
-                        ($oPageTemplate->hasConnector(self::LINK_RIGHT) ? !$oTemplate->hasConnector(self::LINK_RIGHT) : false) ||
-                        ($oPageTemplate->hasConnector(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false);
+            if ($this->getIssue()->getApplication()->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE &&
+                $this->root_page == true) {
+                $bIsDisabled = ($this->hasConnection(self::LINK_TOP) ? !$oTemplate->hasConnector(self::LINK_TOP) : false) ||
+                    ($this->hasConnection(self::LINK_BOTTOM)? !$oTemplate->hasConnector(self::LINK_BOTTOM) : false) ||
+                    ($this->hasConnection(self::LINK_RIGHT) ? !$oTemplate->hasConnector(self::LINK_RIGHT) : false) ||
+                    ($this->hasConnection(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false);
+            }
+            else {
+                //Check template compatibility:
+                //1) if current template has TOP(LEFT, ...) connector, new template must have same connector
+                //2) if current template hasn't TOP(LEFT, ...) connector, new template may have the same or may not
+                $bIsDisabled = ($oPageTemplate->hasConnector(self::LINK_TOP) ? !$oTemplate->hasConnector(self::LINK_TOP) : false) ||
+                    ($oPageTemplate->hasConnector(self::LINK_BOTTOM)? !$oTemplate->hasConnector(self::LINK_BOTTOM) : false) ||
+                    ($oPageTemplate->hasConnector(self::LINK_RIGHT) ? !$oTemplate->hasConnector(self::LINK_RIGHT) : false) ||
+                    ($oPageTemplate->hasConnector(self::LINK_LEFT) ? !$oTemplate->hasConnector(self::LINK_LEFT) : false);
+            }
 
             $aResult[] = array(
                 'id'          => $oTemplate->id,
@@ -966,7 +975,25 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
         /* @var $oElementBody AM_Model_Db_Element */
 
         if (is_null($oElementBody)) {
-            return null;
+            // if it is root page, but not cover page template
+            $oPage = AM_Model_Db_Table_Abstract::factory('page')->findOneBy('id', $this->id);
+            if ($oPage->root_page) {
+                $oFieldBody = AM_Model_Db_Table_Abstract::factory('field')
+                    ->findOneBy(array('name'     => AM_Model_Db_FieldType::TYPE_BODY,
+                                      'template' => $this->template));
+
+                if (empty($oFieldBody)) {
+                    return null;
+                }
+
+                $oElementBody = AM_Model_Db_Table_Abstract::factory('element')
+                    ->findOneBy(array('page'  => $this->id,
+                                      'field' => $oFieldBody->id));
+            }
+
+            if (is_null($oElementBody)) {
+                return null;
+            }
         }
 
         $sResource = $oElementBody->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE);
@@ -1004,7 +1031,25 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
         /* @var $oElementVideo AM_Model_Db_Element */
 
         if (is_null($oElementVideo)) {
-            return null;
+            // if it is root page, but not cover page template
+            $oPage = AM_Model_Db_Table_Abstract::factory('page')->findOneBy('id', $this->id);
+            if ($oPage->root_page) {
+                $oFieldVideo = AM_Model_Db_Table_Abstract::factory('field')
+                    ->findOneBy(array('name'     => AM_Model_Db_FieldType::TYPE_VIDEO,
+                                      'template' => $this->template));
+
+                if (empty($oFieldVideo)) {
+                    return null;
+                }
+
+                $oElementVideo = AM_Model_Db_Table_Abstract::factory('element')
+                    ->findOneBy(array('page'  => $this->id,
+                                      'field' => $oFieldVideo->id));
+            }
+
+            if (is_null($oElementVideo)) {
+                return null;
+            }
         }
 
         $sResource = $oElementVideo->getResources()->getDataValue(AM_Model_Db_Element_Data_Resource::DATA_KEY_RESOURCE);

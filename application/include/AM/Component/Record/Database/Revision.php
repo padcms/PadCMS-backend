@@ -176,6 +176,7 @@ class AM_Component_Record_Database_Revision extends AM_Component_Record_Database
         $aBind['user']     = $this->user['id'];
         $aBind['created']  = new Zend_Db_Expr('NOW()');
         $aBind['updated']  = new Zend_Db_Expr('NOW()');
+        $aBind['root_page'] = true;
 
         $this->db->insert('page', $aBind);
 

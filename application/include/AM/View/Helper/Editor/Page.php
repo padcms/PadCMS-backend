@@ -60,10 +60,16 @@ class AM_View_Helper_Editor_Page extends AM_View_Helper_Abstract
         $aPageInfo['template_title']       = $this->_oPage->getTemplate()->title;
         $aPageInfo['template_description'] = $this->_oPage->getTemplate()->description;
         $aPageInfo['canDelete']            = $this->_oPage->canDelete();
-        $aPageInfo['canChangeTemplate']    = ($this->_oPage->template == AM_Model_Db_Template::TPL_COVER_PAGE)? false : true;
         $aPageInfo['tocItem']              = $this->_oPage->toc;
         $aPageInfo['tocList']              = $this->_getTocList();
         $aPageInfo['tags']                 = $this->_getTags();
+
+        if ($this->_oPage->getIssue()->getApplication()->type != AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
+            $aPageInfo['canChangeTemplate'] = ($this->_oPage->template == AM_Model_Db_Template::TPL_COVER_PAGE) ? false : true;
+        }
+        else {
+            $aPageInfo['canChangeTemplate'] = true;
+        }
 
         $aPageInfo = array_merge($aPageInfo, $this->_oPage->toArray());
 

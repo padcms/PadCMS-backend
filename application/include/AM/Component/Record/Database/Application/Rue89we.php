@@ -129,6 +129,10 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 'For our readers'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'share_url',
+                'Share url'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'share_message',
                 'Share message',
                 array(array('maximum length', 200))));

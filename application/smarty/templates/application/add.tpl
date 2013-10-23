@@ -124,6 +124,10 @@
                             <div class="textarea-wrapper">{if isset($message_for_readers)}{include file="Volcano/textarea.tpl" control=$message_for_readers _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'For our readers ...'|translate|cat:"'"}{/if}</div>
                             <div class="clr"></div>
                         </div>
+                        <div class="form-item{if isset($share_url) && $share_url.errors} error{/if}">
+                            <label>{if isset($share_url)}{$share_url.title|translate|escape}{/if}</label>
+                            <div class="form-item-wrapper">{if isset($share_url)}{include file="Volcano/input.tpl" control=$share_url _class="form-text"}{/if}</div>
+                        </div>
                         <div class="form-item{if isset($share_message) && $share_message.errors} error{/if}">
                             <label>{if isset($share_message)}{$share_message.title|escape}{/if}</label>
                             <div class="textarea-wrapper">{if isset($share_message)}{include file="Volcano/textarea.tpl" control=$share_message _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'Share message ...'|translate|cat:"'"}{/if}</div>

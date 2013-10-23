@@ -90,11 +90,12 @@ class AM_Handler_Issue extends AM_Handler_Abstract
         $oRevision->save();
 
         //Create cover page
-        $oPage           = new AM_Model_Db_Page();
-        $oPage->title    = 'Root page';
-        $oPage->template = AM_Model_Db_Template::TPL_COVER_PAGE;
-        $oPage->revision = $oRevision->id;
-        $oPage->user     = $this->getIssue()->user;
+        $oPage            = new AM_Model_Db_Page();
+        $oPage->title     = 'Root page';
+        $oPage->template  = AM_Model_Db_Template::TPL_COVER_PAGE;
+        $oPage->revision  = $oRevision->id;
+        $oPage->user      = $this->getIssue()->user;
+        $oPage->root_page = true;
         $oPage->save();
 
 

@@ -111,6 +111,7 @@ class AM_Api_Client extends AM_Api
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
                 $aApplication['application_welcome_message']     = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
                 $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
+                $aApplication['application_share_url']           = $oApplication->share_url;
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
                 $aApplication['application_email']               = $oApplication->application_email;
@@ -258,9 +259,8 @@ class AM_Api_Client extends AM_Api
                     $oDate = new Zend_Date($oRevision->created);
                     $aRevision['revision_created'] = $oDate->toString(Zend_Date::ISO_8601);
 
-                    $oPageCover = AM_Model_Db_Table_Abstract::factory('page')->findOneBy(array('revision' => $oRevision->id,
-                                                                              'template' => AM_Model_Db_Template::TPL_COVER_PAGE,
-                                                                              'deleted'  => 'no'));
+                    $oPageCover = AM_Model_Db_Table_Abstract::factory('revision')->findOneBy('id', $oRevision->id)->getPageRoot();
+
                     /* @var $oPageCover AM_Model_Db_Page */
                     if (!is_null($oPageCover)) {
                         $aRevision['revision_cover_image_list'] = (string) $oPageCover->getPageCoverUri();

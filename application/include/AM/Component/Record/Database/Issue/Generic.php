@@ -320,13 +320,14 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
             }
 
 
-            $aBind             = array();
-            $aBind['title']    = 'Root page';
-            $aBind['template'] = AM_Model_Db_Template::TPL_COVER_PAGE;
-            $aBind['revision'] = $this->db->lastInsertId('revision');
-            $aBind['user']     = $aUser['id'];
-            $aBind['created']  = new Zend_Db_Expr('NOW()');
-            $aBind['updated']  = new Zend_Db_Expr('NOW()');
+            $aBind              = array();
+            $aBind['title']     = 'Root page';
+            $aBind['template']  = AM_Model_Db_Template::TPL_COVER_PAGE;
+            $aBind['revision']  = $this->db->lastInsertId('revision');
+            $aBind['user']      = $aUser['id'];
+            $aBind['created']   = new Zend_Db_Expr('NOW()');
+            $aBind['updated']   = new Zend_Db_Expr('NOW()');
+            $aBind['root_page'] = true;
 
             if (!$this->db->insert('page', $aBind)) {
                 return false;

@@ -174,10 +174,9 @@ class AM_Api_User extends AM_Api
                     $oDate = new Zend_Date($oRevision->created);
                     $aRevision['revision_created'] = $oDate->toString(Zend_Date::ISO_8601);
 
-                    $oPageCover = AM_Model_Db_Table_Abstract::factory('page')->findOneBy(array('revision' => $oRevision->id,
-                                                                              'template' => AM_Model_Db_Template::TPL_COVER_PAGE,
-                                                                              'deleted'  => 'no'));
+                    $oPageCover = AM_Model_Db_Table_Abstract::factory('revision')->findOneBy('id', $oRevision->id)->getPageRoot();
                     /* @var $oPageCover AM_Model_Db_Page */
+
                     if (!is_null($oPageCover)) {
                         $aRevision['revision_cover_image_list'] = (string) $oPageCover->getPageCoverUri();
                         $aRevision['revision_video']            = (string) $oPageCover->getStartVideoUri();
