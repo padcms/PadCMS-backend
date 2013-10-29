@@ -67,6 +67,15 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         $this->addControl(new AM_Component_Control_Tags($oActionController,
                 'tags', 'Tags'));
 
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'pricing_plan', 'Pricing plan ', array(array('require')), 'pricing_plan'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'google_play_id', 'Google play Id', array(), 'google_play_id'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'itunes_id', 'ITunes ID', array(), 'itunes_id'));
+
         $validationsRules = array();
 
         if (!$iIssueId) {
@@ -110,9 +119,12 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
             }
         }
 
+        $aPricingPlans = AM_Model_Db_Issue::getPricingPlans();
+
         $aRecord = array(
             'appId'      => $this->applicationId,
             'imageUri'   => isset($sIssueImageUri) ? $sIssueImageUri : null,
+            'pricingPlans'   => $aPricingPlans,
         );
 
         if (isset($this->view->{$this->getName()})) {

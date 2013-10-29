@@ -12,7 +12,8 @@
   <script type="text/javascript" src="/js/colorpicker/colorpicker.js"></script>
   <script type="text/javascript" src="/js/colorpicker/color-handle.js"></script>
   <script type="text/javascript" src="/js/lib/anytime/anytime.compressed.js"></script>
-    <script type="text/javascript" src="/js/issue/publish-date.js"></script>
+  <script type="text/javascript" src="/js/issue/publish-date.js"></script>
+  <script type="text/javascript" src="/js/issue/pricing-plan.js"></script>
   <script type="text/javascript">
     window.issueId = '{if isset($issue)}{$issue.primaryKeyValue}{/if}';
     window.appId = '{if isset($issue)}{$issue.appId}{/if}';
@@ -155,18 +156,6 @@
         </div>
         {/if}
 
-        <div class="form-item{if isset($product_id) && $product_id.errors} error{/if}">
-          <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>
-
-          <div
-              class="form-item-wrapper">{if isset($product_id)}{include file="Volcano/input.tpl" control=$product_id _class="form-text"}{/if}</div>
-          <div class="clr"></div>
-          <div class="description">
-            {'Product ID like '|translate}
-            com.adyax.padcms.issue_{if isset($issue) && $issue.primaryKeyValue}{$issue.primaryKeyValue}{else}ID{/if}
-          </div>
-        </div>
-
         {if isset($issue) && $issue.states && $issue.primaryKeyValue}
           <div class="form-item select-themed{if isset($state) && $state.errors} error{/if}">
             <label>{if isset($state)}{$state.title|escape}{/if} <span>*</span></label>
@@ -177,6 +166,18 @@
             </div>
           </div>
         {/if}
+
+        <div class="product-id-wrapper form-item{if isset($product_id) && $product_id.errors} error{/if}">
+          <label>{if isset($product_id)}{$product_id.title|escape}{/if}</label>
+
+          <div
+                  class="form-item-wrapper">{if isset($product_id)}{include file="Volcano/input.tpl" control=$product_id _class="form-text product-id"}{/if}</div>
+          <div class="clr"></div>
+          <div class="description">
+              {'Product ID like '|translate}
+              com.adyax.padcms.issue_{if isset($issue) && $issue.primaryKeyValue}{$issue.primaryKeyValue}{else}ID{/if}
+          </div>
+        </div>
 
         {if isset($publish_date)}
           <div class="publish-date-wrapper form-item{if isset($publish_date) && $publish_date.errors} error{/if}">
@@ -198,13 +199,29 @@
           </div>
         {/if}
 
-        {if isset($is_issue_individually_paid)}
-          <div class="form-item{if isset($is_issue_individually_paid) && $is_issue_individually_paid.errors} error{/if}">
-              <label>{if isset($is_issue_individually_paid)}{$is_issue_individually_paid.title|escape}{/if}</label>
-              <div class="form-item-wrapper">{if isset($is_issue_individually_paid)}{include file="Volcano/checkbox.tpl" control=$is_issue_individually_paid _class="form-text"}{/if}</div>
+        {if isset($pricing_plan) && $issue.pricingPlans && $issue.primaryKeyValue}
+          <div class="form-item select-themed{if isset($pricing_plan) && $pricing_plan.errors} error{/if}">
+              <label>{if isset($pricing_plan)}{$pricing_plan.title|escape}{/if}</label>
+              <div class="form-item-wrapper">{if isset($pricing_plan)}{include file="Volcano/select.tpl" control=$pricing_plan _values=$issue.pricingPlans _class="form-text issue-pricing"}{/if}</div>
               <div class="clr"></div>
           </div>
         {/if}
+
+        <div class="itunes-id-wrapper form-item{if isset($itunes_id) && $itunes_id.errors} error{/if}">
+          <label>{if isset($itunes_id)}{$itunes_id.title|escape}{/if}</label>
+
+          <div
+                  class="form-item-wrapper">{if isset($itunes_id)}{include file="Volcano/input.tpl" control=$itunes_id _class="form-text itunes-id"}{/if}</div>
+          <div class="clr"></div>
+        </div>
+
+        <div class="google-play-id-wrapper form-item{if isset($google_play_id) && $google_play_id.errors} error{/if}">
+          <label>{if isset($google_play_id)}{$google_play_id.title|escape}{/if}</label>
+
+          <div
+                  class="form-item-wrapper">{if isset($google_play_id)}{include file="Volcano/input.tpl" control=$google_play_id _class="form-text google-play-id"}{/if}</div>
+          <div class="clr"></div>
+        </div>
 
         <div class="form-item{if isset($issue_color) && $issue_color.errors} error{/if}">
           <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>

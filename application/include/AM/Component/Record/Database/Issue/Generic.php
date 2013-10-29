@@ -87,8 +87,6 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
                 'publish_date', 'Publish date', array(), 'publish_date'));
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'paid', 'Paid', array(), 'paid'));
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'is_issue_individually_paid', 'Individually paid issue', array(), 'is_issue_individually_paid'));
 
         $this->postInitialize();
     }

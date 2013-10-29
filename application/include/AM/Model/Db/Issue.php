@@ -59,6 +59,11 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
     const STATUS_ARCHIVED  = 3;
     const STATUS_REVIEW    = 4;
 
+    const FREE                                   = 1;
+    const SUBSCRIPTION_ONLY                      = 2;
+    const SUBSCRIPTION_OR_SINGLE_PURCHASE        = 3;
+    const SINGLE_PURCHASE_ONLY                   = 4;
+
     //The types of vertical mode
     public static $issueTypes = array(self::VERTICAL_MODE_SIMPLE, self::VERTICAL_MODE_ENRICHED);
 
@@ -544,5 +549,31 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
                  'entity_type' => 'issue',
             ));
         $oTermEntities->copyToIssue($this);
+    }
+
+    public static function pricingToName($sState)
+    {
+        switch ($sState) {
+            case self::FREE:
+                return 'free';
+            case self::SUBSCRIPTION_ONLY:
+                return 'subscription_only';
+            case self::SUBSCRIPTION_OR_SINGLE_PURCHASE:
+                return 'subscription_or_single_issue_purchase';
+            case self::SINGLE_PURCHASE_ONLY:
+                return 'single_issue_purchase_only';
+        }
+
+        return null;
+    }
+
+    public static function getPricingPlans()
+    {
+        return array(
+            self::FREE => 'Free',
+            self::SUBSCRIPTION_ONLY => 'Subscription only',
+            self::SUBSCRIPTION_OR_SINGLE_PURCHASE => 'Subscription or single issue purchase',
+            self::SINGLE_PURCHASE_ONLY => 'Single issue purchase only',
+        );
     }
 }
