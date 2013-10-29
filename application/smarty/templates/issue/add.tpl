@@ -199,7 +199,7 @@
           </div>
         {/if}
 
-        {if isset($pricing_plan) && $issue.pricingPlans && $issue.primaryKeyValue}
+        {if isset($pricing_plan) && $issue.pricingPlans}
           <div class="form-item select-themed{if isset($pricing_plan) && $pricing_plan.errors} error{/if}">
               <label>{if isset($pricing_plan)}{$pricing_plan.title|escape}{/if}</label>
               <div class="form-item-wrapper">{if isset($pricing_plan)}{include file="Volcano/select.tpl" control=$pricing_plan _values=$issue.pricingPlans _class="form-text issue-pricing"}{/if}</div>
