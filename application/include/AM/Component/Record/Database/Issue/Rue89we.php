@@ -71,7 +71,7 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
                 'pricing_plan', 'Pricing plan ', array(array('require')), 'pricing_plan'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'google_play_id', 'Google play Id', array(), 'google_play_id'));
+                'google_play_id', 'Google play ID', array(), 'google_play_id'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'itunes_id', 'ITunes ID', array(), 'itunes_id'));
