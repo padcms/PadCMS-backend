@@ -19,7 +19,7 @@
     <div id="content-inner">
         <div id="content-area">
             <div class="cblock-form cblock-signin cblock-add-app error-detected">
-                <div class="cblock-form-mandatory">{'Edit tags'|translate} *</div>
+                <div class="cblock-form-mandatory">&nbsp;</div>
                 <div class="cblock-form-inner">
 
                     {if isset($application) && $application.errors}

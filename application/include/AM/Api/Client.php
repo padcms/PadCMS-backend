@@ -108,7 +108,6 @@ class AM_Api_Client extends AM_Api
                 );
             }
 
-
             $aApplication = array(
                 'application_id'                       => $oApplication->id,
                 'application_title'                    => $oApplication->title,
@@ -119,7 +118,8 @@ class AM_Api_Client extends AM_Api
                 'application_notification_email_title' => $oApplication->{'nt_email_' . $sPlatform},
                 'application_notification_twitter'     => $oApplication->{'nm_twitter_' . $sPlatform},
                 'application_notification_facebook'    => $oApplication->{'nm_fbook_' . $sPlatform},
-                'application_preview'                  => $oApplication->preview
+                'application_preview'                  => $oApplication->preview,
+                'application_tags'                     => $aApplicationTags
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
@@ -129,8 +129,6 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
                 $aApplication['application_email']               = $oApplication->application_email;
-                $aApplication['application_tags']                = $aApplicationTags;
-
                 if (!empty($oApplication->newsstand_cover_image)) {
                     $aApplication['application_newsstand_cover_path'] = AM_Tools::getImageUrl('1066-600',
                             AM_Model_Db_Application::PRESET_APPLICATION_IMAGE, $oApplication->id, $oApplication->newsstand_cover_image, 'png')

@@ -10,14 +10,14 @@ $(document).ready(function() {
         $( "#existing-tags, #possible-tags" ).sortable({
             connectWith: ".connectedSortable",
             stop: function( event, ui ) {
-                var aExistingTags = $( "#existing-tags" ).sortable( "toArray" ) || [];
+                var existingTags = $( "#existing-tags" ).sortable( "toArray" ) || [];
 
                 $.ajax({
                     url: '/application/tag-update',
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        existingTags: aExistingTags,
+                        existingTags: existingTags,
                         aid: window.appId
                     },
                     success: function(data) {

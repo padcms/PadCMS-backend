@@ -445,7 +445,7 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
             ->setIntegrityCheck(false)
             ->distinct(true)
             ->from('term', array('id', 'title', 'te1.id AS te_id'))
-            ->joinLeft('term_entity AS te1', 'term.id = te1.term AND te1.entity_type =  "issue"', array())
+            ->join('term_entity AS te1', 'term.id = te1.term AND te1.entity_type =  "issue"', array())
             ->joinLeft('term_entity AS te2', 'term.id = te2.term AND te2.entity_type = "application"', array())
             ->where('term.deleted = "no"')
             ->where('term.vocabulary = :vocabulary_id')

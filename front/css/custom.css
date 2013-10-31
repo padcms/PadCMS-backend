@@ -880,10 +880,12 @@ div.cke_editable_inline {
 /* For application tags */
 .tags.connectedSortable {
     width: 180px;
-    min-height: 50px;
+    min-height: 80px;
     list-style-type: none;
     margin-top: 10px;
     padding: 0;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
 }
 .tags-wrapper {
     padding-right: 20px;
@@ -898,10 +900,15 @@ div.cke_editable_inline {
 }
 #application-tabs {
     margin-bottom: 20px;
+    background-color: #cccccc;
+    padding: 7px;
+    border: 1px solid #cccccc;
+    border-radius: 11px;
 }
 #application-tabs ul {
     list-style-type: none;
     padding: 0px;
+    margin: 0;
 }
 #application-tabs ul li{
     float: left;
@@ -915,7 +922,7 @@ div.cke_editable_inline {
     color: #555555;
     text-align: center;
     border-radius: 5px;
-    border: 1px solid #dadada;
+    border: 1px solid #aaaaaa;
 }
 #application-tabs ul li a:hover{
     color: #212121;
@@ -923,5 +930,6 @@ div.cke_editable_inline {
 }
 #application-tabs ul li a.active{
     background-color: #FFFFFF;
+    border: 2px solid #aaaaaa;
 }
 /* - - - */
