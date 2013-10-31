@@ -876,3 +876,52 @@ div.cke_editable_inline {
     color: #000000;
 }
 /* - - - */
+
+/* For application tags */
+.tags.connectedSortable {
+    width: 180px;
+    min-height: 50px;
+    list-style-type: none;
+    margin-top: 10px;
+    padding: 0;
+}
+.tags-wrapper {
+    padding-right: 20px;
+    float: left;
+}
+.tags.connectedSortable li {
+    padding: 3px;
+    margin: 2px;
+}
+.clear {
+    clear: both;
+}
+#application-tabs {
+    margin-bottom: 20px;
+}
+#application-tabs ul {
+    list-style-type: none;
+    padding: 0px;
+}
+#application-tabs ul li{
+    float: left;
+    padding-right: 10px;
+}
+#application-tabs ul li a{
+    padding: 5px;
+    width: 50px;
+    background-color: #dadada;
+    display: block;
+    color: #555555;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #dadada;
+}
+#application-tabs ul li a:hover{
+    color: #212121;
+    text-decoration: none;
+}
+#application-tabs ul li a.active{
+    background-color: #FFFFFF;
+}
+/* - - - */

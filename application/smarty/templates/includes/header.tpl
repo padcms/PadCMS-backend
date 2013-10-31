@@ -30,7 +30,7 @@
 
     </head>
     <body>
-        <div id="page" {if $controller == 'auth' || $controller == 'devices' || $action == 'add' || $action == 'download'}class="page-simple"{/if}>
+        <div id="page" {if $controller == 'auth' || $controller == 'devices' || $action == 'add' || $action == 'download' || $controller == 'application' && $action == 'tag'}class="page-simple"{/if}>
              <div id="page-inner">
                 <!-- header -->
                 <div id="header">

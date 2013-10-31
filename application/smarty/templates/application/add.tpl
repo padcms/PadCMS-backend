@@ -41,6 +41,16 @@
                     </div>
                     {/if}
 
+                    {if !empty($application.primaryKeyValue)}
+                    <div id="application-tabs">
+                        <ul>
+                            <li><a href="" class="active">{'Edit'|translate}</a></li>
+                            <li><a href="/application/tag/aid/{$application.primaryKeyValue}/cid/{$client.value}">{'Tags'|translate}</a></li>
+                            <div class="clear"></div>
+                        </ul>
+                    </div>
+                    {/if}
+
                     <form method="POST" enctype="multipart/form-data" action="">
                         <input type="hidden" name="form" value="{if isset($application)}{$application.name}{/if}"/>
 

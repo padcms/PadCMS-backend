@@ -204,4 +204,81 @@ class ApplicationController extends AM_Controller_Action
 
         return $this->getHelper('Json')->sendJson($aMessage);
     }
+
+    /*
+     * Action for add/delete tags from application.
+     */
+    public function tagAction()
+    {
+        $iApplicationId = intval($this->_getParam('aid'));
+
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $iApplicationId)->getVocabularyTag();
+
+        $oPossibleTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsForApplicationPossible($oVocabulary->id);
+        $oExistingTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsForApplicationExisting($oVocabulary->id);
+
+        $aPossibleTags = array();
+        $aExistingTags = array();
+        foreach ($oPossibleTags as $oTag) {
+            $aPossibleTags[] = array(
+                'value' => $oTag->title,
+                'te_id'  => $oTag->te_id,
+            );
+        }
+        foreach ($oExistingTags as $oTag) {
+            $aExistingTags[] = array(
+                'value'  => $oTag->title,
+                'te_id'  => $oTag->te_id,
+            );
+        }
+        $this->view->aid = $iApplicationId;
+        $this->view->cid = intval($this->_getParam('cid'));
+        $this->view->possibleTags = $aPossibleTags;
+        $this->view->existingTags = $aExistingTags;
+    }
+
+    /*
+    * Action for add/delete tags from application for ajax request.
+    */
+    public function tagUpdateAction() {
+        $aExistingTags  = !empty($_POST['existingTags']) ? $_POST['existingTags'] : array();
+        $iApplicationId = $_POST['aid'];
+        AM_Model_Db_Table_Abstract::factory('term')->updateTagsForApplication($aExistingTags, $iApplicationId);
+
+        $oTags = array();
+        foreach ($oTags as $oTag) {
+            $aTags[] = array(
+                'id' => $oTag->id,
+                'value' => $oTag->title,
+            );
+        }
+
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $iApplicationId)->getVocabularyTag();
+
+        $oPossibleTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsForApplicationPossible($oVocabulary->id);
+        $oExistingTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsForApplicationExisting($oVocabulary->id);
+        $aPossibleTags = array();
+        $aExistingTags = array();
+        foreach ($oPossibleTags as $oTag) {
+            $aPossibleTags[] = array(
+                'value' => $oTag->title,
+                'te_id'  => $oTag->te_id,
+            );
+        }
+        foreach ($oExistingTags as $oTag) {
+            $aExistingTags[] = array(
+                'value'  => $oTag->title,
+                'te_id'  => $oTag->te_id,
+            );
+        }
+
+        $aTags = array(
+            'possibleTags' => $aPossibleTags,
+            'existingTags' => $aExistingTags
+        );
+
+        return $this->getHelper('Json')->sendJson($aTags);
+    }
 }

@@ -95,6 +95,20 @@ class AM_Api_Client extends AM_Api
                 }
             }
 
+            $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+                ->findOneBy('id', $iApplicationId)->getVocabularyTag();
+
+            $aApplicationTags = array();
+            $oApplicationTags = AM_Model_Db_Table_Abstract::factory('term')->getTagsForApplicationExisting($oVocabulary->id);
+
+            foreach ($oApplicationTags as $oApplicationTag) {
+                $aApplicationTags[] = array(
+                    'id'    => $oApplicationTag->id,
+                    'title' => $oApplicationTag->title,
+                );
+            }
+
+
             $aApplication = array(
                 'application_id'                       => $oApplication->id,
                 'application_title'                    => $oApplication->title,
@@ -115,6 +129,7 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
                 $aApplication['application_email']               = $oApplication->application_email;
+                $aApplication['application_tags']                = $aApplicationTags;
 
                 if (!empty($oApplication->newsstand_cover_image)) {
                     $aApplication['application_newsstand_cover_path'] = AM_Tools::getImageUrl('1066-600',

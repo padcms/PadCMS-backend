@@ -418,4 +418,98 @@ class AM_Model_Db_Table_Term extends AM_Model_Db_Table_Abstract
 
         return $oTerms;
     }
+
+    public function getTagsForApplicationExisting($iVocabularyId)
+    {
+        $oQuery = $this->select()
+            ->setIntegrityCheck(false)
+            ->from('term', array('id', 'title', 'term_entity.id AS te_id'))
+            ->joinLeft('term_entity', 'term.id = term_entity.term', array())
+            ->where('term.deleted = "no"')
+            ->where('term.vocabulary = :vocabulary_id')
+            ->where('term_entity.entity_type = "application"')
+            ->order('delta ASC');
+        $oQuery->bind(
+            array(
+                 ':vocabulary_id' => $iVocabularyId
+            ));
+
+        $oTerms = $this->fetchAll($oQuery);
+
+        return $oTerms;
+    }
+
+    public function getTagsForApplicationPossible($iVocabularyId)
+    {
+        $oQuery = $this->select()
+            ->setIntegrityCheck(false)
+            ->distinct(true)
+            ->from('term', array('id', 'title', 'te1.id AS te_id'))
+            ->joinLeft('term_entity AS te1', 'term.id = te1.term AND te1.entity_type =  "issue"', array())
+            ->joinLeft('term_entity AS te2', 'term.id = te2.term AND te2.entity_type = "application"', array())
+            ->where('term.deleted = "no"')
+            ->where('term.vocabulary = :vocabulary_id')
+            ->where('te2.id IS NULL')
+            ->group('title')
+            ->order('title ASC');
+        $oQuery->bind(
+            array(
+                 ':vocabulary_id' => $iVocabularyId
+            ));
+
+        $oTerms = $this->fetchAll($oQuery);
+
+        return $oTerms;
+    }
+
+    public function updateTagsForApplication($aNewExistingTags, $iApplicationId)
+    {
+        $aOldExistingTags = array();
+        if (empty($aNewExistingTags)) {
+            $aNewExistingTags = array();
+        }
+
+        $oVocabulary = AM_Model_Db_Table_Abstract::factory('application')
+            ->findOneBy('id', $iApplicationId)->getVocabularyTag();
+        $oExistingTags = $this->getTagsForApplicationExisting($oVocabulary->id);
+        $oTermEntityTable = AM_Model_Db_Table_Abstract::factory('term_entity');
+
+        foreach ($oExistingTags as $oTag) {
+            $aOldExistingTags[] = $oTag->te_id;
+        }
+
+        $aTagsForUpdate = array_intersect($aNewExistingTags, $aOldExistingTags);
+        $aTagsForInsert = array_diff($aNewExistingTags, $aOldExistingTags);
+        $aTagsForDelete = array_diff($aOldExistingTags, $aNewExistingTags);
+
+        foreach ($aTagsForUpdate as $iDelta => $iTagEntityId) {
+            $oTermEntityTable->update(array('delta' => $iDelta + 1), 'id = ' . (int) $iTagEntityId);
+        }
+
+        if (!empty($aTagsForInsert)) {
+            $oQuery = $this->select()
+                ->setIntegrityCheck(false)
+                ->from('term_entity', array('id', 'term'))
+                ->where('term_entity.id IN (' . $this->_db->quote($aTagsForInsert) . ')');
+
+            $oTermEntityIds = $oTermEntityTable->fetchAll($oQuery);
+
+            $aTagsIdForInsert = array();
+            foreach ($oTermEntityIds as $oTermEntityId) {
+                $aTagsIdForInsert[$oTermEntityId->id] = $oTermEntityId->term;
+            }
+            foreach ($aTagsForInsert as $iDelta => $iTagEntityId) {
+                $oTermEntityTable->insert(array(
+                   'term'        => $aTagsIdForInsert[$iTagEntityId],
+                   'entity_type' => 'application',
+                   'entity'      => $iApplicationId,
+                   'delta'       => $iDelta + 1,
+                ));
+            }
+        }
+
+        if (!empty($aTagsForDelete)) {
+            $oTermEntityTable->delete('id IN (' . $this->_db->quote($aTagsForDelete) . ')');
+        }
+    }
 }
