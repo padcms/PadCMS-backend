@@ -76,7 +76,7 @@ class AM_Task_Worker_Notification_Sender_Boxcar extends AM_Task_Worker_Abstract
 
         try {
             $oBoxcar = new BoxcarPHP_Api($sProviderKey, $sProviderSecret);
-            $oBoxcar->broadcast($sMessage, $iBadge, $aTokensApple, $aTokensAndroid);
+            $oBoxcar->broadcast($sMessage, $iBadge, $aTokensApple, $aTokensAndroid, $oTask->id);
         }
         catch (BoxcarPHP_Exception $e) {
             $bError = true;

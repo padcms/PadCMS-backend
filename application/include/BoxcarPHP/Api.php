@@ -89,8 +89,8 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon  Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    public function broadcast ($message, $badge, $tokens_apple, $tokens_android) {
-        return $this->do_notify($message, $badge, $tokens_apple, $tokens_android);
+    public function broadcast ($message, $badge, $tokens_apple, $tokens_android, $task_id) {
+        return $this->do_notify($message, $badge, $tokens_apple, $tokens_android, $task_id);
     }
 
 
@@ -107,15 +107,21 @@ class BoxcarPHP_Api {
      * @param string $source_url Optional; This is a URL that may be used for future devices. It will replace the redirect payload.
      * @param string $icon Optional; This is the URL of the icon that will be shown to the user. Standard size is 57x57.
      */
-    private function do_notify($message, $badge, $tokens_apple, $tokens_android) {
+    private function do_notify($message, $badge, $tokens_apple, $tokens_android, $task_id) {
         $notification = array(
             'aps' => array(
-                'badge' => $badge,
-                'alert' => $message
+                'badge' => 'auto',
+                'alert' => $message,
             ),
-            'device_tokens'    => $tokens_apple,
-            'registration_ids' => $tokens_android
         );
+
+        if (!empty($tokens_android)) {
+            $notification['registration_ids'] = $tokens_android;
+        }
+
+        if (!empty($tokens_apple)) {
+            $notification['device_tokens'] = $tokens_apple;
+        }
 
         $result = $this->http_post($this->api_key, $this->secret, $notification);
 
@@ -130,6 +136,7 @@ class BoxcarPHP_Api {
      * @return string
      */
     private function default_response_handler ($result) {
+
         // work out what to do based on http code
         switch ($result['http_code']) {
             case 200:
