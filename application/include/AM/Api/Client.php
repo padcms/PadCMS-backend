@@ -190,23 +190,28 @@ class AM_Api_Client extends AM_Api
                     'issue_title'                => $oIssue->title,
                     'issue_number'               => $oIssue->number,
                     'issue_state'                => AM_Model_Db_State::stateToName($oIssue->state),
-                    'issue_product_id'           => $oIssue->product_id,
-                    'paid'                       => !empty($oIssue->paid) ? true : false,
                     'revisions'                  => array(),
                     'tags'                       => $aTags,
                     'issue_publish_date'         => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
                 );
 
+                if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_GENERIC) {
+                    $aIssue['paid']             = !empty($oIssue->paid) ? true : false;
+                    $aIssue['issue_product_id'] = $oIssue->product_id;
+                }
+
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                    $aIssue['issue_author']         = $oIssue->author;
-                    $aIssue['issue_words']          = $oIssue->words;
-                    $aIssue['issue_excerpt']        = !empty($oIssue->excerpt) ? str_replace("\n", "\\n", $oIssue->excerpt) : null;
-                    $aIssue['issue_title_short']    = $oIssue->title_short;
-                    $aIssue['issue_excerpt_short']  = !empty($oIssue->excerpt_short) ? str_replace("\n", "\\n", $oIssue->excerpt_short) : null;
-                    $aIssue['issue_category']       = !empty($oIssue->category) ? str_replace("\n", "\\n", $oIssue->category) : null;
-                    $aIssue['issue_pricing_plan']   = AM_Model_Db_Issue::pricingToName($oIssue->pricing_plan);
-                    $aIssue['issue_google_play_id'] = $oIssue->google_play_id;
-                    $aIssue['issue_itunes_id']      = $oIssue->itunes_id;
+                    $aIssue['issue_author']           = $oIssue->author;
+                    $aIssue['issue_words']            = $oIssue->words;
+                    $aIssue['issue_excerpt']          = !empty($oIssue->excerpt) ? str_replace("\n", "\\n", $oIssue->excerpt) : null;
+                    $aIssue['issue_title_short']      = $oIssue->title_short;
+                    $aIssue['issue_excerpt_short']    = !empty($oIssue->excerpt_short) ? str_replace("\n", "\\n", $oIssue->excerpt_short) : null;
+                    $aIssue['issue_category']         = !empty($oIssue->category) ? str_replace("\n", "\\n", $oIssue->category) : null;
+                    $aIssue['issue_pricing_plan']     = AM_Model_Db_Issue::pricingToName($oIssue->pricing_plan);
+                    $aIssue['issue_google_play_id']   = $oIssue->google_play_id;
+                    $aIssue['issue_itunes_id']        = $oIssue->itunes_id;
+                    $aIssue['issue_subscribe_title']  = $oIssue->subscribe_title;
+                    $aIssue['issue_subscribe_button'] = $oIssue->subscribe_button;
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')

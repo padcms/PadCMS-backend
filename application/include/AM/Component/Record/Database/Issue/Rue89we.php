@@ -76,6 +76,15 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'itunes_id', 'ITunes ID', array(), 'itunes_id'));
 
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'subscribe_title', 'Subscribe popup title', array(), 'subscribe_title'));
+
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'subscribe_button', 'Subscribe button subtitle', array(), 'subscribe_button'));
+
+        $this->removeControl('product_id');
+        $this->removeControl('paid');
+
         $validationsRules = array();
 
         if (!$iIssueId) {

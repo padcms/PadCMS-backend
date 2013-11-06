@@ -407,7 +407,9 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
         $sNumber = $this->controls['number']->getValue();
         $this->controls['number']->setValue(AM_Tools::filter_xss($sNumber));
 
-        $sProductId = $this->controls['product_id']->getValue();
-        $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
+        if (get_class($this) == 'AM_Component_Record_Database_Issue_Generic') {
+            $sProductId = $this->controls['product_id']->getValue();
+            $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
+        }
     }
 }
