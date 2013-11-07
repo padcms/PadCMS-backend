@@ -129,6 +129,8 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_share_message']       = $oApplication->share_message;
                 $aApplication['application_notification_google'] = $oApplication->application_notification_google;
                 $aApplication['application_email']               = $oApplication->application_email;
+                $aApplication['application_subscribe_title']     = $oApplication->subscribe_title;
+                $aApplication['application_subscribe_button']    = $oApplication->subscribe_button;
                 if (!empty($oApplication->newsstand_cover_image)) {
                     $aApplication['application_newsstand_cover_path'] = AM_Tools::getImageUrl('1066-600',
                             AM_Model_Db_Application::PRESET_APPLICATION_IMAGE, $oApplication->id, $oApplication->newsstand_cover_image, 'png')
@@ -210,8 +212,6 @@ class AM_Api_Client extends AM_Api
                     $aIssue['issue_pricing_plan']     = AM_Model_Db_Issue::pricingToName($oIssue->pricing_plan);
                     $aIssue['issue_google_play_id']   = $oIssue->google_play_id;
                     $aIssue['issue_itunes_id']        = $oIssue->itunes_id;
-                    $aIssue['issue_subscribe_title']  = $oIssue->subscribe_title;
-                    $aIssue['issue_subscribe_button'] = $oIssue->subscribe_button;
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')

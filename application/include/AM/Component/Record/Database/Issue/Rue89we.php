@@ -85,6 +85,11 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
         $this->removeControl('product_id');
         $this->removeControl('paid');
 
+        //TODO delete this code later
+        $this->removeControl('subscribe_title');
+        $this->removeControl('subscribe_button');
+        //-----
+
         $validationsRules = array();
 
         if (!$iIssueId) {

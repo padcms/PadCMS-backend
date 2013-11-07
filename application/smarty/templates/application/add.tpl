@@ -151,7 +151,24 @@
                         <div class="form-item{if isset($application_email) && $application_email.errors} error{/if}">
                             <label>{if isset($application_email)}{$application_email.title|translate|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($application_email)}{include file="Volcano/input.tpl" control=$application_email _class="form-text"}{/if}</div>
+                            <div class="clr"></div>
                         </div>
+
+                        {if isset($subscribe_title)}
+                            <div class="form-item{if isset($subscribe_title) && $subscribe_title.errors} error{/if}">
+                                <label>{if isset($subscribe_title)}{$subscribe_title.title|escape}{/if}</label>
+                                <div class="form-item-wrapper">{if isset($subscribe_title)}{include file="Volcano/input.tpl" control=$subscribe_title _class="form-text"}{/if}</div>
+                                <div class="clr"></div>
+                            </div>
+                        {/if}
+
+                        {if isset($subscribe_button)}
+                            <div class="form-item{if isset($subscribe_button) && $subscribe_button.errors} error{/if}">
+                                <label>{if isset($subscribe_button)}{$subscribe_button.title|escape}{/if}</label>
+                                <div class="form-item-wrapper">{if isset($subscribe_button)}{include file="Volcano/input.tpl" control=$subscribe_button _class="form-text"}{/if}</div>
+                                <div class="clr"></div>
+                            </div>
+                        {/if}
 
                         <h2>{'Push notification settings'|translate}</h2>
                         <div id="push-tabs">
