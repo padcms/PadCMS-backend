@@ -115,12 +115,14 @@ class BoxcarPHP_Api {
             ),
         );
 
-        if (!empty($tokens_android)) {
-            $notification['registration_ids'] = $tokens_android;
-        }
+        $notification['device_tokens'] = array();
 
         if (!empty($tokens_apple)) {
             $notification['device_tokens'] = $tokens_apple;
+        }
+
+        if (!empty($tokens_android)) {
+            $notification['device_tokens'] = array_merge($notification['device_tokens'], $tokens_android);
         }
 
         $result = $this->http_post($this->api_key, $this->secret, $notification);
@@ -177,7 +179,6 @@ class BoxcarPHP_Api {
      * @return array
      */
     private function http_post ($access_key, $secret_key, $data) {
-
         $post_data = json_encode($data);
 
         $ch = curl_init();
