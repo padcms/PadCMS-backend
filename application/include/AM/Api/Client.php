@@ -131,6 +131,18 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_email']               = $oApplication->application_email;
                 $aApplication['application_subscribe_title']     = $oApplication->subscribe_title;
                 $aApplication['application_subscribe_button']    = $oApplication->subscribe_button;
+
+                $oSubscriptions = AM_Model_Db_Table_Abstract::factory('subscription')->findAllBy(array('application' => $oApplication->id));
+
+                $aApplication['application_subscriptions'] = array();
+                foreach ($oSubscriptions as $oSubscription) {
+                    $aApplication['application_subscriptions'][$oSubscription->id] = array(
+                        'button_title' => $oSubscription->button_title,
+                        'itunes_id'    => $oSubscription->itunes_id,
+                        'google_id'    => $oSubscription->google_id,
+                    );
+                }
+
                 if (!empty($oApplication->newsstand_cover_image)) {
                     $aApplication['application_newsstand_cover_path'] = AM_Tools::getImageUrl('1066-600',
                             AM_Model_Db_Application::PRESET_APPLICATION_IMAGE, $oApplication->id, $oApplication->newsstand_cover_image, 'png')

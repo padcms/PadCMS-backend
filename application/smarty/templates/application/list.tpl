@@ -7,7 +7,7 @@
 <script type="text/javascript" src="/js/common/clients-list.js"></script>
 <script type="text/javascript" src="/js/application/list.js"></script>
 {/capture}
-
+    
 <div id="content-header">
     <div id="content-header-inner">
         {include file="includes/header-button.tpl" btn_url="/application/add/cid/"|cat:$clientId btn_title="Add new application"}
@@ -41,6 +41,9 @@
                                     <a href="#" class="cbutton cbutton-green cbutton-copy-move" id="copy-application-{$item.id}-{$clientId}"><span><span class="ico">{'Copy'|translate}</span></span></a>
                                 {/if}
                                 <a href="/issue/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'List issues'|translate}</span></span></a>
+                                {if $item.type == 'rue98we'}
+                                    <a href="/subscription/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'List subscription'|translate}</span></span></a>
+                                {/if}
                             </div>
                         </div>
                     </div>

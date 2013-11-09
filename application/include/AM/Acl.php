@@ -71,6 +71,7 @@ class AM_Acl extends Zend_Acl
         $this->add(new Zend_Acl_Resource('page-map'));
         $this->add(new Zend_Acl_Resource('export'));
         $this->add(new Zend_Acl_Resource('devices'));
+        $this->add(new Zend_Acl_Resource('subscription'));
 
         $this->add(new Zend_Acl_Resource('field'));
         $this->add(new Zend_Acl_Resource('field-slide'));
@@ -127,5 +128,6 @@ class AM_Acl extends Zend_Acl
         $this->allow('member', 'page');
         $this->allow('member', 'revision');
         $this->allow('member', 'page-map');
+        $this->allow('member', 'subscription');
     }
 }

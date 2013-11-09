@@ -933,3 +933,17 @@ div.cke_editable_inline {
     border: 2px solid #aaaaaa;
 }
 /* - - - */
+
+/* For subscription list */
+.subscription-list #content-inner,
+.subscription-list #content-area {
+    margin-top: 0;
+}
+
+.subscription-list #content-area table {
+    margin-bottom: 0px;
+}
+.subscription-list .tb-main {
+    padding-bottom: 15px;
+}
+/* - - - */
