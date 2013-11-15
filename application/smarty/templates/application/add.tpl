@@ -6,6 +6,7 @@
 <script type="text/javascript">
     CKEDITOR.replace('message_for_readers');
     CKEDITOR.replace('welcome');
+    CKEDITOR.replace('welcome_part2');
 </script>
 {/capture}
 <div id="main">
@@ -129,6 +130,15 @@
                             </div>
                         {/if}
 
+                        {if isset($welcome_part2)}
+                            <div class="form-item{if isset($welcome_part2) && $welcome_part2.errors} error{/if}">
+                                <label>{if isset($welcome_part2)}{$welcome_part2.title|escape}{/if}</label>
+                                <div
+                                        class="textarea-wrapper">{if isset($welcome_part2)}{include file="Volcano/textarea.tpl" control=$welcome_part2 _class="form-textarea"}{/if}</div>
+                                <div class="clr"></div>
+                            </div>
+                        {/if}
+
                         <div class="form-item{if isset($message_for_readers) && $message_for_readers.errors} error{/if}">
                             <label>{if isset($message_for_readers)}{$message_for_readers.title|escape}{/if}</label>
                             <div class="textarea-wrapper">{if isset($message_for_readers)}{include file="Volcano/textarea.tpl" control=$message_for_readers _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'For our readers ...'|translate|cat:"'"}{/if}</div>
@@ -151,6 +161,16 @@
                         <div class="form-item{if isset($application_email) && $application_email.errors} error{/if}">
                             <label>{if isset($application_email)}{$application_email.title|translate|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($application_email)}{include file="Volcano/input.tpl" control=$application_email _class="form-text"}{/if}</div>
+                            <div class="clr"></div>
+                        </div>
+                        <div class="form-item{if isset($contact_email_subject) && $contact_email_subject.errors} error{/if}">
+                            <label>{if isset($contact_email_subject)}{$contact_email_subject.title|translate|escape}{/if}</label>
+                            <div class="form-item-wrapper">{if isset($contact_email_subject)}{include file="Volcano/input.tpl" control=$contact_email_subject _class="form-text"}{/if}</div>
+                            <div class="clr"></div>
+                        </div>
+                        <div class="form-item{if isset($contact_email_text) && $contact_email_text.errors} error{/if}">
+                            <label>{if isset($contact_email_text)}{$contact_email_text.title|escape}{/if}</label>
+                            <div class="textarea-wrapper">{if isset($contact_email_text)}{include file="Volcano/textarea.tpl" control=$contact_email_text _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'Contact email default text ...'|translate|cat:"'"}{/if}</div>
                             <div class="clr"></div>
                         </div>
 

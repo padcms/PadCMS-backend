@@ -571,9 +571,9 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
     {
         return array(
             self::FREE => 'Free',
-            self::SUBSCRIPTION_ONLY => 'Subscription only',
-            self::SUBSCRIPTION_OR_SINGLE_PURCHASE => 'Subscription or single issue purchase',
-            self::SINGLE_PURCHASE_ONLY => 'Single issue purchase only',
+            self::SUBSCRIPTION_ONLY => 'Free, visible for subscribers only',
+            self::SUBSCRIPTION_OR_SINGLE_PURCHASE => 'Paid for regular users, free for subscribers',
+            self::SINGLE_PURCHASE_ONLY => 'Paid for everyone',
         );
     }
 }
