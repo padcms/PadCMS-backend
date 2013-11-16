@@ -123,7 +123,6 @@ class AM_Api_Client extends AM_Api
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
-                $aApplication['application_welcome_message']     = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
                 $aApplication['application_welcome_message']       = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
                 $aApplication['application_welcome_message_part2'] = !empty($oApplication->welcome_part2) ? str_replace("\n", "\\n", $oApplication->welcome_part2) : null;
                 $aApplication['application_message_for_readers']   = $oApplication->message_for_readers;
