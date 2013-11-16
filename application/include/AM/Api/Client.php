@@ -124,13 +124,17 @@ class AM_Api_Client extends AM_Api
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
                 $aApplication['application_welcome_message']     = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
-                $aApplication['application_message_for_readers'] = $oApplication->message_for_readers;
-                $aApplication['application_share_url']           = $oApplication->share_url;
-                $aApplication['application_share_message']       = $oApplication->share_message;
-                $aApplication['application_notification_google'] = $oApplication->application_notification_google;
-                $aApplication['application_email']               = $oApplication->application_email;
-                $aApplication['application_subscribe_title']     = $oApplication->subscribe_title;
-                $aApplication['application_subscribe_button']    = $oApplication->subscribe_button;
+                $aApplication['application_welcome_message']       = !empty($oApplication->welcome) ? str_replace("\n", "\\n", $oApplication->welcome) : null;
+                $aApplication['application_welcome_message_part2'] = !empty($oApplication->welcome_part2) ? str_replace("\n", "\\n", $oApplication->welcome_part2) : null;
+                $aApplication['application_message_for_readers']   = $oApplication->message_for_readers;
+                $aApplication['application_share_url']             = $oApplication->share_url;
+                $aApplication['application_share_message']         = $oApplication->share_message;
+                $aApplication['application_notification_google']   = $oApplication->application_notification_google;
+                $aApplication['application_email']                 = $oApplication->application_email;
+                $aApplication['application_contact_email_subject'] = $oApplication->contact_email_subject;
+                $aApplication['application_contact_email_text']    = $oApplication->contact_email_text;
+                $aApplication['application_subscribe_title']       = $oApplication->subscribe_title;
+                $aApplication['application_subscribe_button']      = $oApplication->subscribe_button;
 
                 $oSubscriptions = AM_Model_Db_Table_Abstract::factory('subscription')->findAllBy(array('application' => $oApplication->id));
 
