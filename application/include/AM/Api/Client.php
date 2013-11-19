@@ -72,7 +72,7 @@ class AM_Api_Client extends AM_Api
         $bIsUdidUserAdmin = false;
         $oDevice          = null;
 
-        if ($this->authenticatePublisher($sPublisherToken) == RESULT_SUCCESS) {
+        if ($this->authenticatePublisher($sPublisherToken) == self::RESULT_SUCCESS) {
             $bIsUdidUserAdmin = true;
         }
 
@@ -333,10 +333,10 @@ class AM_Api_Client extends AM_Api
     public function authenticatePublisher($sPublisherToken) {
         $sPassword = Zend_Registry::get('config')->application->password;
         if (!empty($sPassword) && !empty($sPublisherToken) && $sPublisherToken == md5($sPassword)) {
-            return $this::RESULT_SUCCESS;
+            return self::RESULT_SUCCESS;
         }
         else {
-            return $this::RESULT_FAIL;
+            return self::RESULT_FAIL;
         }
     }
 }
