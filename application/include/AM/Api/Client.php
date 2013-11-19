@@ -51,7 +51,7 @@ class AM_Api_Client extends AM_Api
      * @param string $sUdid
      * @return array
      */
-    public function getIssues($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS)
+    public function getIssues($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS, $sPublisherToken = NULL)
     {
         $iApplicationId = intval($iApplicationId);
 
@@ -68,19 +68,12 @@ class AM_Api_Client extends AM_Api
         if (!is_null($sUdid)) {
             $sUdid = trim($sUdid);
         }
-        //Does udid belong to admin user
+
         $bIsUdidUserAdmin = false;
         $oDevice          = null;
 
-        if (!empty($sUdid)) {
-            $oDevice = AM_Model_Db_Table_Abstract::factory('device')->findOneBy(array('identifer' => $sUdid));
-            if (!is_null($oDevice)) {
-                $this->getLogger()->debug(sprintf('Existing device given: %s', $sUdid));
-                $oUser = $oDevice->getUser();
-                if (!is_null($oUser)) {
-                    $bIsUdidUserAdmin = (bool) $oUser->is_admin;
-                }
-            }
+        if ($this->authenticatePublisher($sPublisherToken) == RESULT_SUCCESS) {
+            $bIsUdidUserAdmin = true;
         }
 
         $aResult = array('code' => self::RESULT_SUCCESS, 'applications' => array());
@@ -335,5 +328,15 @@ class AM_Api_Client extends AM_Api
         $mResponse['help-page-horizontal'] = $oThumbnailer->getResolutions(AM_Model_Db_IssueHelpPage_Data_Abstract::TYPE . '-horizontal');
 
         return $mResponse;
+    }
+
+    public function authenticatePublisher($sPublisherToken) {
+        $sPassword = Zend_Registry::get('config')->application->password;
+        if (!empty($sPassword) && !empty($sPublisherToken) && $sPublisherToken == md5($sPassword)) {
+            return $this::RESULT_SUCCESS;
+        }
+        else {
+            return $this::RESULT_FAIL;
+        }
     }
 }
