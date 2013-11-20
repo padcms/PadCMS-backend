@@ -121,7 +121,6 @@ class AM_Api_Client extends AM_Api
                 $aApplication['application_message_for_readers']   = $oApplication->message_for_readers;
                 $aApplication['application_share_url']             = $oApplication->share_url;
                 $aApplication['application_share_message']         = $oApplication->share_message;
-                $aApplication['application_notification_google']   = $oApplication->application_notification_google;
                 $aApplication['application_email']                 = $oApplication->application_email;
                 $aApplication['application_contact_email_subject'] = $oApplication->contact_email_subject;
                 $aApplication['application_contact_email_text']    = $oApplication->contact_email_text;

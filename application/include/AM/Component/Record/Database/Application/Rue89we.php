@@ -144,10 +144,6 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
                 array(array('maximum length', 200))));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'application_notification_google',
-                'Notification Google'));
-
-        $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'application_email',
                 'Application email'));
 

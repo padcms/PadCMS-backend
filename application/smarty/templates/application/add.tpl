@@ -153,11 +153,6 @@
                             <div class="textarea-wrapper">{if isset($share_message)}{include file="Volcano/textarea.tpl" control=$share_message _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'Share message ...'|translate|cat:"'"}{/if}</div>
                             <div class="clr"></div>
                         </div>
-                        <div class="form-item{if isset($application_notification_google) && $application_notification_google.errors} error{/if}">
-                            <label>{if isset($application_notification_google)}{$application_notification_google.title|escape}{/if}</label>
-                            <div class="textarea-wrapper">{if isset($application_notification_google)}{include file="Volcano/textarea.tpl" control=$application_notification_google _rows=3 _cols=45 _class="form-textarea" _additional="title='"|cat:'Notification Google ...'|translate|cat:"'"}{/if}</div>
-                            <div class="clr"></div>
-                        </div>
                         <div class="form-item{if isset($application_email) && $application_email.errors} error{/if}">
                             <label>{if isset($application_email)}{$application_email.title|translate|escape}{/if}</label>
                             <div class="form-item-wrapper">{if isset($application_email)}{include file="Volcano/input.tpl" control=$application_email _class="form-text"}{/if}</div>
