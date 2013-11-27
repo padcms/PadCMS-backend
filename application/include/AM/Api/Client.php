@@ -72,15 +72,15 @@ class AM_Api_Client extends AM_Api
         $bIsUdidUserAdmin = false;
         $oDevice          = null;
 
-        if ($this->authenticatePublisher($sPublisherToken) == self::RESULT_SUCCESS) {
-            $bIsUdidUserAdmin = true;
-        }
-
         $aResult = array('code' => self::RESULT_SUCCESS, 'applications' => array());
 
         $oApplications = AM_Model_Db_Table_Abstract::factory('application')->findAllBy(array('id' => $iApplicationId, 'deleted' => 'no'));
 
         foreach ($oApplications as $oApplication) {
+
+            if ($this->authenticatePublisher($sPublisherToken, $oApplication->id, $oApplication) == self::RESULT_SUCCESS) {
+                $bIsUdidUserAdmin = true;
+            }
 
             if (!is_null($oDevice)) {
                 if (!is_null($oDevice->getUser()) && $oApplication->client == $oDevice->getUser()->client) {
@@ -157,7 +157,7 @@ class AM_Api_Client extends AM_Api
 
                 foreach($aProductIds as $sProductId) {
                     $oSubscription = AM_Model_Db_Table_Abstract::factory('purchase')
-                            ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $sProductId, 'deleted' => 'no'));
+                        ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $sProductId, 'deleted' => 'no'));
                     /* @var $oSubscription AM_Model_Db_Purchase */
                     if (!is_null($oSubscription)) {
                         $this->getLogger()->debug(sprintf('Found subscription for device: %s', $sUdid));
@@ -222,7 +222,7 @@ class AM_Api_Client extends AM_Api
                     if (!empty($oIssue->image)) {
                         $aIssue['issue_image_large'] = AM_Tools::getImageUrl('1066-600',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
-                                . '?' . strtotime($oIssue->updated);
+                            . '?' . strtotime($oIssue->updated);
 
                         $aIssue['issue_image_small'] = AM_Tools::getImageUrl('533-300',
                                 AM_Model_Db_Issue::PRESET_ISSUE_IMAGE, $oIssue->id, $oIssue->image, 'png')
@@ -241,7 +241,7 @@ class AM_Api_Client extends AM_Api
                     } else {
                         $this->getLogger()->debug(sprintf('Checking purchase: %s', $sUdid));
                         $oPurchase = AM_Model_Db_Table_Abstract::factory('purchase')
-                                ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $oIssue->product_id, 'deleted' => 'no'));
+                            ->findOneBy(array('device_id' => $oDevice->id, 'product_id' => $oIssue->product_id, 'deleted' => 'no'));
 
                         if (!is_null($oPurchase)) {
                             $this->getLogger()->debug(sprintf('Found purchase record: %s', $sUdid));
@@ -329,8 +329,13 @@ class AM_Api_Client extends AM_Api
         return $mResponse;
     }
 
-    public function authenticatePublisher($sPublisherToken) {
-        $sPassword = Zend_Registry::get('config')->application->password;
+    public function authenticatePublisher($sPublisherToken, $iApplicationId ,$oApplication = null) {
+        if (empty($oApplication)) {
+            $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
+        }
+        if (!empty($oApplication)) {
+            $sPassword = $oApplication->password;
+        }
         if (!empty($sPassword) && !empty($sPublisherToken) && $sPublisherToken == md5($sPassword)) {
             return self::RESULT_SUCCESS;
         }

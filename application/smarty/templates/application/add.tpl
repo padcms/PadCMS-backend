@@ -185,6 +185,12 @@
                             </div>
                         {/if}
 
+                        <div class="form-item{if isset($application_password) && $application_password.errors} error{/if}">
+                            <label>{if isset($application_password)}{$application_password.title|translate|escape}{/if}</label>
+                            <div class="form-item-wrapper">{if isset($application_password)}{include file="Volcano/input.tpl" control=$application_password _class="form-text"}{/if}</div>
+                            <div class="clr"></div>
+                        </div>
+
                         <h2>{'Push notification settings'|translate}</h2>
                         <div id="push-tabs">
                             <ul>

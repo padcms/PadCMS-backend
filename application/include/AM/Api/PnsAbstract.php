@@ -54,7 +54,7 @@ abstract class AM_Api_PnsAbstract extends AM_Api
      * @return void
      * @throws AM_Api_Apns_Exception
      */
-    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
+    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL, $sUdid = NULL)
     {
         $iApplicationId = intval($iApplicationId);
         $sToken         = trim($sToken);
@@ -63,6 +63,9 @@ abstract class AM_Api_PnsAbstract extends AM_Api
         }
         if (!empty($sVersionApp)) {
             $sVersionApp = trim($sVersionApp);
+        }
+        if (!empty($sUdid)) {
+            $sUdid = trim($sUdid);
         }
 
         if (empty($sToken)) {
@@ -75,6 +78,7 @@ abstract class AM_Api_PnsAbstract extends AM_Api
 
         if (!is_null($this->oDeviceToken)) {
             $this->oDeviceToken->token       = $sToken;
+            $this->oDeviceToken->udid        = $sUdid;
             $this->oDeviceToken->version_os  = $sVersionOs;
             $this->oDeviceToken->version_app = $sVersionApp;
             $this->oDeviceToken->updated     = new Zend_Db_Expr('NOW()');
@@ -87,6 +91,7 @@ abstract class AM_Api_PnsAbstract extends AM_Api
 
         $this->oDeviceToken                 = new AM_Model_Db_DeviceToken();
         $this->oDeviceToken->token          = $sToken;
+        $this->oDeviceToken->udid           = $sUdid;
         $this->oDeviceToken->application_id = $iApplicationId;
         $this->oDeviceToken->updated        = new Zend_Db_Expr('NOW()');
         $this->oDeviceToken->version_os     = $sVersionOs;

@@ -44,14 +44,15 @@ class AM_Api_PnsAndroid extends AM_Api_PnsAbstract
     /**
      * Saves device token, which will use to send notifications
      *
+     * @param string $sUdid
      * @param int $iApplicationId
      * @param string $sToken
      * @return void
      * @throws AM_Api_Apns_Exception
      */
-    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL)
+    public function setDeviceToken($iApplicationId, $sToken, $sVersionOs = NULL, $sVersionApp = NULL, $sUdid = NULL)
     {
-        $aResult = parent::setDeviceToken($iApplicationId, $sToken, $sVersionOs, $sVersionApp);
+        $aResult = parent::setDeviceToken($iApplicationId, $sToken, $sVersionOs, $sVersionApp, $sUdid);
 
         $this->oDeviceToken->type_os = AM_Model_Pns_Type::PLATFORM_ANDROID;
         $this->oDeviceToken->save();

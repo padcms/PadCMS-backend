@@ -162,6 +162,10 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
                 'subscribe_button', 'Subscribe button subtitle', array(), 'subscribe_button'));
 
+        $this->addControl(new Volcano_Component_Control_Database($oActionController,
+                'application_password',
+                'Application password', array(), 'password'));
+
         $this->addControl(new Volcano_Component_Control_Database_Static($oActionController,
                 'updated',
                 new Zend_Db_Expr('NOW()')));
