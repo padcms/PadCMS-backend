@@ -83,7 +83,7 @@ class AM_Component_Record_Database_Issue_Rue89we extends AM_Component_Record_Dat
                 'subscribe_button', 'Subscribe button subtitle', array(), 'subscribe_button'));
 
         $this->addControl(new Volcano_Component_Control_Database($oActionController,
-                'exclude', 'Exclude issue from Android feed', array(), 'exclude'));
+                'exclude', 'Exclude issue from feed', array(), 'exclude'));
 
         $this->removeControl('product_id');
         $this->removeControl('paid');
