@@ -239,6 +239,14 @@
           </div>
         {/if}
 
+        {if isset($exclude)}
+            <div class="form-item{if isset($exclude) && $exclude.errors} error{/if}">
+                <label>{if isset($exclude)}{$exclude.title|escape}{/if}</label>
+                <div class="form-item-wrapper">{if isset($exclude)}{include file="Volcano/checkbox.tpl" control=$exclude _class="form-text"}{/if}</div>
+                <div class="clr"></div>
+            </div>
+        {/if}
+
         <div class="form-item{if isset($issue_color) && $issue_color.errors} error{/if}">
           <label>{if isset($issue_color)}{$issue_color.title|escape}{/if}</label>
 

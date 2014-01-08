@@ -191,6 +191,9 @@ class AM_Api_Client extends AM_Api
 
             $oIssues = AM_Model_Db_Table_Abstract::factory('issue')->findAllBy($aCriteria);
             foreach ($oIssues as $oIssue) {
+                if (!empty($oIssue->exclude)) {
+                    continue;
+                }
                 $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
                     array(
                          'entity' => $oIssue->id,
@@ -213,6 +216,7 @@ class AM_Api_Client extends AM_Api
                     'revisions'                  => array(),
                     'tags'                       => $aTags,
                     'issue_publish_date'         => ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED && !empty($oIssue->publish_date)) ? $oIssue->publish_date : null,
+                    'updated'                    => $oIssue->updated,
                 );
 
                 if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_GENERIC) {
