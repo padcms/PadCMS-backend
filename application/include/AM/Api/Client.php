@@ -123,7 +123,8 @@ class AM_Api_Client extends AM_Api
                 'application_notification_twitter'     => $oApplication->{'nm_twitter_' . $sPlatform},
                 'application_notification_facebook'    => $oApplication->{'nm_fbook_' . $sPlatform},
                 'application_preview'                  => $oApplication->preview,
-                'application_tags'                     => $aApplicationTags
+                'application_tags'                     => $aApplicationTags,
+                'application_updated'                  => strtotime($oApplication->updated)
             );
 
             if ($oApplication->type == AM_Model_Db_ApplicationType::TYPE_RUE98WE) {
