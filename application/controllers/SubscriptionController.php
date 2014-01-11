@@ -93,6 +93,8 @@ class SubscriptionController extends AM_Controller_Action
         if ($oComponent->operation()) {
             $oSubscription = AM_Model_Db_Table_Abstract::factory('subscription')->findOneBy('id', $oComponent->getPrimaryKeyValue());
 
+            $this->updateApplication();
+
             return $this->_redirect('/subscription/list/aid/' . $oSubscription->application);
         }
         $oComponent->show();
@@ -134,6 +136,14 @@ class SubscriptionController extends AM_Controller_Action
         $oSubscription = AM_Model_Db_Table_Abstract::factory('subscription')->findOneBy('id', $iSubscriptionId);
         $oSubscription->delete();
 
+        $this->updateApplication();
+
         $this->_redirect('/subscription/list/aid/' . $this->iApplicationId);
+    }
+
+    protected function updateApplication() {
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $this->iApplicationId);
+        $oApplication->updated = new Zend_Db_Expr('NOW()');
+        $oApplication->save();
     }
 }

@@ -358,4 +358,17 @@ class AM_Api_Client extends AM_Api
             return self::RESULT_FAIL;
         }
     }
+
+    public function isApplicationUpdated($iApplicationId, $iUpdatedTimestamp) {
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
+        if (!empty($oApplication)) {
+            if ($iUpdatedTimestamp <= strtotime($oApplication->updated)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
 }

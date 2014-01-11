@@ -53,6 +53,9 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
     /** @var AM_Model_Db_Issue **/
     protected $_oIssue = null; /**< @type AM_Model_Db_Issue */
 
+    /** @var AM_Model_Db_Application **/
+    protected $_oApplication = null; /**< @type AM_Model_Db_Application */
+
     /** @var AM_Model_Db_Template **/
     protected $_oTemplate = null; /**< @type AM_Model_Db_Template */
 
@@ -474,6 +477,34 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
     }
 
     /**
+     * Get pages application
+     * @return AM_Model_Db_Application
+     */
+    public function getApplication()
+    {
+        if (empty($this->_oApplication)) {
+            $this->fetchApplication();
+        }
+
+        return $this->_oApplication;
+    }
+
+    /**
+     * Fetch pages application
+     * @return AM_Model_Db_Page
+     */
+    public function fetchApplication()
+    {
+        $this->_oApplication = $this->getIssue()->getApplication();
+
+        if (is_null($this->_oApplication)) {
+            throw new AM_Model_Db_Exception(sprintf('Page "%s" has no application', $this->id));
+        }
+
+        return $this;
+    }
+
+    /**
      * Get page template
      * @return AM_Model_Db_Template
      */
@@ -658,12 +689,14 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
         $oExportHandler = AM_Handler_Locator::getInstance()->getHandler('export');
         /* @var $handler AM_Handler_Export */
 
-        $this->updated                = new Zend_Db_Expr('NOW()');
+        $this->updated                      = new Zend_Db_Expr('NOW()');
         $this->save();
-        $this->getRevision()->updated = new Zend_Db_Expr('NOW()');
+        $this->getRevision()->updated       = new Zend_Db_Expr('NOW()');
         $this->getRevision()->save();
-        $this->getIssue()->updated    = new Zend_Db_Expr('NOW()');
+        $this->getIssue()->updated          = new Zend_Db_Expr('NOW()');
         $this->getIssue()->save();
+        $this->getApplication()->updated    = new Zend_Db_Expr('NOW()');
+        $this->getApplication()->save();
 
         if (!$bUpdateBackground) {
             $oExportHandler->initExportProcess($this->getRevision());

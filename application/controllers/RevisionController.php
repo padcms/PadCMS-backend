@@ -42,6 +42,7 @@ class RevisionController extends AM_Controller_Action
 {
     protected $iIssueId          = null; /**< @type int */
     public    $oHelperBreadCrumb = null; /**< @type AM_View_Helper_Breadcrumbs */
+    protected $iApplicationId = null; /**< @type int */
 
     public function preDispatch() {
         parent::preDispatch();
@@ -51,6 +52,9 @@ class RevisionController extends AM_Controller_Action
         if ($this->iIssueId && !AM_Model_Db_Table_Abstract::factory('issue')->checkAccess($this->iIssueId, $this->_aUserInfo)) {
             throw new AM_Controller_Exception_Forbidden('Access denied');
         }
+
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->iIssueId);
+        $this->iApplicationId = $oIssue->application;
 
         $this->oHelperBreadCrumb = new AM_View_Helper_Breadcrumbs($this->view, $this->oDb, $this->getUser(),
                                                            AM_View_Helper_Breadcrumbs::REV, $this->_getAllParams());
@@ -95,6 +99,8 @@ class RevisionController extends AM_Controller_Action
                 throw new AM_Controller_Exception(sprintf('Can\'t find revision by id "%d"', $iRevisionId));
             }
             $oRevision->exportRevision();
+
+            $this->updateApplication();
             $this->_redirect('/revision/list/iid/' . $this->iIssueId);
         }
         $oComponentRecordRevision->show();
@@ -137,6 +143,8 @@ class RevisionController extends AM_Controller_Action
             }
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage["message"]      = 'Error. Can\'t publish revision' . PHP_EOL . $e->getMessage();
             $aMessage["errorMessage"] = $e->getMessage();
@@ -161,6 +169,8 @@ class RevisionController extends AM_Controller_Action
             throw new AM_Controller_Exception(sprintf('Can\'t find revision by id "%d"', $iRevisionId));
         }
         $oRevision->delete();
+
+        $this->updateApplication();
 
         return $this->_redirect('/revision/list/iid/' . $this->iIssueId);
     }
@@ -217,10 +227,23 @@ class RevisionController extends AM_Controller_Action
             $oRevision->$sMethod($oIssue);
 
             $aMessage["status"] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage["message"] = $e->getMessage();
         }
 
         return $this->getHelper('Json')->sendJson($aMessage);
+    }
+
+    protected function updateApplication() {
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $this->iApplicationId);
+        $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->iIssueId);
+        if ($oIssue->state == AM_Model_Db_State::STATE_PUBLISHED) {
+            $oIssue->updated = new Zend_Db_Expr('NOW()');
+            $oIssue->save();
+            $oApplication->updated = new Zend_Db_Expr('NOW()');
+            $oApplication->save();
+        }
     }
 }

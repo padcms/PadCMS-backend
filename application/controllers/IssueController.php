@@ -108,6 +108,7 @@ class IssueController extends AM_Controller_Action
             $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $oComponentRecord->getPrimaryKeyValue());
             //Init export processes
             $oIssue->exportRevisions();
+            $this->updateApplication();
         }
 
         if ($sResult) {
@@ -169,6 +170,8 @@ class IssueController extends AM_Controller_Action
         /* @var $oIssue AM_Model_Db_Issue */
         $oIssue->delete();
 
+        $this->updateApplication();
+
         return $this->_redirect('/issue/list/aid/' . $this->iApplicationId);
     }
 
@@ -210,6 +213,8 @@ class IssueController extends AM_Controller_Action
             }
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage['message']      = 'Error. Can\'t publish issue.' . PHP_EOL . $e->getMessage();
         }
@@ -261,6 +266,8 @@ class IssueController extends AM_Controller_Action
             $aMessage['issueStaticPdfMode'] = $oIssue->static_pdf_mode;
             $aMessage['staticPdf']          = $oHorisontalPdf->id;
             $aMessage['status']             = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             if (isset($oHorisontalPdf)) {
                 $oHorisontalPdf->delete();
@@ -316,6 +323,8 @@ class IssueController extends AM_Controller_Action
             $aMessage['file']      = $aFile;
             $aMessage['simplePdf'] = $oSimplePdf->id_issue;
             $aMessage['status']    = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             if (isset($oSimplePdf)) {
                 $oSimplePdf->delete();
@@ -346,6 +355,8 @@ class IssueController extends AM_Controller_Action
             AM_Tools::clearResizerCache(AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, AM_Model_Db_IssueSimplePdf_Data_Abstract::TYPE, $iIssueId);
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage["message"]      = 'Error. Can\'t delete simple pdf.' . PHP_EOL . $e->getMessage();
         }
@@ -382,6 +393,8 @@ class IssueController extends AM_Controller_Action
             $oIssue->exportRevisions();
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage["message"] = 'Error. Can\'t change weight.' . PHP_EOL . $e->getMessage();
         }
@@ -425,6 +438,8 @@ class IssueController extends AM_Controller_Action
             $oIssue->exportRevisions();
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage['message']      = 'Error. Can\'t delete static pdf.' . PHP_EOL . $e->getMessage();
         }
@@ -461,6 +476,8 @@ class IssueController extends AM_Controller_Action
 
         $this->view->error   = 1;
         $this->view->issueId = $iIssueId;
+
+        $this->updateApplication();
     }
 
     /**
@@ -507,6 +524,8 @@ class IssueController extends AM_Controller_Action
             $oIssue->$sMethod($oUser, $oApplication);
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage['message'] = $e->getMessage();
         }
@@ -555,6 +574,8 @@ class IssueController extends AM_Controller_Action
 
             $aMessage['file']      = $aFile;
             $aMessage['status']    = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             if (isset($oHelpPage)) {
                 $oHelpPage->delete();
@@ -595,6 +616,8 @@ class IssueController extends AM_Controller_Action
             $oIssue->exportRevisions();
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage['message'] = 'Error. Can\'t delete help page. ' . PHP_EOL . $e->getMessage();
         }
@@ -612,6 +635,19 @@ class IssueController extends AM_Controller_Action
         }
         else {
             return null;
+        }
+    }
+
+    protected function updateApplication() {
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $this->iApplicationId);
+        if (!empty($this->iIssueId)) {
+            $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->iIssueId);
+        }
+        if (!empty($oIssue) && $oIssue->state == AM_Model_Db_State::STATE_PUBLISHED) {
+            $oIssue->updated = new Zend_Db_Expr('NOW()');
+            $oIssue->save();
+            $oApplication->updated = new Zend_Db_Expr('NOW()');
+            $oApplication->save();
         }
     }
 }

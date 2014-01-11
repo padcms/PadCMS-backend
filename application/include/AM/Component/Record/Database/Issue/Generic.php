@@ -151,7 +151,17 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
             $this->controls['state']->setValue(AM_Model_Db_State::STATE_WORK_IN_PROGRESS);
         }
 
-        return parent::operation();
+
+        $bResult = parent::operation();
+
+        if ($bResult) {
+            $oIssue = AM_Model_Db_Table_Abstract::factory('issue')->findOneBy('id', $this->primaryKeyValue);
+            $oApplication = $oIssue->getApplication();
+            $oApplication->updated = new Zend_Db_Expr('NOW()');
+            $oApplication->save();
+        }
+
+        return $bResult;
     }
 
     /**

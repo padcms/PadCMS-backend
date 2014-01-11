@@ -99,6 +99,7 @@ class ApplicationController extends AM_Controller_Action
                 /* @var $oIssue AM_Model_Db_Issue */
                 $oIssue->exportRevisions();
             }
+            $this->updateApplication($oApplication->id);
 
             if (is_a($oComponent, 'AM_Component_Record_Database_Application_Add')) {
                 return $this->_redirect("/application/edit/aid/{$oApplication->id}/cid/$iClientId");
@@ -106,7 +107,6 @@ class ApplicationController extends AM_Controller_Action
             else {
                 return $this->_redirect('/application/list/cid/' . $iClientId);
             }
-
         }
 
         $oComponent->show();
@@ -198,6 +198,8 @@ class ApplicationController extends AM_Controller_Action
             $oApplication->$sMethod($oUser);
 
             $aMessage['status'] = 1;
+
+            $this->updateApplication();
         } catch (Exception $e) {
             $aMessage['message'] = $e->getMessage();
         }
@@ -245,6 +247,7 @@ class ApplicationController extends AM_Controller_Action
         $aExistingTags  = !empty($_POST['existingTags']) ? $_POST['existingTags'] : array();
         $iApplicationId = $_POST['aid'];
         AM_Model_Db_Table_Abstract::factory('term')->updateTagsForApplication($aExistingTags, $iApplicationId);
+        $this->updateApplication($iApplicationId);
 
         $oTags = array();
         foreach ($oTags as $oTag) {
@@ -280,5 +283,14 @@ class ApplicationController extends AM_Controller_Action
         );
 
         return $this->getHelper('Json')->sendJson($aTags);
+    }
+
+    protected function updateApplication($iApplicationId = null) {
+        if (empty($iApplicationId)) {
+            $iApplicationId = intval($this->_getParam('aid'));
+        }
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $iApplicationId);
+        $oApplication->updated = new Zend_Db_Expr('NOW()');
+        $oApplication->save();
     }
 }
