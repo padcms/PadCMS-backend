@@ -363,7 +363,7 @@ class AM_Api_Client extends AM_Api
     public function isApplicationUpdated($iApplicationId, $iUpdatedTimestamp) {
         $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
         if (!empty($oApplication)) {
-            if ($iUpdatedTimestamp <= strtotime($oApplication->updated)) {
+            if ($iUpdatedTimestamp < strtotime($oApplication->updated)) {
                 return true;
             }
             else {

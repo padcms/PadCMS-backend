@@ -1744,7 +1744,8 @@ a.cbutton-add span {
 }
 
 .accordion-panel #edit-pdf-wrapper label,
-.accordion-panel #edit-has-photo-wrapper label{
+.accordion-panel #edit-has-photo-wrapper label,
+.accordion-panel #edit-show-top-wrapper label{
   padding: 2px 0 0;
 }
 

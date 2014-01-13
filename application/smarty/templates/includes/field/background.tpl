@@ -1,4 +1,3 @@
-
 <input type="hidden" name="field-id" value="{$field.fieldId}" />
 
 <h3 class="head">Background</h3>
@@ -39,5 +38,14 @@
 
         </div>
     </div>
+
+    {if $template == 'scrolling_page'}
+    <div id="edit-show-top-wrapper" class="form-item">
+        <label>{'Show on top'|translate}</label>
+        <div class="checks">
+            <input type="checkbox" onchange="fieldBackground.onChangeShowOnTop(this);" name="partner" value="" {if isset($field.element) && $field.element.showOnTop}checked="checked"{/if} />
+        </div>
+    </div>
+    {/if}
 
 </div>

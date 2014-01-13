@@ -155,5 +155,11 @@ var fieldBackground = {
                 context.init();
             }
         });
+    },
+
+    onChangeShowOnTop: function(element) {
+        var context = this;
+        var value = $(element).attr('checked');
+        context.onSave('showOnTop', value ? 1 : 0);
     }
 }

@@ -49,6 +49,14 @@ class AM_View_Helper_Field_Background extends AM_View_Helper_Field
             /* @var $oElement AM_Model_Db_Element */
             $aElementView = array('id' => $oElement->id);
 
+            $aExtraDataItem = array(
+                AM_Model_Db_Element_Data_Background::DATA_KEY_SHOW_ON_TOP
+            );
+
+            foreach ($aExtraDataItem as $sItem) {
+                $aElementView[$sItem] = $oElement->getResources()->getDataValue($sItem);
+            }
+
             $aResourceView = $this->_getResourceViewData($oElement);
             $aElementView  = array_merge($aElementView, $aResourceView);
         }
