@@ -76,9 +76,14 @@ var fieldBackground = {
                 }
             });
         });
+
+        if (!$('.show-on-top .jquery-checkbox').hasClass('jquery-checkbox-checked')) {
+            this.onSave('showOnTop', 0);
+        }
     },
 
     onSave: function(key, value) {
+
         var context = this;
 
         if (!key)

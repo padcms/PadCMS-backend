@@ -42,7 +42,7 @@
     {if $template == 'scrolling_page'}
     <div id="edit-show-top-wrapper" class="form-item">
         <label>{'Show on top'|translate}</label>
-        <div class="checks">
+        <div class="checks show-on-top">
             <input type="checkbox" onchange="fieldBackground.onChangeShowOnTop(this);" name="partner" value="" {if isset($field.element) && $field.element.showOnTop}checked="checked"{/if} />
         </div>
     </div>
