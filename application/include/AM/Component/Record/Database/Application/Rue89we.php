@@ -219,4 +219,32 @@ class AM_Component_Record_Database_Application_Rue89we extends AM_Component_Reco
         $sProductId = $this->controls['product_id']->getValue();
         $this->controls['product_id']->setValue(AM_Tools::filter_xss($sProductId));
     }
+
+    /**
+     * @return string
+     */
+    public function operation()
+    {
+        $bResult = parent::operation();
+
+        if ($bResult) {
+            // Update application cache
+            $api_client = new AM_Api_Client();
+            $cache_data_ios = $api_client->getIssuesNoCache($this->primaryKeyValue);
+            $cache_data_android = $api_client->getIssuesNoCache($this->primaryKeyValue, null, 'android');
+            $cache_data_ios = json_encode($cache_data_ios);
+            $cache_data_android = json_encode($cache_data_android);
+
+            $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $this->primaryKeyValue);
+            if (empty($oCache)) {
+                $oCache = new AM_Model_Db_Cache();
+                $oCache->application_id = $this->primaryKeyValue;
+            }
+            $oCache->data_ios = $cache_data_ios;
+            $oCache->data_android = $cache_data_android;
+            $oCache->save();
+        }
+
+        return $bResult;
+    }
 }

@@ -65,6 +65,107 @@ class AM_Api_Client extends AM_Api
             $sPlatform = self::PLATFORM_IOS;
         }
 
+        if (!empty($sPublisherToken)) {
+            return $this->getIssuesNoCache($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS, $sPublisherToken = NULL);
+        }
+
+        $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $iApplicationId);
+        if (empty($oCache)) {
+            $oCache = new AM_Model_Db_Cache();
+            $oCache->application_id = $iApplicationId;
+            $oCache->save();
+        }
+
+        if (!empty($sPlatform) && $sPlatform == 'android') {
+            if (empty($oCache->data_android)) {
+                $cache_data_android = $this->getIssuesNoCache($iApplicationId, null, 'android');
+                $oCache->data_android = json_encode($cache_data_android);
+                $oCache->save();
+            }
+            return json_decode($oCache->data_android, true);
+        }
+        else {
+            if (empty($oCache->data_ios)) {
+                $cache_data_ios = $this->getIssuesNoCache($iApplicationId);
+                $oCache->data_ios = json_encode($cache_data_ios);
+                $oCache->save();
+            }
+            return json_decode($oCache->data_ios, true);
+        }
+    }
+
+    /**
+     * Get resolutions list
+     *
+     * @return array
+     * @throws AM_Api_Client_Exception
+     */
+    public function getResolutions()
+    {
+        $mResponse = array();
+
+        $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
+        /* @var $oThumbnailer AM_Handler_Thumbnail */
+
+        $mResponse['page-horizontal']      = $oThumbnailer->getResolutions(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE);
+        $mResponse['menu']                 = $oThumbnailer->getResolutions(AM_Model_Db_Term_Data_Abstract::TYPE);
+        $mResponse['element-vertical']     = $oThumbnailer->getResolutions(AM_Model_Db_Element_Data_Abstract::TYPE . '-vertical');
+        $mResponse['element-horizontal']   = $oThumbnailer->getResolutions(AM_Model_Db_Element_Data_Abstract::TYPE . '-horizontal');
+        $mResponse['help-page-vertical']   = $oThumbnailer->getResolutions(AM_Model_Db_IssueHelpPage_Data_Abstract::TYPE . '-vertical');
+        $mResponse['help-page-horizontal'] = $oThumbnailer->getResolutions(AM_Model_Db_IssueHelpPage_Data_Abstract::TYPE . '-horizontal');
+
+        return $mResponse;
+    }
+
+    public function authenticatePublisher($sPublisherToken, $iApplicationId ,$oApplication = null) {
+        if (empty($oApplication)) {
+            $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
+        }
+        if (!empty($oApplication)) {
+            $sPassword = $oApplication->password;
+        }
+        if (!empty($sPassword) && !empty($sPublisherToken) && $sPublisherToken == md5($sPassword)) {
+            return self::RESULT_SUCCESS;
+        }
+        else {
+            return self::RESULT_FAIL;
+        }
+    }
+
+    public function isApplicationUpdated($iApplicationId, $iUpdatedTimestamp) {
+        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
+        if (!empty($oApplication)) {
+            if ($iUpdatedTimestamp < strtotime($oApplication->updated)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get client application/issues/revision tree no cache
+     *
+     * @param int $iApplicationId
+     * @param string $sUdid
+     * @return array
+     */
+    public function getIssuesNoCache($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS, $sPublisherToken = NULL)
+    {
+        $iApplicationId = intval($iApplicationId);
+
+        if ($iApplicationId <= 0) {
+            throw new AM_Api_Client_Exception(sprintf('Invalid application id "%d"', $iApplicationId));
+        }
+
+        $sPlatform = trim($sPlatform);
+
+        if (!in_array($sPlatform, $this->_aValidPlatforms)) {
+            $sPlatform = self::PLATFORM_IOS;
+        }
+
 //        if (!is_null($sUdid)) {
 //            $sUdid = trim($sUdid);
 //        }
@@ -89,9 +190,9 @@ class AM_Api_Client extends AM_Api
 
         foreach ($oApplications as $oApplication) {
 
-//            if (!empty($sPublisherToken) && $this->authenticatePublisher($sPublisherToken, $oApplication->id, $oApplication) == self::RESULT_SUCCESS) {
-//                $bIsUdidUserAdmin = true;
-//            }
+            if (!empty($sPublisherToken) && $this->authenticatePublisher($sPublisherToken, $oApplication->id, $oApplication) == self::RESULT_SUCCESS) {
+                $bIsUdidUserAdmin = true;
+            }
 
             if (!is_null($oDevice)) {
                 if (!is_null($oDevice->getUser()) && $oApplication->client == $oDevice->getUser()->client) {
@@ -320,56 +421,5 @@ class AM_Api_Client extends AM_Api
         }
 
         return $aResult;
-    }
-
-    /**
-     * Get resolutions list
-     *
-     * @return array
-     * @throws AM_Api_Client_Exception
-     */
-    public function getResolutions()
-    {
-        $mResponse = array();
-
-        $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
-        /* @var $oThumbnailer AM_Handler_Thumbnail */
-
-        $mResponse['page-horizontal']      = $oThumbnailer->getResolutions(AM_Model_Db_StaticPdf_Data_Abstract::TYPE_CACHE);
-        $mResponse['menu']                 = $oThumbnailer->getResolutions(AM_Model_Db_Term_Data_Abstract::TYPE);
-        $mResponse['element-vertical']     = $oThumbnailer->getResolutions(AM_Model_Db_Element_Data_Abstract::TYPE . '-vertical');
-        $mResponse['element-horizontal']   = $oThumbnailer->getResolutions(AM_Model_Db_Element_Data_Abstract::TYPE . '-horizontal');
-        $mResponse['help-page-vertical']   = $oThumbnailer->getResolutions(AM_Model_Db_IssueHelpPage_Data_Abstract::TYPE . '-vertical');
-        $mResponse['help-page-horizontal'] = $oThumbnailer->getResolutions(AM_Model_Db_IssueHelpPage_Data_Abstract::TYPE . '-horizontal');
-
-        return $mResponse;
-    }
-
-    public function authenticatePublisher($sPublisherToken, $iApplicationId ,$oApplication = null) {
-        if (empty($oApplication)) {
-            $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
-        }
-        if (!empty($oApplication)) {
-            $sPassword = $oApplication->password;
-        }
-        if (!empty($sPassword) && !empty($sPublisherToken) && $sPublisherToken == md5($sPassword)) {
-            return self::RESULT_SUCCESS;
-        }
-        else {
-            return self::RESULT_FAIL;
-        }
-    }
-
-    public function isApplicationUpdated($iApplicationId, $iUpdatedTimestamp) {
-        $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy(array('id' => $iApplicationId));
-        if (!empty($oApplication)) {
-            if ($iUpdatedTimestamp < strtotime($oApplication->updated)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        return false;
     }
 }
