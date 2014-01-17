@@ -89,9 +89,9 @@ class AM_Api_Client extends AM_Api
 
         foreach ($oApplications as $oApplication) {
 
-            if (!empty($sPublisherToken) && $this->authenticatePublisher($sPublisherToken, $oApplication->id, $oApplication) == self::RESULT_SUCCESS) {
-                $bIsUdidUserAdmin = true;
-            }
+//            if (!empty($sPublisherToken) && $this->authenticatePublisher($sPublisherToken, $oApplication->id, $oApplication) == self::RESULT_SUCCESS) {
+//                $bIsUdidUserAdmin = true;
+//            }
 
             if (!is_null($oDevice)) {
                 if (!is_null($oDevice->getUser()) && $oApplication->client == $oDevice->getUser()->client) {
