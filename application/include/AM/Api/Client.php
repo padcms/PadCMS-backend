@@ -65,7 +65,7 @@ class AM_Api_Client extends AM_Api
             $sPlatform = self::PLATFORM_IOS;
         }
 
-        if (!empty($sPublisherToken)) {
+        if (!empty($sPublisherToken) || !empty($sUdid)) {
             return $this->getIssuesNoCache($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS, $sPublisherToken = NULL);
         }
 

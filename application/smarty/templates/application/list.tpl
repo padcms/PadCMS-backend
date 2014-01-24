@@ -44,6 +44,8 @@
                                 {if $item.type == 'rue98we'}
                                     <a href="/subscription/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'List subscription'|translate}</span></span></a>
                                 {/if}
+
+                                <a href="#" class="cbutton cbutton-green cbutton-clear-cache" id="cc-{$item.id}-{$clientId}"><span><span class="ico">{'Clr cache'|translate}</span></span></a>
                             </div>
                         </div>
                     </div>

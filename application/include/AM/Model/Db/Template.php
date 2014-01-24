@@ -59,6 +59,10 @@ class AM_Model_Db_Template extends AM_Model_Db_Abstract
     const TPL_HTML5                                   = 18;
     const TPL_GAMES                                   = 19;
     const TPL_3D                                      = 21;
+    const TPL_ANIMATED_GIFS                           = 22;
+    const TPL_MULTI_POPUPS                            = 23;
+    const TPL_NAVIGATION_MENU_FIXED                   = 24;
+    const TPL_DIAPORAMA_IN_A_LONG_ARTICLE             = 25;
 
     /**
      * Checks if connector with link type $linkType exists

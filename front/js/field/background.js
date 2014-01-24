@@ -77,7 +77,7 @@ var fieldBackground = {
             });
         });
 
-        if (!$('.show-on-top .jquery-checkbox').hasClass('jquery-checkbox-checked')) {
+        if ($('.show-on-top .jquery-checkbox').length && !$('.show-on-top .jquery-checkbox').hasClass('jquery-checkbox-checked')) {
             this.onSave('showOnTop', 0);
         }
     },

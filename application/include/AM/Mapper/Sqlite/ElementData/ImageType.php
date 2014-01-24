@@ -38,17 +38,22 @@
 /**
  * @ingroup AM_Mapper
  */
-class AM_Mapper_Sqlite_ElementData_PdfInfo extends AM_Mapper_Sqlite_Abstract
+class AM_Mapper_Sqlite_ElementData_ImageType extends AM_Mapper_Sqlite_Abstract
 {
     /**
      * @return AM_Mapper_Sqlite_ElementData_PdfInfo
      */
     protected function _unmapCustom()
     {
-        if (!empty($this->getModel()->value)) {
-            $aPdfInfo     = Zend_Json_Decoder::decode($this->getModel()->value, true);
-            $sContentText = $aPdfInfo['text'];
-            $this->_unmapPdfInfo($aPdfInfo);
+        $oElementData = $this->getModel()->getPdfInfoElementData($this->getModel()->getElement()->getField()->id);
+        if (!empty($oElementData)) {
+            $aPdfInfo = Zend_Json_Decoder::decode($oElementData->value, true);
+        }
+        if (!empty($aPdfInfo['zones'])) {
+            $this->_unmapImageType($aPdfInfo['zones']);
+        }
+        else {
+            $this->_unmapImageType();
         }
 
         return $this;
@@ -60,34 +65,25 @@ class AM_Mapper_Sqlite_ElementData_PdfInfo extends AM_Mapper_Sqlite_Abstract
      * @param array $aPdfInfo
      * @return AM_Mapper_Sqlite_ElementData_PdfInfo
      */
-    private function _unmapPdfInfo($aPdfInfo)
+    private function _unmapImageType($aImageZones = null)
     {
-        //Parse page size
-        if (array_key_exists('width', $aPdfInfo)) {
-            $aData = array(
-                'element_id'  => $this->getModel()->id_element,
-                'type'        => 'width',
-                'value'       => $aPdfInfo['width'],
-                'position_id' => 0
-            );
-            $this->_getSqliteGateway('element_data')->insert($aData);
-        }
-
-        if (array_key_exists('height', $aPdfInfo)) {
-            $aData = array(
-                'element_id'  => $this->getModel()->id_element,
-                'type'        => 'height',
-                'value'       => $aPdfInfo['height'],
-                'position_id' => 0
-            );
-            $this->_getSqliteGateway('element_data')->insert($aData);
-        }
-
-        if (array_key_exists('zones', $aPdfInfo)) {
-            foreach ($aPdfInfo['zones'] as $aZone) {
-//                if (strpos($aZone['uri'], 'gallery') !== FALSE || strpos($aZone['uri'], 'popup') !== FALSE) {
-//                    continue;
-//                }
+        $iPositionId = 0;
+        $zoneWeight = -1;
+        $aFieldsWithDefinedZones = array(
+            64 => 'gallery',
+            66 => 'popup'
+        );
+        $iFieldId = $this->getModel()->getElement()->getField()->id;
+        if (!empty($aImageZones) && array_key_exists($iFieldId, $aFieldsWithDefinedZones)) {
+            foreach ($aImageZones as $aZone) {
+                if (strpos($aZone['uri'], $aFieldsWithDefinedZones[$iFieldId]) !== FALSE) {
+                    $zoneWeight = filter_var($aZone['uri'], FILTER_SANITIZE_NUMBER_INT);
+                    if ($zoneWeight == $this->getModel()->getElement()->weight) {
+                        break;
+                    }
+                }
+            }
+            if ($zoneWeight == $this->getModel()->getElement()->weight) {
                 $aData = array(
                     'start_x' => $aZone['llx'],
                     'end_x'   => $aZone['urx'],
@@ -96,16 +92,16 @@ class AM_Mapper_Sqlite_ElementData_PdfInfo extends AM_Mapper_Sqlite_Abstract
                 );
 
                 $iPositionId = $this->_getSqliteGateway('element_data_position')->insert($aData);
-
-                $aData = array(
-                    'element_id'  => $this->getModel()->id_element,
-                    'type'        => 'active_zone',
-                    'value'       => $aZone['uri'],
-                    'position_id' => $iPositionId
-                );
-                $this->_getSqliteGateway('element_data')->insert($aData);
             }
         }
+
+        $aData = array(
+            'element_id'  => $this->getModel()->id_element,
+            'type'        => $this->getModel()->key_name,
+            'value'       => $this->getModel()->value,
+            'position_id' => $iPositionId
+        );
+        $this->_getSqliteGateway('element_data')->insert($aData);
 
         return $this;
     }

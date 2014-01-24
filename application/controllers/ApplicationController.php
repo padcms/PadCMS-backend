@@ -293,4 +293,37 @@ class ApplicationController extends AM_Controller_Action
         $oApplication->updated = new Zend_Db_Expr('NOW()');
         $oApplication->save();
     }
+
+
+    /**
+     * Action for clear application cache
+     */
+    public function clearCacheAction()
+    {
+        $aMessage = array('status' => 0, 'message' => '');
+
+        try {
+
+            $iApplicationId = $this->_getParam('aid');
+            $iClientId      = $this->_getParam('cid');
+
+            if (empty($iApplicationId)  || empty($iClientId)) {
+                throw new AM_Controller_Exception_BadRequest('Incorrect parameters were given');
+            }
+
+            $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $iApplicationId);
+
+            if ($iApplicationId && !AM_Model_Db_Table_Abstract::factory('application')->checkAccess($iApplicationId, $this->_aUserInfo)) {
+                throw new AM_Controller_Exception_Forbidden('Access denied');
+            }
+
+            $oApplication->clearCache();
+
+            $aMessage['status'] = 1;
+        } catch (Exception $e) {
+            $aMessage['message'] = $e->getMessage();
+        }
+
+        return $this->getHelper('Json')->sendJson($aMessage);
+    }
 }

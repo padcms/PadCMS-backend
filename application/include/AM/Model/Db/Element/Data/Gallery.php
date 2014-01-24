@@ -43,10 +43,12 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 {
     const DATA_KEY_GALLERY_ID  = 'gallery_id';
     const DATA_KEY_ENABLE_ZOOM = 'zoom';
+    const DATA_GIF_RESOURCE    = 'gif_resource';
 
 
     protected static $_aAllowedFileExtensions = array(
-        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png')
+        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png'),
+        self::DATA_GIF_RESOURCE => array('gif')
     );
 
     /**
@@ -93,6 +95,74 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 
     public function getImageType($sKeyName = self::DATA_KEY_RESOURCE)
     {
+        if ($this->_oElement->getField()->template == AM_Model_Db_Template::TPL_ANIMATED_GIFS) {
+            return AM_Handler_Thumbnail::IMAGE_TYPE_GIF;
+        }
+
         return AM_Handler_Thumbnail::IMAGE_TYPE_JPEG;
+    }
+
+
+    /**
+     * Upload resource
+     * @param string $sResourceKey resource name
+     * @return AM_Model_Db_Element_Data_Resource
+     * @throws AM_Model_Db_Element_Data_Exception
+     */
+    public function upload($sResourceKey = self::DATA_KEY_RESOURCE)
+    {
+        $oUploader = $this->getUploader();
+        if (!$oUploader->isUploaded($sResourceKey)) {
+            throw new AM_Model_Db_Element_Data_Exception(sprintf('File with variable name "%s" not found', $sResourceKey));
+        }
+
+        if ($this->_oElement->getField()->template == AM_Model_Db_Template::TPL_ANIMATED_GIFS) {
+            $allowedFileExtensions = self::getAllowedFileExtensions(self::DATA_GIF_RESOURCE);
+        }
+        else {
+            $allowedFileExtensions = self::getAllowedFileExtensions($sResourceKey);
+        }
+
+        //Validate uploaded file
+        $oUploader->addValidator('Size', true, array('min' => 20, 'max' => 209715200))
+            ->addValidator('Count', true, 1)
+            ->addValidator('Extension', true, $allowedFileExtensions);
+
+        if (!$oUploader->isValid()) {
+            throw new AM_Model_Db_Element_Data_Exception($oUploader->getMessagesAsString());
+        }
+
+        $sDataPath = $this->_getResourceDir();
+        if (!AM_Tools_Standard::getInstance()->is_dir($sDataPath)) {
+            if (!AM_Tools_Standard::getInstance()->mkdir($sDataPath, 0777, true)) {
+                throw new AM_Model_Db_Element_Data_Exception(sprintf('I/O error while create dir "%s"', $sDataPath));
+            }
+        }
+
+        $aFiles         = $oUploader->getFileInfo();
+        $sGivenFileName = $aFiles[$sResourceKey]['name'];
+        $aFileInfo      = pathinfo($sGivenFileName);
+        $sFileExtension = $aFileInfo['extension'];
+        $sFileNameNew    = $sResourceKey . "." . $sFileExtension;
+
+        //Copy resource
+        $sDestination = $sDataPath . DIRECTORY_SEPARATOR . $sFileNameNew;
+
+        //Rename file and receive it
+        $oUploader->addFilter('Rename', array('target' => $sDestination, 'overwrite' => true));
+
+        $this->clearResources($sResourceKey);
+
+        if (!$oUploader->receive($sResourceKey)) {
+            throw new AM_Model_Db_Element_Data_Exception($oUploader->getMessagesAsString());
+        }
+
+        $this->addKeyValue($sResourceKey, $sGivenFileName);
+        $this->addKeyValue(self::DATA_KEY_IMAGE_TYPE, $this->getImageType());
+
+        $this->_postUpload($sDestination, $sResourceKey);
+
+
+        return $this;
     }
 }

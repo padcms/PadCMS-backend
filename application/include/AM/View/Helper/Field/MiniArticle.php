@@ -90,7 +90,13 @@ class AM_View_Helper_Field_MiniArticle extends AM_View_Helper_Field
             $aFieldView['elements'] = $aElementsView;
         }
 
-        $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_MiniArticle::getAllowedFileExtensions());
+        if ($this->_oField->template == AM_Model_Db_Template::TPL_DIAPORAMA_IN_A_LONG_ARTICLE) {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_MiniArticle::getAllowedFileExtensions(AM_Model_Db_Element_Data_MiniArticle::DATA_IMAGE_RESOURCE));
+        }
+        else {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_MiniArticle::getAllowedFileExtensions());
+        }
+
         sort($aExtensions, SORT_STRING);
         $aFieldView['allowedExtensions'] = implode(' / ', $aExtensions);
 

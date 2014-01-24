@@ -42,6 +42,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
 {
     const IMAGE_TYPE_PNG  = 'png';
     const IMAGE_TYPE_JPEG = 'jpg';
+    const IMAGE_TYPE_GIF  = 'gif';
 
     /** @var array */
     protected $_aSources = array(); /**< @type array */

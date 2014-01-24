@@ -251,23 +251,20 @@ class AM_Model_Db_Application extends AM_Model_Db_Abstract
         $this->save();
     }
 
-    public function save() {
+    public function clearCache() {
+        $api_client = new AM_Api_Client();
+        $cache_data_ios = $api_client->getIssuesNoCache($this->id);
+        $cache_data_android = $api_client->getIssuesNoCache($this->id, null, 'android');
+        $cache_data_ios = json_encode($cache_data_ios);
+        $cache_data_android = json_encode($cache_data_android);
 
-//        $api_client = new AM_Api_Client();
-//        $cache_data_ios = $api_client->getIssuesNoCache($this->id);
-//        $cache_data_android = $api_client->getIssuesNoCache($this->id, null, 'android');
-//        $cache_data_ios = json_encode($cache_data_ios);
-//        $cache_data_android = json_encode($cache_data_android);
-//
-//        $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $this->id);
-//        if (empty($oCache)) {
-//            $oCache = new AM_Model_Db_Cache();
-//            $oCache->application_id = $this->id;
-//        }
-//        $oCache->data_ios = $cache_data_ios;
-//        $oCache->data_android = $cache_data_android;
-//        $oCache->save();
-
-        parent::save();
+        $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $this->id);
+        if (empty($oCache)) {
+            $oCache = new AM_Model_Db_Cache();
+            $oCache->application_id = $this->id;
+        }
+        $oCache->data_ios = $cache_data_ios;
+        $oCache->data_android = $cache_data_android;
+        $oCache->save();
     }
 }

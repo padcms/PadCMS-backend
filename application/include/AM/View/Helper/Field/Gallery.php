@@ -69,7 +69,12 @@ class AM_View_Helper_Field_Gallery extends AM_View_Helper_Field
 
         $aFieldView['galleries'] = $aGalleries;
 
-        $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Gallery::getAllowedFileExtensions());
+        if ($this->_oField->template == AM_Model_Db_Template::TPL_ANIMATED_GIFS) {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Gallery::getAllowedFileExtensions(AM_Model_Db_Element_Data_Gallery::DATA_GIF_RESOURCE));
+        }
+        else {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Gallery::getAllowedFileExtensions());
+        }
         sort($aExtensions, SORT_STRING);
         $aFieldView['allowedExtensions'] = implode(' / ', $aExtensions);
 

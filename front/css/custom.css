@@ -947,3 +947,9 @@ div.cke_editable_inline {
     padding-bottom: 15px;
 }
 /* - - - */
+
+/* For application clear cache*/
+.cblock-application .cblock-buttons a.cbutton.cbutton-clear-cache {
+    margin-left: 0px;
+}
+/*- - - */

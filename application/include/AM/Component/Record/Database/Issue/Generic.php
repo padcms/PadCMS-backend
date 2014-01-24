@@ -159,23 +159,6 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
             $oApplication = $oIssue->getApplication();
             $oApplication->updated = new Zend_Db_Expr('NOW()');
             $oApplication->save();
-
-
-            // Update application cache
-            $api_client = new AM_Api_Client();
-            $cache_data_ios = $api_client->getIssuesNoCache($oApplication->id);
-            $cache_data_android = $api_client->getIssuesNoCache($oApplication->id, null, 'android');
-            $cache_data_ios = json_encode($cache_data_ios);
-            $cache_data_android = json_encode($cache_data_android);
-
-            $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $oApplication->id);
-            if (empty($oCache)) {
-                $oCache = new AM_Model_Db_Cache();
-                $oCache->application_id = $oApplication->id;
-            }
-            $oCache->data_ios = $cache_data_ios;
-            $oCache->data_android = $cache_data_android;
-            $oCache->save();
         }
 
         return $bResult;

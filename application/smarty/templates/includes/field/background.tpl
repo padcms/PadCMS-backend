@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    {if $template == 'scrolling_page'}
+    {if $template == 'scrolling_page' || $template == 'navigation_menu_fixed_in_the_screen'}
     <div id="edit-show-top-wrapper" class="form-item">
         <label>{'Show on top'|translate}</label>
         <div class="checks show-on-top">

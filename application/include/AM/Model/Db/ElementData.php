@@ -74,4 +74,16 @@ class AM_Model_Db_ElementData extends AM_Model_Db_Abstract
 
         return $this->_oData;
     }
+
+    public function getPdfInfoElementData($IFieldId) {
+        $oQuery = $this->select()->from('element_data')
+                                ->setIntegrityCheck(false)
+                                ->join('element', 'element_data.id_element = element.id')
+                                ->where('page = (SELECT page FROM element WHERE id = ?)', $this->id_element)
+                                //->where('field = ?', $IFieldId)
+                                ->where('key_name = ?', 'pdf_info');
+
+        $oElementData = $this->getTable()->fetchRow($oQuery);
+        return $oElementData;
+    }
 }
