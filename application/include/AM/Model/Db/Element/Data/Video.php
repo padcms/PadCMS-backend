@@ -41,7 +41,9 @@
  */
 class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
 {
-    const DATA_KEY_STREAM = 'stream';
+    const DATA_KEY_STREAM      = 'stream';
+    const DATA_KEY_ENABLE_LOOP = 'loop_video';
+    const DATA_KEY_DISABLE_UI  = 'disable_user_interaction';
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('mp4', 'm4v'));
 
     /**
@@ -58,8 +60,22 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
             throw new AM_Model_Db_Element_Data_Exception(sprintf('Wrong parameter "%s" given', self::DATA_KEY_STREAM));
         }
 
-        //Remove all resources keys from element
+        //Remove all resources elements for this field
         $this->delete(self::DATA_KEY_RESOURCE);
+
+        $oField = $this->getElement()->getField();
+        $oElements = $this->getElement()->getPage()->getElementsByField($oField);
+
+        foreach ($oElements as $oElement) {
+            $oElementData = AM_Model_Db_Table_Abstract::factory('element_data')->findOneBy(
+                array(
+                     'id_element' => $oElement->id,
+                     'key_name'   => 'resource',
+                ));
+            if ($oElement->id != $this->getElement()->id && !empty($oElementData)) {
+                $oElement->delete();
+            }
+        }
 
         return $sValue;
     }
@@ -70,8 +86,22 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
      */
     protected function _addResource($sValue)
     {
-        //Remove all stream keys from element
+        //Remove all stream elements for this field
         $this->delete(self::DATA_KEY_STREAM);
+
+        $oField = $this->getElement()->getField();
+        $oElements = $this->getElement()->getPage()->getElementsByField($oField);
+
+        foreach ($oElements as $oElement) {
+            $oElementData = AM_Model_Db_Table_Abstract::factory('element_data')->findOneBy(
+                array(
+                     'id_element' => $oElement->id,
+                     'key_name'   => 'stream',
+                ));
+            if ($oElement->id != $this->getElement()->id && !empty($oElementData)) {
+                $oElement->delete();
+            }
+        }
 
         return $sValue;
     }
@@ -87,5 +117,26 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
         $sExtension = pathinfo($sResource, PATHINFO_EXTENSION);
 
         return $sExtension;
+    }
+
+    /**
+     * Create new element
+     *
+     * @param AM_Model_Db_Page $oPage
+     * @param AM_Model_Db_Field $oField
+     * @return AM_Model_Db_Element
+     */
+    public static function getElementForPageAndField(AM_Model_Db_Page $oPage, AM_Model_Db_Field $oField)
+    {
+        $iMaxWeight = AM_Model_Db_Table_Abstract::factory('element')->getMaxElementWeight($oPage, $oField);
+
+        $oElement = new AM_Model_Db_Element();
+        $oElement->setPage($oPage);
+        $oElement->weight = (is_null($iMaxWeight)) ? 0 : ++$iMaxWeight;
+        $oElement->page   = $oPage->id;
+        $oElement->field  = $oField->id;
+        $oElement->save();
+
+        return $oElement;
     }
 }

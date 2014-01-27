@@ -81,7 +81,7 @@ class AM_Mapper_Sqlite_Element extends AM_Mapper_Sqlite_Abstract
         $aData = array(
             'id'                 => $this->getModel()->id,
             'page_id'            => $this->getModel()->page,
-            'element_type_name'  => $this->getModel()->getFieldTypeTitle(),
+            'element_type_name'  => $this->getModel()->getFieldTitle(),
             'weight'             => intval($this->getModel()->weight),
             'content_text'       => $sContentText
         );

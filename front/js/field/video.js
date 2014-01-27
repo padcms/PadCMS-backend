@@ -23,19 +23,43 @@ var fieldVideo = {
         context.pageId = document.pid;
         context.fieldId = $("input[name='field-id']", context.domRoot).val();
 
-        $('input', '#video-type-stream').bind('keypress', context, function(event) {
-            if (event.which == 13) {
-                event.data.onSave('stream', $(event.originalEvent.target).val());
-            }
+//        $('input', '#video-type-stream').bind('keypress', context, function(event) {
+//            if (event.which == 13) {
+//                event.data.onSave('stream', $(event.originalEvent.target).val());
+//            }
+//        });
+
+        $('a.cbutton', '#video-type-stream').bind('click', context, function(event) {
+            var idElem = $(this).prev().children('input').attr('id');
+            event.data.onSave('stream', $(this).prev().children('input').val(), idElem);
         });
 
-        $('a', '#video-type-stream').bind('click', context, function(event) {
-            event.data.onSave('stream', $('input', '#video-type-stream').val());
-        });
-
-        $('a.close', context.domRoot).bind('click', context, function(event){
+        $('a.delete-btn', context.domRoot).bind('click', context, function(event){
             return event.data.onDelete(event.originalEvent);
         });
+
+        $('a.enable-loop-btn', context.domRoot).bind('click', context, function(event){
+            event.data.onEnableLoop(event);
+            return false;
+        });
+        $('a.disable-ui-btn', context.domRoot).bind('click', context, function(event){
+            event.data.onDisableUi(event);
+            return false;
+        });
+
+        $(".gallery", context.domRoot).sortable({
+            stop: function(event, ui) {
+                $(event.originalEvent.target).addClass('prevent-select');
+                context.onChangeWeight(event, ui);
+            }
+        }).disableSelection();
+
+        $(".stream-sort", context.domRoot).sortable({
+            stop: function(event, ui) {
+                $(event.originalEvent.target).addClass('prevent-select');
+                context.onChangeWeight(event, ui);
+            }
+        }).disableSelection();
 
         $('input.resource-video').change(function(event){
             $('.upload-form-video').ajaxSubmit({
@@ -52,7 +76,8 @@ var fieldVideo = {
                             alert(translate('Error. Can\'t upload file'));
                         }
                     } else {
-                        var file = responseJSON.file;
+                        var file    = responseJSON.file;
+                        var element = responseJSON.element;
 
                         //Unset field value
                         $('input.resource-video').val('');
@@ -68,15 +93,46 @@ var fieldVideo = {
                             image = '<img alt="' + file.fileName + '" src="' + file.smallUri + '"/>';
                         }
 
-                        var divPicture = $('div.picture', context.domRoot);
-                        $(divPicture).html(image);
+                        var html =
+                            '<li id="element-' + element + '">' +
+                                '<div class="data-item">' +
+                                image +
+                                '<div class="actions">' +
+                                '<a class="action-2-disabled enable-loop-btn" href="#" title="Enable loop"></a>' +
+                                '<a class="action-2-disabled disable-ui-btn" href="#" title="Disable UI"></a>' +
+                                '</div>' +
+                                '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>' +
+                                '<a href="#" title="Delete video" class="close delete-btn"></a>' +
+                                '</div>' +
+                                '</li>';
 
-                        $('a.close', $(divPicture).parent())
-                                .attr('href', '/field/delete/key/resource/element/' + responseJSON.element)
-                                .show();
-                        $('span.name', $(divPicture).parent())
-                                .html(file.fileNameShort)
-                                .attr('title', file.fileName);
+                        $('ul.gallery', context.domRoot).append(html);
+
+                        // Bind events
+                        var domElement = $('#element-' + element);
+                        $('a.delete-btn', domElement).bind('click', context, function(event) {
+                            return event.data.onDelete(event.originalEvent);
+                        });
+                        $('a.enable-loop-btn', domElement).bind('click', context, function(event){
+                            event.data.onEnableLoop(event);
+                            return false;
+                        });
+                        $('a.disable-ui-btn', domElement).bind('click', context, function(event){
+                            event.data.onDisableUi(event);
+                            return false;
+                        });
+
+                        $('ul.stream-sort').empty();
+
+//                        var divPicture = $('div.picture', context.domRoot);
+//                        $(divPicture).html(image);
+//
+//                        $('a.close', $(divPicture).parent())
+//                                .attr('href', '/field/delete/key/resource/element/' + responseJSON.element)
+//                                .show();
+//                        $('span.name', $(divPicture).parent())
+//                                .html(file.fileNameShort)
+//                                .attr('title', file.fileName);
 
                         $("a.single_image", context.domRoot).fancybox();
                     }
@@ -85,23 +141,54 @@ var fieldVideo = {
         });
     },
 
+//    onDelete: function(event) {
+//        var context = this;
+//        url = $(event.target).attr('href');
+//        $.ajax({
+//            url: url,
+//            type: 'POST',
+//            dataType: 'json',
+//            success: function(data) {
+//                try {
+//                    if (data.status == 1) {
+//                        var divPicture = $('div.picture', context.domRoot);
+//                        var html = '<img alt="Default image" src="' + data.defaultImageUri + '"/>';
+//                        $(divPicture).html(html);
+//                        $('a.close', $(divPicture).parent())
+//                                .hide()
+//                                .attr('href', '');
+//                        $('span.name', $(divPicture).parent()).empty();
+//                    } else {
+//                        alert(data.message);
+//                    }
+//                } catch (e) {
+//                    window.ui.log(e);
+//                    alert(translate('unexpected_ajax_error'));
+//                }
+//            }
+//        });
+//        return false;
+//    },
+
     onDelete: function(event) {
-        var context = this;
-        url = $(event.target).attr('href');
+        var liId = $(event.target).closest('li').attr('id').split('-');
+        var elementId = liId.pop();
+        var elemType = liId.pop();
+
+        if (!elementId)
+            return false;
+
         $.ajax({
-            url: url,
+            url: '/field/delete',
             type: 'POST',
             dataType: 'json',
+            data: {
+                element: elementId
+            },
             success: function(data) {
                 try {
                     if (data.status == 1) {
-                        var divPicture = $('div.picture', context.domRoot);
-                        var html = '<img alt="Default image" src="' + data.defaultImageUri + '"/>';
-                        $(divPicture).html(html);
-                        $('a.close', $(divPicture).parent())
-                                .hide()
-                                .attr('href', '');
-                        $('span.name', $(divPicture).parent()).empty();
+                        $('#' + elemType + '-' + elementId).remove();
                     } else {
                         alert(data.message);
                     }
@@ -136,7 +223,37 @@ var fieldVideo = {
         });
     },
 
-    onSave: function(key, value) {
+    onChangeWeight: function(event, ui) {
+        var context = this;
+        var data = {};
+        $('li', event.target).each(function(index) {
+            data[$(this).attr('id').split('-').pop()] = index;
+        });
+
+        $.ajax({
+            url: '/field/save-weight',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page_id: context.pageId,
+                weight: data
+            },
+            success: function(data) {
+                try {
+                    if (data.status != 1) {
+                        alert(data.message);
+                    } else {
+                        $('#page-' + context.pageId).closest('td').attr('background', data.background);
+                    }
+                } catch (e) {
+                    window.ui.log(e);
+                    alert(translate('unexpected_ajax_error'));
+                }
+            }
+        });
+    },
+
+    onSave: function(key, value, elemId) {
         var context = this;
 
         if (!key)
@@ -149,17 +266,62 @@ var fieldVideo = {
             data: {
                 page_id: context.pageId,
                 field_id: context.fieldId,
+                element: elemId,
                 key: key,
                 value: value
             },
             success: function(data) {
                 try {
                     if (data.status == 1) {
-                        var divPicture = $('div.picture', context.domRoot);
-                        var html = '<img alt="Default image" src="' + data.defaultImageUri + '"/>';
-                        $(divPicture).html(html);
-                        $('a.close', $(divPicture).parent()).hide();
-                        $('span.name', $(divPicture).parent()).empty();
+//                        var divPicture = $('div.picture', context.domRoot);
+//                        var html = '<img alt="Default image" src="' + data.defaultImageUri + '"/>';
+//                        $(divPicture).html(html);
+//                        $('a.close', $(divPicture).parent()).hide();
+//                        $('span.name', $(divPicture).parent()).empty();
+
+                        if (elemId == 0) {
+                            var element = data.element;
+                            var stream = data.stream;
+                            var html =
+                                '<li id="stream-' + element + '">' +
+                                    '<div id="edit-width-wrapper" class="form-item">' +
+                                    '<div class="form-item-wrapper stream-url-wrapper">' +
+                                    '<div class="sort-weight"></div>' +
+                                    '<input id="' + element + '" type="text" class="form-text" value=' + stream + ' />' +
+                                    '</div>' +
+                                    '<a id="page-additional-data-btn" class="cbutton" href="#"><span><span class="ico">Save</span></span></a>' +
+                                    '<a href="#" title="Delete video" class="close delete-btn"></a>' +
+                                    '</div>' +
+                                    '<div class="clear"></div>' +
+                                    '<div class="actions">' +
+                                    '<a class="action-2-disabled enable-loop-btn" href="#" title="Enable loop"></a>' +
+                                    '<a class="action-2-disabled disable-ui-btn" href="#" title="Disable UI"></a>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>';
+
+                            $('ul.stream-sort', context.domRoot).append(html);
+                            $('input.new-stream', context.domRoot).val(null);
+
+                            // Bind events
+                            var domElement = $('#stream-' + element);
+                            $('a.cbutton', domElement).bind('click', context, function(event) {
+                                var idElem = $(this).prev().children('input').attr('id');
+                                event.data.onSave('stream', $('input', domElement).val(), idElem);
+                            });
+                            $('a.enable-loop-btn', domElement).bind('click', context, function(event){
+                                event.data.onEnableLoop(event);
+                                return false;
+                            });
+                            $('a.disable-ui-btn', domElement).bind('click', context, function(event){
+                                event.data.onDisableUi(event);
+                                return false;
+                            });
+                            $('a.delete-btn', domElement).bind('click', context, function(event) {
+                                return event.data.onDelete(event.originalEvent);
+                            });
+                            $('ul.gallery').empty();
+                        }
                     } else {
                         alert(data.message);
                     }
@@ -186,6 +348,70 @@ var fieldVideo = {
                 context.currentType = 'file';
             }
             return true;
+    },
+
+    onEnableLoop: function(event) {
+        var context = this;
+        var elementId = $(event.target).closest('li').attr('id').split('-').pop();
+        context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+
+        $.ajax({
+            url: '/field-video/save',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page_id: context.pageId,
+                field_id: context.fieldId,
+                element: elementId,
+                key: 'loop_video',
+                value: context.value
+            },
+            success: function(data) {
+                try {
+                    if (context.value == 1) {
+                        $(event.target).removeClass('action-2-disabled').addClass('action-2');
+                    } else {
+                        $(event.target).removeClass('action-2').addClass('action-2-disabled');
+                    }
+                } catch (e) {
+                    window.ui.log(e);
+                    alert(translate('unexpected_ajax_error'));
+                }
+            }
+        });
+        return false;
+    },
+
+    onDisableUi: function(event) {
+        var context = this;
+        var elementId = $(event.target).closest('li').attr('id').split('-').pop();
+        context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+
+        $.ajax({
+            url: '/field-video/save',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page_id: context.pageId,
+                field_id: context.fieldId,
+                element: elementId,
+                key: 'disable_user_interaction',
+                value: context.value
+            },
+            success: function(data) {
+                try {
+                    if (context.value == 1) {
+                        $(event.target).removeClass('action-2-disabled').addClass('action-2');
+                    } else {
+                        $(event.target).removeClass('action-2').addClass('action-2-disabled');
+                    }
+                } catch (e) {
+                    window.ui.log(e);
+                    alert(translate('unexpected_ajax_error'));
+                }
+            }
+        });
+        return false;
     }
 
 }

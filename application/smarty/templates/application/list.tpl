@@ -40,16 +40,15 @@
                                     <a href="#" class="cbutton cbutton-green cbutton-copy-move" id="move-application-{$item.id}-{$clientId}"><span><span class="ico">{'Move'|translate}</span></span></a>
                                     <a href="#" class="cbutton cbutton-green cbutton-copy-move" id="copy-application-{$item.id}-{$clientId}"><span><span class="ico">{'Copy'|translate}</span></span></a>
                                 {/if}
-                                <a href="/issue/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'List issues'|translate}</span></span></a>
+                                <a href="/issue/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'Issues'|translate}</span></span></a>
                                 {if $item.type == 'rue98we'}
-                                    <a href="/subscription/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'List subscription'|translate}</span></span></a>
+                                    <a href="/subscription/list/aid/{$item.id}" class="cbutton cbutton-green"><span><span class="ico">{'Subscriptions'|translate}</span></span></a>
                                 {/if}
 
-                                <a href="#" class="cbutton cbutton-green cbutton-clear-cache" id="cc-{$item.id}-{$clientId}"><span><span class="ico">{'Clr cache'|translate}</span></span></a>
+                                <a href="#" class="cbutton cbutton-green cbutton-clear-cache" id="cc-{$item.id}-{$clientId}"><span><span class="ico">{'Clear cache'|translate}</span></span></a>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
 <input type="hidden" name="field-id" value="{$field.fieldId}" />
 
-<h3 class="head">{'Popup'|translate}</h3>
+<h3 class="head">{$field.fieldTitle|translate}</h3>
 
 <div class="cont">
     <div id="edit-pic-widget-wrapper" class="form-item">

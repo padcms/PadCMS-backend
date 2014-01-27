@@ -953,3 +953,73 @@ div.cke_editable_inline {
     margin-left: 0px;
 }
 /*- - - */
+
+/* For video field */
+#field-video #edit-width-wrapper .form-item-wrapper.stream-url-wrapper {
+    width: 75%;
+}
+#field-video #video-type-stream label {
+    margin-bottom: 10px;
+}
+.accordion-panel .cont .stream-url-wrapper input.form-text {
+    width: 79%;
+    float: right;
+}
+#field-video #edit-width-wrapper .sort-weight {
+    float: left;
+    text-align: center;
+    height: 27px;
+    line-height: 28px;
+    cursor: default;
+    width: 16%;
+    font-size: 16px;
+    font-weight: bold;
+}
+.stream-sort {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.stream-sort a.close {
+    width: 13px;
+    height: 14px;
+    display: block;
+    background: url(/images/map/ico-del-pic-small.png) 0px 0 no-repeat;
+    float: left;
+    margin-top: 6px;
+}
+.stream-sort .sort-weight {
+    background: url(/images/map/ico-draggable.png) 12px 4px no-repeat;
+}
+.stream-sort .sort-weight:hover {
+    background: url(/images/map/ico-draggable.png) 12px -16px no-repeat;
+}
+.stream-sort div.actions .action-2-disabled {
+    width: 14px;
+    height: 11px;
+    display: block;
+    position: relative;
+    float: left;
+    background: url(/images/map/icos-action.png) -17px 0 no-repeat;
+    margin: 0 3px 0 0;
+}
+
+.stream-sort div.actions .action-2 {
+    width: 14px;
+    height: 11px;
+    display: block;
+    position: relative;
+    float: left;
+    background: url(/images/map/icos-action.png) -51px 0 no-repeat;
+    margin: 0 3px 0 0;
+}
+.stream-sort div.actions {
+    margin: -3px 0px 10px 42px;
+}
+.accordion-panel .form-item.stream-item {
+    padding-bottom: 32px;
+}
+.accordion-panel .form-item.new-stream-item {
+    padding-bottom: 15px;
+}
+/* - - - */

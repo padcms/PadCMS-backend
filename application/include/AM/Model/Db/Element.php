@@ -49,6 +49,8 @@ class AM_Model_Db_Element extends AM_Model_Db_Abstract
     protected $_oField      = null; /**< @type AM_Model_Db_Field */
     /** @var string */
     protected $_sFieldTypeTitle = null; /**< @type string */
+    /** @var string */
+    protected $_sFieldTitle = null; /**< @type string */
 
     const RESOURCE_TYPE         = 'element';
     const RESOURCE_CLASS_PREFIX = 'AM_Model_Db_Element_Data';
@@ -224,6 +226,15 @@ class AM_Model_Db_Element extends AM_Model_Db_Abstract
     protected function _postDelete()
     {
         $this->getResources()->delete();
+        $oField = $this->getField();
+        $oElements = $this->getPage()->getElementsByField($oField);
+        $iWeight = 0;
+
+        foreach ($oElements as $oElement) {
+            $oElement->weight = $iWeight;
+            $oElement->save();
+            $iWeight++;
+        }
     }
 
     /**
@@ -247,5 +258,19 @@ class AM_Model_Db_Element extends AM_Model_Db_Abstract
         $this->save();
 
         return $this;
+    }
+
+    /**
+     * Get element's field title
+     *
+     * @return string Field title
+     */
+    public function getFieldTitle()
+    {
+        if (is_null($this->_sFieldTitle)) {
+            $this->_sFieldTitle = $this->getField()->name;
+        }
+
+        return $this->_sFieldTitle;
     }
 }

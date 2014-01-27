@@ -123,6 +123,10 @@ class AM_Controller_Action_Field extends AM_Controller_Action
             $oElement->getResources()->addKeyValue($sKey, $sValue);
 
             $oPage->setUpdated(false);
+            $aMessage['element']         = $oElement->id;
+            if (!empty($sKey)) {
+                $aMessage[$sKey]         = $sValue;
+            }
             $aMessage['defaultImageUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $oPage->getOrientation(), 'element', null, '');
             $aMessage['status']          = 1;
             $aMessage['value']           = $oElement->getResources()->getDataValue($sKey);

@@ -46,6 +46,9 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
     protected $_oPage = null; /**< @type AM_Model_Db_Page */
     /** @var string **/
     protected $_sPageOrientation = null; /**< @type string */
+    /** @var string **/
+    protected $_sFieldTitle = null; /**< @type string */
+
 
     /**
      * @param AM_Model_Db_Field $oField
@@ -65,9 +68,10 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
     {
         $aFieldView = array(
             'name'           => $this->getName(),
+            'fieldTitle'     => $this->getFieldTitle(),
             'fieldId'        => $this->_oField->id,
             'fieldTypeTitle' => $this->_oField->getFieldType()->title,
-            'pageId'         => $this->_oPage->id
+            'pageId'         => $this->_oPage->id,
         );
 
         $this->_setFieldData($aFieldView);
@@ -143,5 +147,22 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
     protected function _getThumbnailPresetName()
     {
         return AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation;
+    }
+
+    /**
+     * Get helper name
+     * @return string
+     */
+    public function getFieldTitle()
+    {
+        if (is_null($this->_sFieldTitle)) {
+            $aFieldTitle = mb_split('_', $this->_oField->name);
+            if (!empty($aFieldTitle)) {
+                $aFieldTitle[0] = mb_convert_case($aFieldTitle[0], MB_CASE_TITLE);
+            }
+            $this->_sFieldTitle = implode(' ', $aFieldTitle);
+        }
+
+        return $this->_sFieldTitle;
     }
 }

@@ -43,33 +43,49 @@ class AM_View_Helper_Field_Video extends AM_View_Helper_Field
     public function show()
     {
         $aElements = $this->_oPage->getElementsByField($this->_oField);
-
+        $bIsStream = false;
         if (count($aElements)) {
-            $oElement     = $aElements[0];
-            /* @var $oElement AM_Model_Db_Element */
-            $aElementView = array('id' => $oElement->id);
+            $aElementsView = array();
+            foreach ($aElements as $oElement) {
+                /* @var $oElement AM_Model_Db_Element */
+                $aElementView = array (
+                    'id' => $oElement->id
+                );
 
-            $aExtraDataItem = array(
-                AM_Model_Db_Element_Data_Video::DATA_KEY_STREAM
-            );
+                $aExtraDataItem = array(
+                    AM_Model_Db_Element_Data_Video::DATA_KEY_STREAM
+                );
 
-            foreach ($aExtraDataItem as $sItem) {
-                $aElementView[$sItem] = $oElement->getResources()->getDataValue($sItem);
+                foreach ($aExtraDataItem as $sItem) {
+                    $aElementView[$sItem] = $oElement->getResources()->getDataValue($sItem);
+                    if (!empty($aElementView[$sItem])) {
+                        $bIsStream = true;
+                    }
+                }
+
+                $aElementView['loop'] = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Video::DATA_KEY_ENABLE_LOOP, 0);
+                $aElementView['ui']   = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Video::DATA_KEY_DISABLE_UI, 0);
+
+                $aResourceView = $this->_getResourceViewData($oElement);
+                $aElementView  = array_merge($aElementView, $aResourceView);
+
+                $aElementsView[] = $aElementView;
             }
 
-            $aResourceView = $this->_getResourceViewData($oElement);
-            $aElementView  = array_merge($aElementView, $aResourceView);
+            /* @var $oElement AM_Model_Db_Element */
+            $aElementView = array('id' => $oElement->id);
         }
 
         $aFieldView = array();
 
-        if (isset($aElementView)) {
-            $aFieldView['element'] = $aElementView;
+        if (isset($aElementsView)) {
+            $aFieldView['elements'] = $aElementsView;
         }
+        $aFieldView['isStream'] = $bIsStream;
 
-        if (!isset($aElementView) || !isset($aElementView['fileName'])) {
-            $aFieldView['defaultImageUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation, 'element', null, null);
-        }
+//        if (!isset($aElementView) || !isset($aElementView['fileName'])) {
+//            $aFieldView['defaultImageUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation, 'element', null, null);
+//        }
 
         $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Video::getAllowedFileExtensions());
         sort($aExtensions, SORT_STRING);
