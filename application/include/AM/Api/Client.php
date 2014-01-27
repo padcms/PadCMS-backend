@@ -66,7 +66,7 @@ class AM_Api_Client extends AM_Api
         }
 
         if (!empty($sPublisherToken) || !empty($sUdid)) {
-            return $this->getIssuesNoCache($iApplicationId, $sUdid = null, $sPlatform = self::PLATFORM_IOS, $sPublisherToken = NULL);
+            return $this->getIssuesNoCache($iApplicationId, $sUdid, $sPlatform, $sPublisherToken);
         }
 
         $oCache = AM_Model_Db_Table_Abstract::factory('cache')->findOneBy('application_id', $iApplicationId);
@@ -166,23 +166,23 @@ class AM_Api_Client extends AM_Api
             $sPlatform = self::PLATFORM_IOS;
         }
 
-//        if (!is_null($sUdid)) {
-//            $sUdid = trim($sUdid);
-//        }
+        if (!is_null($sUdid)) {
+            $sUdid = trim($sUdid);
+        }
         //Does udid belong to admin user
         $bIsUdidUserAdmin = false;
         $oDevice          = null;
 
-//        if (!empty($sUdid)) {
-//            $oDevice = AM_Model_Db_Table_Abstract::factory('device')->findOneBy(array('identifer' => $sUdid));
-//            if (!is_null($oDevice)) {
-//                $this->getLogger()->debug(sprintf('Existing device given: %s', $sUdid));
-//                $oUser = $oDevice->getUser();
-//                if (!is_null($oUser)) {
-//                    $bIsUdidUserAdmin = (bool) $oUser->is_admin;
-//                }
-//            }
-//        }
+        if (!empty($sUdid)) {
+            $oDevice = AM_Model_Db_Table_Abstract::factory('device')->findOneBy(array('identifer' => $sUdid));
+            if (!is_null($oDevice)) {
+                $this->getLogger()->debug(sprintf('Existing device given: %s', $sUdid));
+                $oUser = $oDevice->getUser();
+                if (!is_null($oUser)) {
+                    $bIsUdidUserAdmin = (bool) $oUser->is_admin;
+                }
+            }
+        }
 
         $aResult = array('code' => self::RESULT_SUCCESS, 'applications' => array());
 
