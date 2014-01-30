@@ -15,6 +15,7 @@ var fieldVideo = {
         var context = this;
 
         context.domRoot = $('#field-video')[0];
+        context.domRootAudio = $('#field-id-sound').parent()[0];
 
         if (!context.domRoot) {
             return;
@@ -22,6 +23,26 @@ var fieldVideo = {
 
         context.pageId = document.pid;
         context.fieldId = $("input[name='field-id']", context.domRoot).val();
+        if (context.domRootAudio) {
+            context.fieldIdSound = $("input[name='field-id']", context.domRootAudio).val();
+            $('a.delete-btn', context.domRootAudio).bind('click', context, function(event){
+                return event.data.onDelete(event.originalEvent);
+            });
+            $('a.enable-loop-btn', context.domRootAudio).bind('click', context, function(event){
+                event.data.onEnableLoop(event);
+                return false;
+            });
+            $('a.disable-ui-btn', context.domRootAudio).bind('click', context, function(event){
+                event.data.onDisableUi(event);
+                return false;
+            });
+            $(".gallery", context.domRootAudio).sortable({
+                stop: function(event, ui) {
+                    $(event.originalEvent.target).addClass('prevent-select');
+                    context.onChangeWeight(event, ui);
+                }
+            }).disableSelection();
+        }
 
 //        $('input', '#video-type-stream').bind('keypress', context, function(event) {
 //            if (event.which == 13) {
@@ -106,7 +127,7 @@ var fieldVideo = {
                                 '</div>' +
                                 '</li>';
 
-                        $('ul.gallery', context.domRoot).append(html);
+                        $('ul#video', context.domRoot).append(html);
 
                         // Bind events
                         var domElement = $('#element-' + element);
@@ -135,6 +156,96 @@ var fieldVideo = {
 //                                .attr('title', file.fileName);
 
                         $("a.single_image", context.domRoot).fancybox();
+
+                        if (context.domRootAudio) {
+                            $("a.single_image", context.domRootAudio).fancybox();
+                        }
+                    }
+                }
+            });
+        });
+
+        $('input.resource-sound').change(function(event){
+            $('.upload-form-sound').ajaxSubmit({
+                data: {
+                    page_id:  context.pageId,
+                    field_id: context.fieldIdSound
+                },
+                dataType: 'json',
+                success: function(responseJSON) {
+                    if (!responseJSON.status) {
+                        if (responseJSON.message) {
+                            alert(responseJSON.message);
+                        } else {
+                            alert(translate('Error. Can\'t upload file'));
+                        }
+                    } else {
+                        var file    = responseJSON.file;
+                        var element = responseJSON.element;
+
+                        //Unset field value
+                        $('input.resource-sound').val('');
+                        $('input', '#sound-type-stream').val('');
+
+                        var image = null;
+                        if (file.smallUri && file.bigUri) {
+                            image =
+                                '<a class="single_image" href="' + file.bigUri + '">' +
+                                    '<img alt="' + file.fileName + '" src="' + file.smallUri + '"/>' +
+                                    '</a>';
+                        } else {
+                            image = '<img alt="' + file.fileName + '" src="' + file.smallUri + '"/>';
+                        }
+
+                        var html =
+                            '<li id="element-' + element + '">' +
+                                '<div class="data-item">' +
+                                image +
+                                '<div class="actions">' +
+                                '<a class="action-2-disabled enable-loop-btn" href="#" title="Enable loop"></a>' +
+                                '<a class="action-2-disabled disable-ui-btn" href="#" title="Disable UI"></a>' +
+                                '</div>' +
+                                '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>' +
+                                '<a href="#" title="Delete sound" class="close delete-btn"></a>' +
+                                '</div>' +
+                                '</li>';
+
+
+                        if (context.domRootAudio) {
+                            $('ul#sound', context.domRootAudio).append(html);
+                        }
+
+                        // Bind events
+                        var domElement = $('#element-' + element);
+                        $('a.delete-btn', domElement).bind('click', context, function(event) {
+                            return event.data.onDelete(event.originalEvent);
+                        });
+                        $('a.enable-loop-btn', domElement).bind('click', context, function(event){
+                            event.data.onEnableLoop(event);
+                            return false;
+                        });
+                        $('a.disable-ui-btn', domElement).bind('click', context, function(event){
+                            event.data.onDisableUi(event);
+                            return false;
+                        });
+
+                        $('ul.stream-sort').empty();
+
+//                        var divPicture = $('div.picture', context.domRoot);
+//                        $(divPicture).html(image);
+//
+//                        $('a.close', $(divPicture).parent())
+//                                .attr('href', '/field/delete/key/resource/element/' + responseJSON.element)
+//                                .show();
+//                        $('span.name', $(divPicture).parent())
+//                                .html(file.fileNameShort)
+//                                .attr('title', file.fileName);
+
+                        $("a.single_image", context.domRoot).fancybox();
+
+                        if (context.domRootAudio) {
+                            $("a.single_image", context.domRootAudio).fancybox();
+                        }
                     }
                 }
             });
@@ -320,7 +431,7 @@ var fieldVideo = {
                             $('a.delete-btn', domElement).bind('click', context, function(event) {
                                 return event.data.onDelete(event.originalEvent);
                             });
-                            $('ul.gallery').empty();
+                            $('ul#video.gallery').empty();
                         }
                     } else {
                         alert(data.message);
@@ -339,12 +450,12 @@ var fieldVideo = {
             if (type == 'file') {
                 $('#video-type-stream', context.domRoot).hide();
                 $('#video-type-file', context.domRoot).show();
-                $('div.cont', context.domRoot).css('height', '90px');
+                $('div.cont', context.domRoot).css('height', 'auto');
                 context.currentType = 'stream';
             } else {
                 $('#video-type-file', context.domRoot).hide();
                 $('#video-type-stream', context.domRoot).show();
-                $('div.cont', context.domRoot).css('height', '48px');
+                $('div.cont', context.domRoot).css('height', 'auto');
                 context.currentType = 'file';
             }
             return true;
@@ -354,6 +465,7 @@ var fieldVideo = {
         var context = this;
         var elementId = $(event.target).closest('li').attr('id').split('-').pop();
         context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+        var elemType = $(event.target).closest('ul').attr('id');
 
         $.ajax({
             url: '/field-video/save',
@@ -361,9 +473,9 @@ var fieldVideo = {
             dataType: 'json',
             data: {
                 page_id: context.pageId,
-                field_id: context.fieldId,
+                field_id: elemType == 'video' ? context.fieldId : context.fieldIdSound,
                 element: elementId,
-                key: 'loop_video',
+                key: 'loop_' + elemType,
                 value: context.value
             },
             success: function(data) {
@@ -386,6 +498,7 @@ var fieldVideo = {
         var context = this;
         var elementId = $(event.target).closest('li').attr('id').split('-').pop();
         context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+        var elemType = $(event.target).closest('ul.gallery').attr('id');
 
         $.ajax({
             url: '/field-video/save',
@@ -393,7 +506,7 @@ var fieldVideo = {
             dataType: 'json',
             data: {
                 page_id: context.pageId,
-                field_id: context.fieldId,
+                field_id: elemType == 'video' ? context.fieldId : context.fieldIdSound,
                 element: elementId,
                 key: 'disable_user_interaction',
                 value: context.value

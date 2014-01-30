@@ -181,7 +181,7 @@
 
         {if isset($publish_date)}
           <div class="publish-date-wrapper form-item{if isset($publish_date) && $publish_date.errors} error{/if}">
-              <label>{if isset($publish_date)}{$publish_date.title|escape}{/if}</label>
+              <label>{if isset($publish_date)}{$publish_date.title|escape}{/if}  <span>*</span></label>
               <div class="form-item-wrapper">
                   {if isset($publish_date)}
                       <input id="publish-date" name="{$publish_date.name}" value="{$publish_date.value|escape}" type="text" class="form-text" />

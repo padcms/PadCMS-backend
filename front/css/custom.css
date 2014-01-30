@@ -1022,4 +1022,17 @@ div.cke_editable_inline {
 .accordion-panel .form-item.new-stream-item {
     padding-bottom: 15px;
 }
+#video-type-stream {
+    height: auto;
+}
+#video-type-file {
+    height: 40px;
+}
+/* - - - */
+
+/* For issue search field. */
+.cblock-signin.issue-search-field .cblock-form-inner {
+    padding-left: 20px;
+    padding-right: 20px;
+}
 /* - - - */

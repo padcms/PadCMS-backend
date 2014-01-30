@@ -63,7 +63,7 @@ class AM_View_Helper_Field_Video extends AM_View_Helper_Field
                     }
                 }
 
-                $aElementView['loop'] = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Video::DATA_KEY_ENABLE_LOOP, 0);
+                $aElementView['loop'] = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Video::DATA_KEY_ENABLE_LOOP . $oElement->getField()->name, 0);
                 $aElementView['ui']   = $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Video::DATA_KEY_DISABLE_UI, 0);
 
                 $aResourceView = $this->_getResourceViewData($oElement);
@@ -87,7 +87,12 @@ class AM_View_Helper_Field_Video extends AM_View_Helper_Field
 //            $aFieldView['defaultImageUri'] = AM_Tools::getImageUrl(AM_Handler_Thumbnail_Interface::PRESET_FIELD . '-' . $this->_sPageOrientation, 'element', null, null);
 //        }
 
-        $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Video::getAllowedFileExtensions());
+        if ($this->_oField->name == 'video') {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Video::getAllowedFileExtensions(AM_Model_Db_Element_Data_Video::DATA_KEY_RESOURCE_VIDEO));
+        }
+        else {
+            $aExtensions = array_map('strtoupper', AM_Model_Db_Element_Data_Video::getAllowedFileExtensions(AM_Model_Db_Element_Data_Video::DATA_KEY_RESOURCE_SOUND));
+        }
         sort($aExtensions, SORT_STRING);
         $aFieldView['allowedExtensions'] = implode(' / ', $aExtensions);
 

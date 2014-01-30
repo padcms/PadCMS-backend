@@ -73,12 +73,26 @@ class IssueController extends AM_Controller_Action
      */
     public function listAction()
     {
+
+        $oComponentFilter = new AM_Component_Filter($this, 'filter', array(
+          'controls' => array(
+              'issuesearch' => array(
+                  'title' => 'Issue',
+              )
+          )
+        ));
+
+        if ($oComponentFilter->operation()) {
+            return $this->_redirect($this->getHelper('Url')->url($oComponentFilter->getUrlParams(), null, true));
+        }
+        $oComponentFilter->show();
+
         $oBreadCrumbHelper = new AM_View_Helper_Breadcrumbs($this->view, $this->oDb, $this->getUser(),
                                                      AM_View_Helper_Breadcrumbs::ISSUE,
                                                      $this->_getAllParams());
         $oBreadCrumbHelper->show();
 
-        $oGridComponent = new AM_Component_List_Issue($this, $this->iApplicationId);
+        $oGridComponent = new AM_Component_List_Issue($this, $this->iApplicationId, $oComponentFilter);
         $oGridComponent->show();
 
         $oPagerComponent = new AM_Component_Pager($this, 'pager', $oGridComponent);

@@ -42,12 +42,17 @@
  */
 class AM_Component_List_Issue extends AM_Component_Grid
 {
+    /** @var AM_Component_Filter */
+    protected $_oFilterComponent; /**< @type AM_Component_Filter */
+
     /**
      * @param AM_Controller_Action $oActionController
      * @param int $iApplicationId
      */
-    public function __construct(AM_Controller_Action $oActionController, $iApplicationId)
+    public function __construct(AM_Controller_Action $oActionController, $iApplicationId, AM_Component_Filter $oFilterComponent)
     {
+        $this->_oFilterComponent = $oFilterComponent;
+
         $iApplicationId = intval($iApplicationId);
         $aUser          = $oActionController->getUser();
         $sUserRole      = $aUser['role'];
@@ -95,10 +100,20 @@ class AM_Component_List_Issue extends AM_Component_Grid
                         'application_id'    => 'application.id'));
 
                  if ("admin" != $sUserRole) {
-                    $oQuery->where('user.client = application.client');
+                    //$oQuery->where('user.client = application.client');
                  }
 
         parent::__construct($oActionController, 'grid', $oActionController->oDb,
-                $oQuery, 'issue.updated DESC', null, 4, 'subselect');
+                $oQuery, 'issue.updated DESC', null, 20, 'subselect');
+    }
+
+    /**
+     * Component post initialization
+     */
+    protected function postInitialize() {
+        parent::postInitialize();
+        if ($sValue = $this->_oFilterComponent->getControl('issuesearch')->getValue()) {
+            $this->selectSQL->where('issue.title LIKE CONCAT("%", ?, "%") OR issue.number = ? OR issue.id = ?', $sValue);
+        }
     }
 }

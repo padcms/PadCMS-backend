@@ -41,10 +41,16 @@
  */
 class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
 {
-    const DATA_KEY_STREAM      = 'stream';
-    const DATA_KEY_ENABLE_LOOP = 'loop_video';
-    const DATA_KEY_DISABLE_UI  = 'disable_user_interaction';
-    protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('mp4', 'm4v'));
+    const DATA_KEY_STREAM          = 'stream';
+    const DATA_KEY_ENABLE_LOOP     = 'loop_';
+    const DATA_KEY_DISABLE_UI      = 'disable_user_interaction';
+    const DATA_KEY_RESOURCE_SOUND  = 'resource_sound';
+    const DATA_KEY_RESOURCE_VIDEO  = 'resource_video';
+    protected static $_aAllowedFileExtensions = array(
+        self::DATA_KEY_RESOURCE       => array('mp4', 'm4v', 'mp3'),
+        self::DATA_KEY_RESOURCE_VIDEO => array('mp4', 'm4v'),
+        self::DATA_KEY_RESOURCE_SOUND => array('mp3', 'mp4', 'm4v'),
+    );
 
     /**
      * Check stream value
@@ -61,7 +67,7 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
         }
 
         //Remove all resources elements for this field
-        $this->delete(self::DATA_KEY_RESOURCE);
+        //$this->delete(self::DATA_KEY_RESOURCE);
 
         $oField = $this->getElement()->getField();
         $oElements = $this->getElement()->getPage()->getElementsByField($oField);
@@ -87,7 +93,7 @@ class AM_Model_Db_Element_Data_Video extends AM_Model_Db_Element_Data_Resource
     protected function _addResource($sValue)
     {
         //Remove all stream elements for this field
-        $this->delete(self::DATA_KEY_STREAM);
+        //$this->delete(self::DATA_KEY_STREAM);
 
         $oField = $this->getElement()->getField();
         $oElements = $this->getElement()->getPage()->getElementsByField($oField);

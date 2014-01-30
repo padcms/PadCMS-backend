@@ -66,7 +66,7 @@ class AM_Model_Db_Table_Issue extends AM_Model_Db_Table_Abstract
                               ->where('application.deleted = ?', 'no')
 
                               ->where('issue.id = ?', $iIssueId)
-                              ->where('user.client = application.client')
+                              //->where('user.client = application.client')
                               ->where('application.client = ?', $iClientId);
 
         $oIssue  = $this->getAdapter()->fetchOne($oQuery);

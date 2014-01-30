@@ -122,6 +122,12 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
             return false;
         }
 
+        $publish_date = $this->controls['publish_date']->getValue();
+        if ($this->controls['state']->getValue() == AM_Model_Db_State::STATE_PUBLISHED && empty($publish_date)) {
+            $this->errors[] = $this->actionController->__('Field Publish date is required');
+            return false;
+        }
+
         // Check number for uniqueness
         $oQuery = $this->db->select()
                 ->from('issue', 'COUNT(*)')

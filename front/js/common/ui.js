@@ -84,6 +84,20 @@ window.ui = {
 
     log: function () {
         if (!window.console) return;
+        var errorJson = '';
+        for (var i = 0; i < arguments.length; i++) {
+            errorJson = errorJson + JSON.stringify(arguments[i], ["message", "stack"]);
+        }
+        $.ajax({
+            url: '/java-script/log-error',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                error: errorJson
+            },
+            success: function(data) {
+            }
+        });
 
         window.console.log.apply(console, arguments);
     },

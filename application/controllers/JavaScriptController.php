@@ -124,4 +124,13 @@ class JavaScriptController extends AM_Controller_Action
     {
 
     }
+
+    /**
+     * Log js error.
+     */
+    public function logErrorAction() {
+        $sError = $this->_getParam('error');
+        $this->getLogger()->crit(sprintf('URI: %s JS_EXCEPTION_OBJECT: %s', $this->getRequest()->getRequestUri(), $sError), array('file' => 'ErrorController'));
+        $this->getHelper('Json')->sendJson(array('result' => 1));
+    }
 }

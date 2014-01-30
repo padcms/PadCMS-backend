@@ -11,7 +11,7 @@
             <div id="field-{$item.type}">
                 {php}
                   $aItem = $this->get_template_vars('item');
-                  $sVar  = 'field_' . $aItem['type'];
+                  $sVar  = 'field_' . $aItem['name'];
                   $this->assign('fieldData', $this->get_template_vars($sVar));
                 {/php}
 

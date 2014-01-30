@@ -67,11 +67,12 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
     public function show()
     {
         $aFieldView = array(
-            'name'           => $this->getName(),
-            'fieldTitle'     => $this->getFieldTitle(),
-            'fieldId'        => $this->_oField->id,
-            'fieldTypeTitle' => $this->_oField->getFieldType()->title,
-            'pageId'         => $this->_oPage->id,
+            'name'              => $this->getName(),
+            'fieldTitle'        => $this->getFieldTitle(),
+            'fieldGenuineTitle' => $this->_oField->name,
+            'fieldId'           => $this->_oField->id,
+            'fieldTypeTitle'    => $this->_oField->getFieldType()->title,
+            'pageId'            => $this->_oPage->id,
         );
 
         $this->_setFieldData($aFieldView);
@@ -84,7 +85,8 @@ class AM_View_Helper_Field extends AM_View_Helper_Abstract
     public function getName()
     {
         if (is_null($this->_sName)) {
-            $this->_sName = $this->_oField->getFieldType()->title;
+            //$this->_sName = $this->_oField->getFieldType()->title;
+            $this->_sName = $this->_oField->name;
         }
 
         return $this->_sName;

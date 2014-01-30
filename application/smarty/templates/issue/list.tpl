@@ -19,6 +19,26 @@
 <div id="content">
     <div id="content-inner">
         <div id="content-area">
+            <div class="cblock-form cblock-signin cblock-add-app issue-search-field">
+                <div class="cblock-form-inner">
+                    <form action="" method="POST">
+                        <input type="hidden" name="form" value="{$filter.name}"/>
+                        <fieldset id="date-range" class="collapsible">
+                            <legend onclick="toggleFieldset(this);">{'Filter'|translate}</legend>
+                            <div>
+                                <p>
+                                    <label>{$issuesearch.title}:</label>
+                                    {include file="Volcano/input.tpl" control=$issuesearch}
+                                </p>
+                            </div>
+                        </fieldset>
+
+                        <div class="item-buttons">
+                            <input type="submit" value="{'Apply'|translate}" class="filter-submit" name="submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
             {foreach from=$grid.rows item=item}
             <div class="hover-item">
                 <h2 class="content-title content-title-b"><span><a href="/revision/list/iid/{$item.id}">{$item.title|escape}</a></span></h2>
