@@ -45,7 +45,7 @@
         <input type="hidden" name="form" value="{if isset($subscription)}{$subscription.name}{/if}"/>
 
         <div class="form-item{if isset($button_title) && $button_title.errors} error{/if}">
-          <label>{if isset($button_title)}{$button_title.title|escape}{/if} <span>*</span></label>
+          <label>{if isset($button_title)}{$button_title.title|escape}{/if}</label>
 
           <div class="form-item-wrapper">
               {if isset($button_title)}{include file="Volcano/input.tpl" control=$button_title _class="form-text"}{/if}
