@@ -57,7 +57,7 @@ class AM_Component_Record_Database_Subscription extends AM_Component_Record_Data
 
         $aControls[] = new Volcano_Component_Control_Database($oActionController,
             'button_title',
-            'Button title', array(array('require')));
+            'Button title');
 
         $aControls[] = new Volcano_Component_Control_Database_Static($oActionController, 'updated', new Zend_Db_Expr('NOW()'));
 
