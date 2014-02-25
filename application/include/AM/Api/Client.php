@@ -293,7 +293,7 @@ class AM_Api_Client extends AM_Api
 
             $oIssues = AM_Model_Db_Table_Abstract::factory('issue')->findAllBy($aCriteria);
             foreach ($oIssues as $oIssue) {
-                if (!empty($oIssue->exclude) && !$bIsUdidUserAdmin && $sPlatform == self::PLATFORM_ANDROID) {
+                if (!empty($oIssue->exclude) && $sPlatform == self::PLATFORM_ANDROID) {
                     continue;
                 }
                 $oTermEntities = AM_Model_Db_Table_Abstract::factory('termEntity')->findAllBy(
