@@ -94,11 +94,7 @@ class ApplicationController extends AM_Controller_Action
         if ($oComponent->operation()) {
             $oApplication = AM_Model_Db_Table_Abstract::factory('application')->findOneBy('id', $oComponent->getPrimaryKeyValue());
             /* @var $oApplication AM_Model_Db_Application */
-            $lstIssues = $oApplication->getIssues();
-            foreach ($lstIssues as $oIssue) {
-                /* @var $oIssue AM_Model_Db_Issue */
-                $oIssue->exportRevisions();
-            }
+            $oApplication->exportIssues();
             $this->updateApplication($oApplication->id);
 
             if (is_a($oComponent, 'AM_Component_Record_Database_Application_Add')) {
