@@ -497,6 +497,7 @@ class AM_Model_Db_Issue extends AM_Model_Db_Abstract
         $oRevisions = $this->getRevisions();
 
         foreach ($oRevisions as $oRevision) {
+            /* @var $oRevision AM_Model_Db_Revision */
             $oRevision->exportRevision();
         }
 

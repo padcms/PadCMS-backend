@@ -90,6 +90,20 @@ abstract class AM_Handler_Export_Abstract extends AM_Handler_Abstract
     }
 
     /**
+     * Run application export task
+     * @param AM_Model_Db_Application $oApplication
+     * @return AM_Handler_Export
+     * @throws AM_Handler_Export_Exception
+     */
+    public function initApplicationExportProcess(AM_Model_Db_Application $oApplication)
+    {
+        $sCommand = sprintf('nohup %s/padcms export --application=%d > /dev/null 2>&1 &', APPLICATION_PATH . DIRECTORY_SEPARATOR . '..', $oApplication->id);
+        AM_Tools_Standard::getInstance()->exec($sCommand);
+
+        return $this;
+    }
+
+    /**
      * Create all archives for revision
      * (full archive, revision progressive archive, page archive)
      * @param AM_Model_Db_Revision $oRevision

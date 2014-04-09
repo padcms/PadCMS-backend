@@ -267,4 +267,17 @@ class AM_Model_Db_Application extends AM_Model_Db_Abstract
         $oCache->data_android = $cache_data_android;
         $oCache->save();
     }
+
+    /**
+     * Init export processes foreach issue's revision
+     * @return AM_Model_Db_Application
+     */
+    public function exportIssues()
+    {
+        $oExportHandler = AM_Handler_Locator::getInstance()->getHandler('export');
+        /* @var $oExportHandler AM_Handler_Export */
+        $oExportHandler->initApplicationExportProcess($this);
+
+        return $this;
+    }
 }
