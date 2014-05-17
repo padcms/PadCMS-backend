@@ -178,6 +178,11 @@ var fieldBody = {
         var context = this;
         var value = $('option:selected', element).val();
         context.onSave('alignment', value);
-    }
+    },
 
+    onChangeSwitchPopups: function(element) {
+        var context = this;
+        var value = $(element).attr('checked');
+        context.onSave('switchPopups', value ? 1 : 0);
+    }
 }

@@ -32,6 +32,11 @@
                                 {/if}
                             </div>
 
+                            <div class="actions">
+                                <a class="{if $element.hideOnTouch}action-2{else}action-2-disabled{/if} hide-on-touch"
+                                   href="#" title="{'Hide on touch'|translate}"></a>
+                            </div>
+
                             <span title="{$element.fileName}" class="name">{$element.fileNameShort}</span>
 
                             <a class="close delete-btn" title="{'Delete image'|translate}" href="#"></a>

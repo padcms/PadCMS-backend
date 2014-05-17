@@ -41,7 +41,9 @@
  */
 class AM_Model_Db_Element_Data_Popup extends AM_Model_Db_Element_Data_Resource
 {
-    protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png'));
+    const DATA_KEY_HIDE_ON_TOUCH  = 'hideOnTouch';
+
+    protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png', 'gif'));
 
     /**
      * Create new element

@@ -49,7 +49,8 @@ class AM_View_Helper_Field_Popup extends AM_View_Helper_Field
             foreach ($aElements as $oElement) {
                 /* @var $oElement AM_Model_Db_Element */
                 $aElementView = array (
-                    'id' => $oElement->id
+                    'id' => $oElement->id,
+                    'hideOnTouch' => $oElement->getResources()->getDataValue(AM_Model_Db_Element_Data_Popup::DATA_KEY_HIDE_ON_TOUCH, 0)
                 );
 
                 $aResourceView = $this->_getResourceViewData($oElement);

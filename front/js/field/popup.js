@@ -27,6 +27,11 @@ var fieldPopup = {
             return event.data.onDelete(event.originalEvent);
         });
 
+        $('a.hide-on-touch', context.domRoot).bind('click', context, function(event){
+            event.data.onHideOnTouch(event);
+            return false;
+        });
+
         context.initFancybox($("a.single_image", context.domRoot));
 
         $(".gallery", context.domRoot).sortable({
@@ -72,6 +77,9 @@ var fieldPopup = {
                             '<li id="element-' + element + '">' +
                                 '<div class="data-item">' +
                                     image +
+                                    '<div class="actions">' +
+                                    '<a class="action-2-disabled hide-on-touch" href="#" title="Hide on touch"></a>' +
+                                    '</div>' +
                                     '<span class="name" title="' + file.fileName + '">' + file.fileNameShort + '</span>' +
                                         '<a href="#" title="Delete image" class="close delete-btn"></a>' +
                                 '</div>' +
@@ -83,6 +91,11 @@ var fieldPopup = {
                         var domElement = $('#element-' + element);
                         $('a.delete-btn', domElement).bind('click', context, function(event) {
                             return event.data.onDelete(event.originalEvent);
+                        });
+
+                        $('a.hide-on-touch', context.domRoot).bind('click', context, function(event){
+                            event.data.onHideOnTouch(event);
+                            return false;
                         });
 
                         context.initFancybox($('a.single_image', domElement));
@@ -183,5 +196,37 @@ var fieldPopup = {
                 context.init();
             }
         });
+    },
+
+    onHideOnTouch: function(event) {
+        var context = this;
+        var elementId = $(event.target).closest('li').attr('id').split('-').pop();
+        context.value = $(event.target).hasClass('action-2-disabled') ? 1 : 0;
+
+        $.ajax({
+            url: '/field-popup/save',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page_id: context.pageId,
+                field_id: context.fieldId,
+                element: elementId,
+                key: 'switchPopups',
+                value: context.value
+            },
+            success: function(data) {
+                try {
+                    if (context.value == 1) {
+                        $(event.target).removeClass('action-2-disabled').addClass('action-2');
+                    } else {
+                        $(event.target).removeClass('action-2').addClass('action-2-disabled');
+                    }
+                } catch (e) {
+                    window.ui.log(e);
+                    alert(translate('unexpected_ajax_error'));
+                }
+            }
+        });
+        return false;
     }
 }

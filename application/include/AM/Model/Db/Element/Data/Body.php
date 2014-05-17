@@ -43,8 +43,9 @@ class AM_Model_Db_Element_Data_Body extends AM_Model_Db_Element_Data_Resource
 {
     const DATA_KEY_TOP                    = 'top';
     const DATA_KEY_HAS_PHOTO_GALLERY_LINK = 'hasPhotoGalleryLink';
-    const DATA_KEY_SHOW_GALLERY_ON_ROTATE     = 'showGalleryOnRotate';
+    const DATA_KEY_SHOW_GALLERY_ON_ROTATE = 'showGalleryOnRotate';
     const DATA_KEY_SHOW_TOP_LAYER         = 'showTopLayer';
+    const DATA_KEY_SWITCH_POPUP           = 'switchPopups';
 
     protected static $_aAllowedFileExtensions = array(self::DATA_KEY_RESOURCE => array('pdf', 'jpg', 'jpeg', 'png', 'zip'));
 

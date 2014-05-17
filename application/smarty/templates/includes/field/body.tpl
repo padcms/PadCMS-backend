@@ -1,4 +1,3 @@
-
 <input type="hidden" name="field-id" value="{$field.fieldId}" />
 
 <h3 class="head">{'Body'|translate}</h3>
@@ -54,7 +53,7 @@
         </div>
     </div>
 
-            {if $template != 'fixed_illustration_article'}
+    {if $template != 'fixed_illustration_article'}
     <div id="edit-top-wrapper" class="form-item">
         <label>{'Top position'|translate}</label>
         <div class="form-item-wrapper">
@@ -72,10 +71,19 @@
         </div>
     </div>
 
-        <div id="edit-show-on-rotate-wrapper" class="form-item">
+    <div id="edit-show-on-rotate-wrapper" class="form-item">
         <label>{'Show gallery on rotate'|translate}</label>
         <div class="checks">
             <input type="checkbox" onchange="fieldBody.onChangeShowGalleryOnRotate(this);" name="partner" value="" {if isset($field.element) && $field.element.showGalleryOnRotate}checked="checked"{/if} />
+        </div>
+    </div>
+    {/if}
+
+    {if $template == 'multi_popups'}
+    <div id="edit-switch-popup-wrapper" class="form-item">
+        <label>{'Switch popups'|translate}</label>
+        <div class="checks">
+            <input type="checkbox" onchange="fieldBody.onChangeSwitchPopups(this);" name="partner" value="" {if isset($field.element) && $field.element.switchPopups}checked="checked"{/if} />
         </div>
     </div>
     {/if}
