@@ -39,7 +39,7 @@
 <script type="text/javascript" src="{$baseUrl}/js/field/video.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/html.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/sound.js"></script>
-<script type="text/javascript" src="{$baseUrl}/js/field/advert.js"></script>
+<script type="text/javascript" src="{$baseUrl}/js/field/vertical.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/draganddrop.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/popup.js"></script>
 <script type="text/javascript" src="{$baseUrl}/js/field/html5.js"></script>
