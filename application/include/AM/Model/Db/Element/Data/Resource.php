@@ -378,7 +378,7 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
                 // We do not create real thumbnail here.
                 // Because it is slow. So we create only dummy ones in real time,
                 // and plan a generation of real thumbnail in background.
-                ->createThumbnails(true);
+                ->createThumbnails();
 
         foreach ($oThumbnailer->getSources() as $oSource) {
             if ($oSource->isImage()) {
