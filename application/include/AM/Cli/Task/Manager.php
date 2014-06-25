@@ -46,7 +46,48 @@ class AM_Cli_Task_Manager extends AM_Cli_Task_Abstract
 
     public function execute()
     {
-       $oTaskManager = new AM_Task_Manager();
-       $oTaskManager->run();
+//       $oTaskManager = new AM_Task_Manager();
+//       $oTaskManager->run();
+
+        $this->getLogger()->debug(sprintf("Memory: %s", memory_get_usage(true)));
+        $this->getLogger()->debug(sprintf("Peak Memory: %s", memory_get_peak_usage(true)));
+
+        $oTask = AM_Model_Db_Table_Abstract::factory('task')
+            ->findOneBy(array('status' => AM_Task_Worker_Abstract::STATUS_NEW));
+        /* @var $oTask AM_Model_Db_Task */
+
+        if (is_null($oTask)) {
+            $this->getLogger()->debug('There are no tasks to execute');
+            return;
+        }
+
+        $this->getLogger()->debug(sprintf('Running task #%s with type #%s', $oTask->id, $oTask->task_type_id));
+
+        try {
+            $oWorker = $oTask->getWorker();
+            /* @var $oWorker AM_Task_Worker_Abstract */
+
+        } catch(Exception $oException) {
+            $this->getLogger()->crit($oException);
+            return;
+        }
+
+        try {
+            $this->getLogger()->debug(sprintf('Task worker is  %s', get_class($oWorker)));
+
+            $oWorker->run();
+
+            $this->getLogger()->debug(sprintf('Finishing task #%s', $oTask->id));
+
+            $oWorker->finish();
+
+            $this->getLogger()->debug(sprintf('Task #%s is finished', $oTask->id));
+        } catch (Exception $oException) {
+            $this->getLogger()->crit(sprintf('Task #%s has an error', $oTask->id));
+            $this->getLogger()->crit($oException);
+
+            $oWorker->error($oException);
+            return;
+        }
     }
 }
