@@ -345,7 +345,7 @@ class AM_Model_Db_Page extends AM_Model_Db_Base_NestedSet
                     AM_Handler_Thumbnail_Interface::PRESET_MAP_ITEM . '-' . $this->getOrientation(),
                     $oBackground->type,
                     $oBackground->id,
-                    $aFileInfo['filename'] . '.' . $sImageType . '?' . strtotime($this->updated)
+                    $aFileInfo['filename'] . '.' . $sImageType . '?' . strtotime($oBackground->getElement()->updated)
                 );
 
         return $sUri;

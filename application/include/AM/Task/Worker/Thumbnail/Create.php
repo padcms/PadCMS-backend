@@ -57,7 +57,7 @@ class AM_Task_Worker_Thumbnail_Create extends AM_Task_Worker_Abstract
                 ->setElementId($iElementId)
                 ->addSourceFile($sResource)
                 ->setImageType($aImageType)
-                ->loadAllPresets($sResourceType, false)
+                ->loadAllPresets($sResourceType)
                 ->setZooming($bZooming)
                 ->createThumbnails();
     }
