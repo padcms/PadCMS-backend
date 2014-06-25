@@ -51,8 +51,10 @@ class AM_Task_Worker_Thumbnail_Create extends AM_Task_Worker_Abstract
         $aImageType    = (string) $this->getOption('image_type');
         $bZooming      = (bool) $this->getOption('zooming');
         $sResourceType = (string) $this->getOption('resource_type');
+        $iElementId = (int) $this->getOption('element_id');
 
         $oThumbnailer->clearSources()
+                ->setElementId($iElementId)
                 ->addSourceFile($sResource)
                 ->setImageType($aImageType)
                 ->loadAllPresets($sResourceType, false)

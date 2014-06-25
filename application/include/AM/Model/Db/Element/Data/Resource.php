@@ -386,7 +386,8 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
                 $oTask->setOptions(array('resource'      => $sDestination,
                             'image_type'    => $this->getImageType($sKey),
                             'zooming'       => false,
-                            'resource_type' => $this->getThumbnailPresetName()))
+                            'resource_type' => $this->getThumbnailPresetName(),
+                            'element_id' => $this->getElement()->id))
                         ->create();
             }
 
