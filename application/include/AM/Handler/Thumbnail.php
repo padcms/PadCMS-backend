@@ -435,7 +435,7 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
             $this->_aPresets = array_merge($this->_aPresets, $oResourcesConfig->default->toArray());
         }
 
-        $this->getLogger()->debug('Finishing task: ' . serialize($this->_aPresets));
+        $this->getLogger()->debug('Finishing task "' . $sResourceType . '", "' . ((int) $bUrgent) . '": ' . serialize($this->_aPresets));
 
         return $this;
     }

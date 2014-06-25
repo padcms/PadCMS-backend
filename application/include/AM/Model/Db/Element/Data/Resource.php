@@ -368,7 +368,6 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
      */
     protected function _postUpload($sDestination, $sKey = null)
     {
-        $this->getLogger()->debug('@1');
         $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
         /* @var $oThumbnailer AM_Handler_Thumbnail */
         $oThumbnailer->clearSources()
@@ -401,7 +400,6 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
                 return $this;
             }
         }
-        $this->getLogger()->debug('@2');
 
         return $this;
     }
