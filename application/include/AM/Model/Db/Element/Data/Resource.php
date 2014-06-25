@@ -371,10 +371,14 @@ abstract class AM_Model_Db_Element_Data_Resource extends AM_Model_Db_Element_Dat
         $oThumbnailer = AM_Handler_Locator::getInstance()->getHandler('thumbnail');
         /* @var $oThumbnailer AM_Handler_Thumbnail */
         $oThumbnailer->clearSources()
+                ->setElementId($this->getElement()->id)
                 ->addSourceFile($sDestination)
                 ->setImageType($this->getImageType($sKey))
                 ->loadAllPresets($this->getThumbnailPresetName(), true)
-                ->createThumbnails();
+                // We do not create real thumbnail here.
+                // Because it is slow. So we create only dummy ones in real time,
+                // and plan a generation of real thumbnail in background.
+                ->createThumbnails(true);
 
         foreach ($oThumbnailer->getSources() as $oSource) {
             if ($oSource->isImage()) {

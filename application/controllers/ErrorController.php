@@ -76,7 +76,7 @@ class ErrorController extends AM_Controller_Action
         }
 
         $sErrorCode = uniqid('_', true);
-        $this->getLogger()->crit(sprintf('URI: %s MESSAGE: %s EXECEPTION: %s', $this->getRequest()->getRequestUri(), $oException->getMessage(), $oException->__toString()), array('file' => 'ErrorController', 'info' => $sErrorCode));
+        $this->getLogger()->crit(sprintf('URI: %s MESSAGE: %s EXCEPTION: %s', $this->getRequest()->getRequestUri(), $oException->getMessage(), $oException->__toString()), array('file' => 'ErrorController', 'info' => $sErrorCode));
         $this->getResponse()->clearBody();
         $this->getResponse()->setHttpResponseCode($iHttpResponceCode);
 

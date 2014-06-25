@@ -99,13 +99,28 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         return $this;
     }
 
+    /**
+     * Set ID of related element
+     * @param int $iElementId
+     * @return AM_Handler_Thumbnail
+     */
+    public function setElementId($iElementId)
+    {
+        $this->_iElementId = $iElementId;
+
+        return $this;
+    }
 
     /**
      * @param array | null $aFiles array of image files
      * @param array | null $aPresets  array of presets
      */
-    public function __construct($aFiles = null, $aPresets = null)
+    public function __construct($iElementId = null, $aFiles = null, $aPresets = null)
     {
+        if (!is_null($iElementId)) {
+            $this->_iElementId = $iElementId;
+        }
+
         if (!is_null($aFiles)) {
             foreach ((array) $aFiles as $file) {
                 $this->addFile($file);
@@ -287,11 +302,13 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
      * Create thumbnails for each source
      * @return AM_Handler_Thumbnail
      */
-    public function createThumbnails()
+    public function createThumbnails($useDummySource = false)
     {
         foreach ($this->_aSources as $oSource) {
             /* @var $oSource AM_Resource_Abstract */
-            $sInputFile  = $oSource->getFileForThumbnail($this->getImageType());
+            $sInputFile = !$useDummySource
+                    ? $oSource->getFileForThumbnail($this->getImageType())
+                    : APPLICATION_PATH . "/../front/img/thumbnails/default.png";
             foreach ($this->_aPresets as $sPreset) {
                 if (!isset($this->getConfig()->{$sPreset})) {
                     continue;
@@ -351,6 +368,13 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
                 }
                 $this->getResourceStorage()->save();
             }
+        }
+
+        if (!is_null($this->_iElementId)) {
+            $oElement = AM_Model_Db_Table_Abstract::factory('element')->findOneBy('id', $this->_iElementId);
+            /** @var AM_Model_Db_Element $oElement */
+            $oElement->updated = new Zend_Db_Expr('NOW()');
+            $oElement->save();
         }
 
         return $this;
