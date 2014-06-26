@@ -47,7 +47,7 @@ class AM_Model_Db_Element_Data_Gallery extends AM_Model_Db_Element_Data_Resource
 
 
     protected static $_aAllowedFileExtensions = array(
-        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png'),
+        self::DATA_KEY_RESOURCE => array('jpg', 'jpeg', 'pdf', 'png', 'mp4'),
         self::DATA_GIF_RESOURCE => array('gif')
     );
 
