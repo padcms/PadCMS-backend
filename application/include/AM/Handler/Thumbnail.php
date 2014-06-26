@@ -401,7 +401,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
      */
     public function loadAllPresets($sResourceType, $bUrgent = null)
     {
-        print '@3';
         $this->clearPresets();
         $oResourcesConfig = $this->getConfig()->common->resource;
         $aPresets         = array();
@@ -435,12 +434,6 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         if (is_null($bUrgent) || true === $bUrgent) {
             $this->_aPresets = array_merge($this->_aPresets, $oResourcesConfig->default->toArray());
         }
-
-//        $this->getLogger()->debug('loadAllPresets@AM_Handler_Thumbnail "' . $sResourceType . '", "' . ((int) $bUrgent) . '": ' . serialize($this->_aPresets));
-
-        print serialize($this->_aPresets);
-
-        print '@4';
 
         return $this;
     }

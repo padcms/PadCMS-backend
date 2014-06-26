@@ -53,8 +53,6 @@ class AM_Task_Worker_Thumbnail_Create extends AM_Task_Worker_Abstract
         $sResourceType = (string) $this->getOption('resource_type');
         $iElementId = (int) $this->getOption('element_id');
 
-        print '@1';
-
         $oThumbnailer->clearSources()
                 ->setElementId($iElementId)
                 ->addSourceFile($sResource)
@@ -62,7 +60,5 @@ class AM_Task_Worker_Thumbnail_Create extends AM_Task_Worker_Abstract
                 ->loadAllPresets($sResourceType)
                 ->setZooming($bZooming)
                 ->createThumbnails();
-
-        print '@2';
     }
 }
