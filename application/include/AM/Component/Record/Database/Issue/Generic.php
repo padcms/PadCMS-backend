@@ -322,7 +322,7 @@ class AM_Component_Record_Database_Issue_Generic extends AM_Component_Record_Dat
             $aUser = $this->actionController->getUser();
 
             $aBind            = array();
-            $aBind['state']   = self::STATE_WORK_IN_PROGRESS;
+            $aBind['state']   = AM_Model_Db_State::STATE_PUBLISHED;
             $aBind['user']    = $aUser['id'];
             $aBind['created'] = new Zend_Db_Expr('NOW()');
             $aBind['updated'] = new Zend_Db_Expr('NOW()');
