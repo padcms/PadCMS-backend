@@ -286,7 +286,9 @@ class AM_Handler_Thumbnail extends AM_Handler_Abstract implements AM_Handler_Thu
         }
 
         $aPathInfo = pathinfo($sFileName);
-        if ('pdf' == Zend_Filter::filterStatic($aPathInfo['extension'], 'StringToLower', array('encoding' => 'UTF-8'))) {
+        if (!empty($aPathInfo['extension'])
+            && ('pdf' == Zend_Filter::filterStatic($aPathInfo['extension'], 'StringToLower', array('encoding' => 'UTF-8')))) {
+
             $sFileName = $aPathInfo['filename'] . '.png';
         }
         elseif ($sFileExtension) {
